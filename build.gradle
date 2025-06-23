@@ -1,0 +1,110 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.5.3'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'PerfumeOnMe'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	querydsl { }
+}
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	querydslVersion = '5.1.0'
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// Lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	// MySQL Driver
+//	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	// ✅ QueryDSL (5.1.0)
+	implementation "com.querydsl:querydsl-jpa:$querydslVersion:jakarta"
+	annotationProcessor "com.querydsl:querydsl-apt:$querydslVersion:jakarta"
+	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+	// 테스트 관련 의존성
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	// Swagger
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
+	// validation
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	// Security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	testImplementation 'org.springframework.security:spring-security-test'
+	// Thymeleaf
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE'
+	// JWT
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+// QueryDSL 설정부
+def querydslDir = file("src/main/generated")
+
+sourceSets {
+	main {
+		java {
+			srcDirs += querydslDir
+		}
+	}
+}
+
+// Q 클래스 중복 생성 방지 및 자동 생성
+tasks.named('compileJava') {
+	doFirst {
+		if (querydslDir.exists()) {
+			querydslDir.deleteDir() // Q 클래스 중복 생성 방지
+		}
+		querydslDir.mkdirs()
+	}
+}
+
+tasks.register("compileQuerydsl", JavaCompile) {
+	group = "build"
+	description = "Generates the QueryDSL Q-types"
+	source = sourceSets.main.java
+	destinationDirectory = querydslDir
+	classpath = sourceSets.main.compileClasspath
+	options.annotationProcessorPath = configurations.annotationProcessor
+	options.compilerArgs = [
+			'-proc:only',
+			'-processor', 'com.querydsl.apt.jpa.JPAAnnotationProcessor'
+	]
+}
+
+// compileJava는 항상 compileQuerydsl 이후에 실행
+compileJava {
+	dependsOn compileQuerydsl
+}
