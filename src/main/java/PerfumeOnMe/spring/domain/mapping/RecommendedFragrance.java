@@ -7,6 +7,8 @@ import PerfumeOnMe.spring.domain.Workshop;
 import PerfumeOnMe.spring.domain.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.jdbc.Work;
 
 @Entity
@@ -14,6 +16,8 @@ import org.hibernate.jdbc.Work;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@DynamicInsert
+@DynamicUpdate
 public class RecommendedFragrance extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

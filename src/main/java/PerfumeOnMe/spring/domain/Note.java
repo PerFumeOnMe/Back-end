@@ -7,6 +7,8 @@ import PerfumeOnMe.spring.domain.mapping.FragranceTopNote;
 import PerfumeOnMe.spring.domain.mapping.UserNote;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +18,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@DynamicInsert
+@DynamicUpdate
 public class Note extends BaseEntity {
 
     @Id

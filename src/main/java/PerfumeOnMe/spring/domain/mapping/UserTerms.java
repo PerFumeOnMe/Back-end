@@ -5,12 +5,16 @@ import PerfumeOnMe.spring.domain.User;
 import PerfumeOnMe.spring.domain.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@DynamicInsert
+@DynamicUpdate
 public class UserTerms extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
