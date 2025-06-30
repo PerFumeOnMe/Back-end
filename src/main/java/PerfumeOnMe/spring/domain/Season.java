@@ -26,5 +26,6 @@ public class Season extends BaseEntity {
     private String name;
 
     @OneToMany(mappedBy = "season", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<FragranceSeason> fragranceSeasonList = new ArrayList<>();
 }

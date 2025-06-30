@@ -27,5 +27,6 @@ public class ImageKeyword extends BaseEntity {
     private User user;
 
     @OneToMany(mappedBy = "imageKeyword", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<RecommendedFragrance> RecommendedFragranceList = new ArrayList<>();
 }

@@ -70,33 +70,43 @@ public class Fragrance extends BaseEntity {
     //----- 매핑 관계 -----
 
     @OneToMany(mappedBy = "fragrance", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<UserFragrance> userFragranceList = new ArrayList<>();
 
     @OneToMany(mappedBy = "fragrance", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<Diary> diaryList = new ArrayList<>();
 
     @OneToMany(mappedBy = "fragrance", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<FragranceSeason> fragranceSeasonList = new ArrayList<>();
 
     @OneToMany(mappedBy = "fragrance", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<FragranceLocation> fragranceLocationList = new ArrayList<>();
 
     @OneToMany(mappedBy = "fragrance", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<FragranceKeyword> fragranceKeywordList = new ArrayList<>();
 
     @OneToMany(mappedBy = "fragrance", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<FragrancePrice> fragrancePriceList = new ArrayList<>();
 
     @OneToMany(mappedBy = "fragrance", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<FragranceTopNote> fragranceTopNoteList = new ArrayList<>();
 
     @OneToMany(mappedBy = "fragrance", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<FragranceMiddleNote> fragranceMiddleNoteList = new ArrayList<>();
 
     @OneToMany(mappedBy = "fragrance", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<FragranceBaseNote> fragranceBaseNoteList = new ArrayList<>();
 
     @OneToMany(mappedBy = "fragrance", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<RecommendedFragrance> RecommendedFragranceList = new ArrayList<>();
 
 }

@@ -42,14 +42,18 @@ public class Note extends BaseEntity {
     private boolean base;
 
     @OneToMany(mappedBy = "note", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<FragranceTopNote> fragranceTopNoteList = new ArrayList<>();
 
     @OneToMany(mappedBy = "note", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<FragranceMiddleNote> fragranceMiddleNoteList = new ArrayList<>();
 
     @OneToMany(mappedBy = "note", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<FragranceBaseNote> fragranceBaseNoteList = new ArrayList<>();
 
     @OneToMany(mappedBy = "note", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<UserNote> userNoteList = new ArrayList<>();
 }

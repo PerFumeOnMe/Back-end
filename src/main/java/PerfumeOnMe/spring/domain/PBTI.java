@@ -27,5 +27,6 @@ public class PBTI extends BaseEntity {
     private User user;
 
     @OneToMany(mappedBy = "pbti", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<RecommendedFragrance> RecommendedFragranceList = new ArrayList<>();
 }

@@ -26,6 +26,7 @@ public class Location extends BaseEntity {
     private String name;
 
     @OneToMany(mappedBy = "location", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<FragranceLocation> fragranceLocationList = new ArrayList<>();
 
 

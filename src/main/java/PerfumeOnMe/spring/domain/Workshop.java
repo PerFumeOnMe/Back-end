@@ -27,5 +27,6 @@ public class Workshop extends BaseEntity {
     private User user;
 
     @OneToMany(mappedBy = "workshop", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<RecommendedFragrance> RecommendedFragranceList = new ArrayList<>();
 }

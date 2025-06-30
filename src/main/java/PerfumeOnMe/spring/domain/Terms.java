@@ -32,5 +32,6 @@ public class Terms {
     private boolean required;
 
     @OneToMany(mappedBy = "terms", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<UserTerms> userTermsList = new ArrayList<>();
 }
