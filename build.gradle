@@ -108,3 +108,7 @@ tasks.register("compileQuerydsl", JavaCompile) {
 compileJava {
 	dependsOn compileQuerydsl
 }
+
+jar {
+	enabled = false
+}
