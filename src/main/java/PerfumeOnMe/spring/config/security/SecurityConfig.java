@@ -1,4 +1,4 @@
-package PerfumeOnMe.spring.security;
+package PerfumeOnMe.spring.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,15 +1,27 @@
 package PerfumeOnMe.spring.domain.mapping;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 import PerfumeOnMe.spring.domain.Fragrance;
 import PerfumeOnMe.spring.domain.ImageKeyword;
 import PerfumeOnMe.spring.domain.PBTI;
 import PerfumeOnMe.spring.domain.Workshop;
 import PerfumeOnMe.spring.domain.base.BaseEntity;
-import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.jdbc.Work;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
@@ -18,28 +30,29 @@ import org.hibernate.jdbc.Work;
 @AllArgsConstructor
 @DynamicInsert
 @DynamicUpdate
+@Table(name = "recommended_fragrances")
 public class RecommendedFragrance extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(nullable = false, length = 100)
-    private String name;
+	@Column(nullable = false, length = 100)
+	private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fragrance_id")
-    private Fragrance fragrance;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fragrance_id")
+	private Fragrance fragrance;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "imageKeyword_id")
-    private ImageKeyword imageKeyword;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "imageKeyword_id")
+	private ImageKeyword imageKeyword;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pbti_id")
-    private PBTI pbti;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "pbti_id")
+	private PBTI pbti;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "workshop_id")
-    private Workshop workshop;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "workshop_id")
+	private Workshop workshop;
 
 }
