@@ -12,6 +12,6 @@ public class UserResponseDTO {
 	@AllArgsConstructor
 	@NoArgsConstructor
 	public static class SignupResult {
-		Long userId;
+		private Long userId;
 	}
 }
