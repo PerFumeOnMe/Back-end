@@ -1,6 +1,5 @@
 package PerfumeOnMe.spring.domain;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +10,6 @@ import PerfumeOnMe.spring.domain.base.BaseEntity;
 import PerfumeOnMe.spring.domain.enums.Age;
 import PerfumeOnMe.spring.domain.enums.Social;
 import PerfumeOnMe.spring.domain.enums.UserGender;
-import PerfumeOnMe.spring.domain.enums.UserStatus;
 import PerfumeOnMe.spring.domain.mapping.Diary;
 import PerfumeOnMe.spring.domain.mapping.UserFragrance;
 import PerfumeOnMe.spring.domain.mapping.UserNote;
@@ -47,10 +45,10 @@ public class User extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false, unique = true, length = 25)
+	@Column(nullable = false)
 	private String name;
 
-	@Column(unique = true, length = 25)
+	@Column(unique = true, length = 10)
 	private String nickname;
 
 	@Enumerated(EnumType.STRING)
@@ -61,10 +59,7 @@ public class User extends BaseEntity {
 	@Column(columnDefinition = "VARCHAR(10) DEFAULT 'NONE'")
 	private UserGender gender;
 
-	@Column(nullable = false, unique = true, length = 30)
-	private String email;
-
-	@Column(nullable = false, unique = true, length = 30)
+	@Column(nullable = false, unique = true)
 	private String loginId;
 
 	@Column(columnDefinition = "TEXT", nullable = false)
@@ -73,12 +68,6 @@ public class User extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	@Column(columnDefinition = "VARCHAR(10) DEFAULT 'LOCAL'")
 	private Social social;
-
-	@Enumerated(EnumType.STRING)
-	@Column(columnDefinition = "VARCHAR(10) DEFAULT 'ACTIVE'", nullable = false)
-	private UserStatus status;
-
-	private LocalDate inactiveDate;
 
 	@Column(columnDefinition = "TEXT")
 	private String imageURL;
