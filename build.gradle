@@ -17,15 +17,10 @@ configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
-    querydsl {}
 }
 
 repositories {
     mavenCentral()
-}
-
-ext {
-    querydslVersion = '5.1.0'
 }
 
 dependencies {
@@ -41,8 +36,8 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
 
     // ✅ QueryDSL (5.1.0)
-    implementation "com.querydsl:querydsl-jpa:$querydslVersion:jakarta"
-    annotationProcessor "com.querydsl:querydsl-apt:$querydslVersion:jakarta"
+    implementation 'com.querydsl:querydsl-jpa:5.1.0:jakarta'
+    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
@@ -52,7 +47,7 @@ dependencies {
 
     // Swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
-    // validation
+    // Validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     // Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -64,51 +59,21 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+    // Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.apache.commons:commons-pool2' // 커넥션 풀링
+    // OAuth
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    // Query Parameter Log
+    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
+    //Apache POI
+    implementation 'org.apache.poi:poi-ooxml:5.2.3'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
 
-// QueryDSL 설정부
-def querydslDir = file("src/main/generated")
-
-sourceSets {
-    main {
-        java {
-            srcDirs += querydslDir
-        }
-    }
-}
-
-// Q 클래스 중복 생성 방지 및 자동 생성
-tasks.named('compileJava') {
-    doFirst {
-        if (querydslDir.exists()) {
-            querydslDir.deleteDir() // Q 클래스 중복 생성 방지
-        }
-        querydslDir.mkdirs()
-    }
-}
-
-tasks.register("compileQuerydsl", JavaCompile) {
-    group = "build"
-    description = "Generates the QueryDSL Q-types"
-    source = sourceSets.main.java
-    destinationDirectory = querydslDir
-    classpath = sourceSets.main.compileClasspath
-    options.annotationProcessorPath = configurations.annotationProcessor
-    options.compilerArgs = [
-            '-proc:only',
-            '-processor', 'com.querydsl.apt.jpa.JPAAnnotationProcessor'
-    ]
-}
-
-// compileJava는 항상 compileQuerydsl 이후에 실행
-compileJava {
-    dependsOn compileQuerydsl
-}
-
-jar {
-	enabled = false
+clean {
+    delete file('src/main/generated')
 }
