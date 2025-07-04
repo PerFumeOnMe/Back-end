@@ -14,6 +14,7 @@ import PerfumeOnMe.spring.domain.mapping.Diary;
 import PerfumeOnMe.spring.domain.mapping.FragranceBaseNote;
 import PerfumeOnMe.spring.domain.mapping.FragranceLocation;
 import PerfumeOnMe.spring.domain.mapping.FragranceMiddleNote;
+import PerfumeOnMe.spring.domain.mapping.FragrancePrice;
 import PerfumeOnMe.spring.domain.mapping.FragranceSeason;
 import PerfumeOnMe.spring.domain.mapping.FragranceTopNote;
 import PerfumeOnMe.spring.domain.mapping.RecommendedFragrance;
@@ -71,7 +72,7 @@ public class Fragrance extends BaseEntity {
 	private FragranceType fragranceType;
 
 	@Column(columnDefinition = "TEXT", nullable = false)
-	private String ImageURL;
+	private String imageURL;
 
 	@Column(nullable = false)
 	private String topNoteDescription;
@@ -91,6 +92,9 @@ public class Fragrance extends BaseEntity {
 	@Column(nullable = false)
 	private String baseNoteKeyword;
 
+	@Column(nullable = false, unique = true, length = 30)
+	private String keyword;
+
 	//----- 매핑 관계 -----
 
 	@OneToMany(mappedBy = "fragrance", cascade = CascadeType.ALL)
@@ -108,11 +112,7 @@ public class Fragrance extends BaseEntity {
 	@OneToMany(mappedBy = "fragrance", cascade = CascadeType.ALL)
 	@Builder.Default
 	private List<FragranceLocation> fragranceLocationList = new ArrayList<>();
-
-	@OneToMany(mappedBy = "fragrance", cascade = CascadeType.ALL)
-	@Builder.Default
-	private List<FragranceKeyword> fragranceKeywordList = new ArrayList<>();
-
+	
 	@OneToMany(mappedBy = "fragrance", cascade = CascadeType.ALL)
 	@Builder.Default
 	private List<FragrancePrice> fragrancePriceList = new ArrayList<>();

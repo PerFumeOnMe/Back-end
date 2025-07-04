@@ -7,6 +7,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import PerfumeOnMe.spring.domain.base.BaseEntity;
+import PerfumeOnMe.spring.domain.enums.NoteType;
 import PerfumeOnMe.spring.domain.mapping.FragranceBaseNote;
 import PerfumeOnMe.spring.domain.mapping.FragranceMiddleNote;
 import PerfumeOnMe.spring.domain.mapping.FragranceTopNote;
@@ -43,9 +44,6 @@ public class Note extends BaseEntity {
 	private String name;
 
 	@Column(nullable = false)
-	private String description;
-
-	@Column(nullable = false)
 	private boolean top;
 
 	@Column(nullable = false)
@@ -69,4 +67,14 @@ public class Note extends BaseEntity {
 	@OneToMany(mappedBy = "note", cascade = CascadeType.ALL)
 	@Builder.Default
 	private List<UserNote> userNoteList = new ArrayList<>();
+
+	// 메서드
+	// Setter 를 안쓰기 위해 메서드로 top, middle, base 구분
+	public void activateType(NoteType type) {
+		switch (type) {
+			case TOP -> this.top = true;
+			case MIDDLE -> this.middle = true;
+			case BASE -> this.base = true;
+		}
+	}
 }
