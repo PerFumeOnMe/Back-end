@@ -21,6 +21,11 @@ public enum ErrorStatus implements BaseErrorCode {
 	LOGIN_ID_DUPLICATE(HttpStatus.BAD_REQUEST, "MEMBER4001", "이미 사용된 아이디입니다."),
 	PASSWORD_CONFIRM_FAIL(HttpStatus.BAD_REQUEST, "MEMBER4002", "비밀번호 확인을 실패했습니다."),
 
+	// 데이터시트 에러
+	UNSUPPORTED_BRAND(HttpStatus.BAD_REQUEST, "DATA4001", "지원하지 않는 브랜드입니다."),
+	UNSUPPORTED_TYPE(HttpStatus.BAD_REQUEST, "DATA4002", "지원하지 않는 향수타입입니다."),
+	PRICE_PARSING_ERROR(HttpStatus.BAD_REQUEST, "DATA4003", "가격 정보를 숫자로 변환할 수 없습니다."),
+
 	// 예시,,,
 	ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다.");
 
