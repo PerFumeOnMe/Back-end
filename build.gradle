@@ -66,6 +66,13 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     // Query Parameter Log
     implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
+    // Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.apache.commons:commons-pool2' // 커넥션 풀링
+    // OAuth
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    // Query Parameter Log
+    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
     //Apache POI
     implementation 'org.apache.poi:poi-ooxml:5.2.3'
 }
