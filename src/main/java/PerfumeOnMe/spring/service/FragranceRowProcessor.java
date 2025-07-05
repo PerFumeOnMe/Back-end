@@ -7,6 +7,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import PerfumeOnMe.spring.apiPayload.code.status.ErrorStatus;
+import PerfumeOnMe.spring.apiPayload.exception.GeneralException;
 import PerfumeOnMe.spring.domain.Fragrance;
 import PerfumeOnMe.spring.domain.Location;
 import PerfumeOnMe.spring.domain.Note;
@@ -30,9 +32,11 @@ import PerfumeOnMe.spring.repository.location.LocationRepository;
 import PerfumeOnMe.spring.repository.note.NoteRepository;
 import PerfumeOnMe.spring.repository.season.SeasonRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FragranceRowProcessor {
 
 	// 필요한 Repository 들 의존성 주입
@@ -56,7 +60,7 @@ public class FragranceRowProcessor {
 
 		// 이미 저장된 향수라면 중복 저장 방지
 		if (fragranceRepository.findByName(name).isPresent()) {
-			System.out.println("⚠️ 이미 존재하는 향수: " + name + " → 저장하지 않음");
+			log.info("⚠️이미 존재하는 향수: " + name + " → 저장하지 않음");
 			return;
 		}
 
@@ -206,7 +210,7 @@ public class FragranceRowProcessor {
 			case "LOIVIE" -> Brand.LOIVIE;
 			case "DIPTYQUE" -> Brand.DIPTYQUE;
 			case "JOMALONE" -> Brand.JOMALONE;
-			default -> throw new IllegalArgumentException("지원하지 않는 브랜드: " + brandStr);
+			default -> throw new GeneralException(ErrorStatus.UNSUPPORTED_BRAND);
 		};
 	}
 
@@ -232,7 +236,7 @@ public class FragranceRowProcessor {
 			case "오 드 뚜왈렛" -> FragranceType.EAU_DE_TOILETTE;
 			case "오 드 코롱" -> FragranceType.EAU_DE_COLOGNE;
 			case "샤워 코롱" -> FragranceType.SHOWER_COLOGNE;
-			default -> null;
+			default -> throw new GeneralException(ErrorStatus.UNSUPPORTED_TYPE);
 		};
 	}
 }

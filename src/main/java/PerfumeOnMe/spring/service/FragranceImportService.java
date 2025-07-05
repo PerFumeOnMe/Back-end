@@ -11,6 +11,8 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
+import PerfumeOnMe.spring.apiPayload.code.status.ErrorStatus;
+import PerfumeOnMe.spring.apiPayload.exception.GeneralException;
 import PerfumeOnMe.spring.domain.Price;
 import PerfumeOnMe.spring.domain.mapping.FragrancePrice;
 import PerfumeOnMe.spring.repository.fragrance.FragranceRepository;
@@ -18,6 +20,7 @@ import PerfumeOnMe.spring.repository.fragrancePrice.FragrancePriceRepository;
 import PerfumeOnMe.spring.repository.price.PriceRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 엑셀로부터 향수 정보를 불러와 DB에 저장하는 서비스 클래스
@@ -28,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FragranceImportService {
 
 	private final FragranceRepository fragranceRepository;
@@ -45,7 +49,7 @@ public class FragranceImportService {
 
 		Workbook workbook = WorkbookFactory.create(is); // 엑셀 Workbook 객체 생성
 		importAllFromWorkbook(workbook);
-		System.out.println("✅ 향수 엑셀 데이터 로드 완료!");
+		log.info("✅향수 엑셀 데이터 로드 완료!");
 	}
 
 	/**
@@ -83,12 +87,14 @@ public class FragranceImportService {
 
 			// 향수가 존재할 경우 가격 및 매핑 정보 저장
 			fragranceRepository.findById(perfumeId).ifPresent(fragrance -> {
-				Price savedPrice = priceRepository.save(
-					Price.builder()
-						.mlCount(mlCount)
-						.price(price)
-						.build()
-				);
+				// 동일한 ml, 가격이 이미 존재하는지 확인
+				Price savedPrice = priceRepository.findByMlCountAndPrice(mlCount, price)
+					.orElseGet(() -> priceRepository.save(
+						Price.builder()
+							.mlCount(mlCount)
+							.price(price)
+							.build()
+					));
 
 				fragrancePriceRepository.save(
 					FragrancePrice.builder()
@@ -98,7 +104,7 @@ public class FragranceImportService {
 				);
 			});
 		} catch (NumberFormatException e) {
-			System.out.println("⚠️ 가격 row 변환 실패: " + e.getMessage()); // 파싱 실패 로그
+			throw new GeneralException(ErrorStatus.PRICE_PARSING_ERROR); // 파싱 실패 로그
 		}
 	}
 
