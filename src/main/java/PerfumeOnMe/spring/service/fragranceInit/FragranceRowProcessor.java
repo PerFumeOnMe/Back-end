@@ -1,4 +1,4 @@
-package PerfumeOnMe.spring.service;
+package PerfumeOnMe.spring.service.fragranceInit;
 
 import java.util.Arrays;
 
