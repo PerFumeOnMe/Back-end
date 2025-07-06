@@ -95,13 +95,18 @@ public class FragranceImportService {
 							.price(price)
 							.build()
 					));
+				// 이미 연결된 fragrance + price 조합이 있는지 확인하고 없을 때만 매핑 저장
+				boolean alreadyMapped = fragrancePriceRepository
+					.existsByFragranceAndPrice(fragrance, savedPrice);
 
-				fragrancePriceRepository.save(
-					FragrancePrice.builder()
-						.fragrance(fragrance)
-						.price(savedPrice)
-						.build()
-				);
+				if (!alreadyMapped) {
+					fragrancePriceRepository.save(
+						FragrancePrice.builder()
+							.fragrance(fragrance)
+							.price(savedPrice)
+							.build()
+					);
+				}
 			});
 		} catch (NumberFormatException e) {
 			throw new GeneralException(ErrorStatus.PRICE_PARSING_ERROR); // 파싱 실패 로그
