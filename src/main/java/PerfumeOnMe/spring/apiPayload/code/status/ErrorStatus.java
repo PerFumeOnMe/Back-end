@@ -26,6 +26,9 @@ public enum ErrorStatus implements BaseErrorCode {
 	UNSUPPORTED_TYPE(HttpStatus.BAD_REQUEST, "DATA4002", "지원하지 않는 향수타입입니다."),
 	PRICE_PARSING_ERROR(HttpStatus.BAD_REQUEST, "DATA4003", "가격 정보를 숫자로 변환할 수 없습니다."),
 
+	// 향수 상세 페이지 에러
+	FRAGRANCE_NOT_FOUND(HttpStatus.BAD_REQUEST, "FRAGRANCE4001", "해당 ID에 해당하는 향수를 찾을 수 없습니다."),
+
 	// 예시,,,
 	ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다.");
 
