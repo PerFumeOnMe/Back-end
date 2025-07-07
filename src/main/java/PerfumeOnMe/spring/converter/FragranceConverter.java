@@ -1,14 +1,20 @@
 package PerfumeOnMe.spring.converter;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
 import PerfumeOnMe.spring.domain.Fragrance;
+import PerfumeOnMe.spring.domain.Location;
+import PerfumeOnMe.spring.domain.Note;
+import PerfumeOnMe.spring.domain.Season;
 import PerfumeOnMe.spring.domain.mapping.FragranceBaseNote;
+import PerfumeOnMe.spring.domain.mapping.FragranceLocation;
 import PerfumeOnMe.spring.domain.mapping.FragranceMiddleNote;
 import PerfumeOnMe.spring.domain.mapping.FragrancePrice;
+import PerfumeOnMe.spring.domain.mapping.FragranceSeason;
 import PerfumeOnMe.spring.domain.mapping.FragranceTopNote;
 import PerfumeOnMe.spring.web.dto.fragrance.FragranceResponseDTO;
 
@@ -38,10 +44,14 @@ public class FragranceConverter {
 				.build())
 			.gender(fragrance.getGender().getKoName())
 			.locations(fragrance.getFragranceLocationList().stream()
-				.map(fl -> fl.getLocation().getName())
+				.map(FragranceLocation::getLocation)
+				.filter(Objects::nonNull)
+				.map(Location::getName)
 				.collect(Collectors.toList()))
 			.seasons(fragrance.getFragranceSeasonList().stream()
-				.map(fs -> fs.getSeason().getName())
+				.map(FragranceSeason::getSeason)
+				.filter(Objects::nonNull)
+				.map(Season::getName)
 				.collect(Collectors.toList()))
 			.homePageUrl(fragrance.getHomePageURL())
 			.build();
@@ -51,9 +61,12 @@ public class FragranceConverter {
 	private List<FragranceResponseDTO.FragranceDetailResult.PriceDto> toPriceDtoList(
 		List<FragrancePrice> fragrancePrices) {
 		return fragrancePrices.stream()
-			.map(fp -> FragranceResponseDTO.FragranceDetailResult.PriceDto.builder()
-				.mlcount(fp.getPrice().getMlCount())
-				.price(fp.getPrice().getPrice())
+			.filter(Objects::nonNull)
+			.map(FragrancePrice::getPrice)
+			.filter(Objects::nonNull)
+			.map(price -> FragranceResponseDTO.FragranceDetailResult.PriceDto.builder()
+				.mlcount(price.getMlCount())
+				.price(price.getPrice())
 				.build())
 			.collect(Collectors.toList());
 	}
@@ -61,25 +74,31 @@ public class FragranceConverter {
 	// 탑 노트 추출
 	private List<String> extractTopNotes(List<? extends FragranceTopNote> fragranceNotes) {
 		return fragranceNotes.stream()
-			.map(noteMapping -> noteMapping.getNote().getName())
+			.map(FragranceTopNote::getNote)
+			.filter(Objects::nonNull)
+			.map(Note::getName)
 			.collect(Collectors.toList());
 	}
 
 	// 미들 노트 추출
 	private List<String> extractMiddleNotes(List<? extends FragranceMiddleNote> fragranceNotes) {
 		return fragranceNotes.stream()
-			.map(noteMapping -> noteMapping.getNote().getName())
+			.map(FragranceMiddleNote::getNote)
+			.filter(Objects::nonNull)
+			.map(Note::getName)
 			.collect(Collectors.toList());
 	}
 
 	// 베이스 노트 추출
 	private List<String> extractBaseNotes(List<? extends FragranceBaseNote> fragranceNotes) {
 		return fragranceNotes.stream()
-			.map(noteMapping -> noteMapping.getNote().getName())
+			.map(FragranceBaseNote::getNote)
+			.filter(Objects::nonNull)
+			.map(Note::getName)
 			.collect(Collectors.toList());
 	}
 
-	// 해당 노트, 노트 키워드, 노트 설명 저장.
+	// 해당 노트, 노트 키워드, 노트 설명 저장
 	private FragranceResponseDTO.FragranceDetailResult.NoteDto.NoteSection toNoteSection(String keyword,
 		String description, List<String> ingredients) {
 		return FragranceResponseDTO.FragranceDetailResult.NoteDto.NoteSection.builder()
@@ -89,6 +108,3 @@ public class FragranceConverter {
 			.build();
 	}
 }
-
-
-
