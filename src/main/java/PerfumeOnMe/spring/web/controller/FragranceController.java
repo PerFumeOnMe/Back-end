@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/fragrances")
-@Tag(name = "Fragrance", description = "향수 상세 조회 API")
+@Tag(name = "Fragrance", description = "향수 조회 API")
 public class FragranceController {
 
 	private final FragranceService fragranceService;
