@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import PerfumeOnMe.spring.domain.base.BaseEntity;
 import PerfumeOnMe.spring.domain.mapping.UserTerms;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -29,7 +30,7 @@ import lombok.NoArgsConstructor;
 @DynamicInsert
 @DynamicUpdate
 @Table(name = "terms")
-public class Terms {
+public class Terms extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
