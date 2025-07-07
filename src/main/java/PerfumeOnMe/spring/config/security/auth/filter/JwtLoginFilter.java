@@ -23,6 +23,7 @@ import PerfumeOnMe.spring.apiPayload.exception.GeneralException;
 import PerfumeOnMe.spring.config.security.auth.dto.AuthRequestDTO;
 import PerfumeOnMe.spring.config.security.auth.dto.AuthResponseDTO;
 import PerfumeOnMe.spring.config.security.auth.provider.JwtTokenProvider;
+import PerfumeOnMe.spring.config.security.auth.repository.RefreshTokenRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,6 +40,7 @@ Authentication을 SecurityContextHolder에 설정하는 클래스
 public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
 
 	private final JwtTokenProvider jwtTokenProvider;
+	private final RefreshTokenRepository refreshTokenRepository;
 
 	private final ObjectMapper mapper = new ObjectMapper();
 
@@ -69,12 +71,16 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
 		FilterChain chain, Authentication authResult) throws IOException, ServletException {
 
 		// 토큰 생성 및 DTO에 담기
+		String loginId = authResult.getName();
 		String accessToken = jwtTokenProvider.createAccessToken(authResult);
 		String refreshToken = jwtTokenProvider.createRefreshToken(authResult);
 		AuthResponseDTO.RefreshToken refreshTokenDTO = AuthResponseDTO
 			.RefreshToken.builder()
 			.refreshToken(refreshToken)
 			.build();
+
+		// 리프레시 토큰을 Redis에 저장
+		refreshTokenRepository.saveRefreshToken(loginId, refreshToken);
 
 		// 응답 헤더 작성
 		response.setCharacterEncoding("UTF-8");
