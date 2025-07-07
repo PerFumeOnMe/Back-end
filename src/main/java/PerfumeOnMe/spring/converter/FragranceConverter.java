@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.springframework.stereotype.Component;
-
 import PerfumeOnMe.spring.domain.Fragrance;
 import PerfumeOnMe.spring.domain.Location;
 import PerfumeOnMe.spring.domain.Note;
@@ -18,10 +16,9 @@ import PerfumeOnMe.spring.domain.mapping.FragranceSeason;
 import PerfumeOnMe.spring.domain.mapping.FragranceTopNote;
 import PerfumeOnMe.spring.web.dto.fragrance.FragranceResponseDTO;
 
-@Component
 public class FragranceConverter {
 
-	public FragranceResponseDTO.FragranceDetailResult toDetailDto(Fragrance fragrance) {
+	public static FragranceResponseDTO.FragranceDetailResult toDetailDto(Fragrance fragrance) {
 		return FragranceResponseDTO.FragranceDetailResult.builder()
 			.id(fragrance.getId())
 			.brand(fragrance.getBrand().getShowBrand())
@@ -58,7 +55,7 @@ public class FragranceConverter {
 	}
 
 	// ml 당 가격 추출
-	private List<FragranceResponseDTO.FragranceDetailResult.PriceDto> toPriceDtoList(
+	private static List<FragranceResponseDTO.FragranceDetailResult.PriceDto> toPriceDtoList(
 		List<FragrancePrice> fragrancePrices) {
 		return fragrancePrices.stream()
 			.filter(Objects::nonNull)
@@ -72,7 +69,7 @@ public class FragranceConverter {
 	}
 
 	// 탑 노트 추출
-	private List<String> extractTopNotes(List<? extends FragranceTopNote> fragranceNotes) {
+	private static List<String> extractTopNotes(List<? extends FragranceTopNote> fragranceNotes) {
 		return fragranceNotes.stream()
 			.map(FragranceTopNote::getNote)
 			.filter(Objects::nonNull)
@@ -81,7 +78,7 @@ public class FragranceConverter {
 	}
 
 	// 미들 노트 추출
-	private List<String> extractMiddleNotes(List<? extends FragranceMiddleNote> fragranceNotes) {
+	private static List<String> extractMiddleNotes(List<? extends FragranceMiddleNote> fragranceNotes) {
 		return fragranceNotes.stream()
 			.map(FragranceMiddleNote::getNote)
 			.filter(Objects::nonNull)
@@ -90,7 +87,7 @@ public class FragranceConverter {
 	}
 
 	// 베이스 노트 추출
-	private List<String> extractBaseNotes(List<? extends FragranceBaseNote> fragranceNotes) {
+	private static List<String> extractBaseNotes(List<? extends FragranceBaseNote> fragranceNotes) {
 		return fragranceNotes.stream()
 			.map(FragranceBaseNote::getNote)
 			.filter(Objects::nonNull)
@@ -99,7 +96,7 @@ public class FragranceConverter {
 	}
 
 	// 해당 노트, 노트 키워드, 노트 설명 저장
-	private FragranceResponseDTO.FragranceDetailResult.NoteDto.NoteSection toNoteSection(String keyword,
+	private static FragranceResponseDTO.FragranceDetailResult.NoteDto.NoteSection toNoteSection(String keyword,
 		String description, List<String> ingredients) {
 		return FragranceResponseDTO.FragranceDetailResult.NoteDto.NoteSection.builder()
 			.keywords(keyword)

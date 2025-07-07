@@ -17,13 +17,12 @@ import lombok.RequiredArgsConstructor;
 public class FragranceServiceImpl implements FragranceService {
 
 	private final FragranceRepository fragranceRepository;
-	private final FragranceConverter fragranceConverter;
 
 	@Override
 	public FragranceResponseDTO.FragranceDetailResult getFragranceDetail(Long fragranceId) {
 		Fragrance fragrance = fragranceRepository.findByIdWithAllDetails(fragranceId)
 			.orElseThrow(() -> new GeneralException(ErrorStatus.FRAGRANCE_NOT_FOUND));
-		return fragranceConverter.toDetailDto(fragrance);
+		return FragranceConverter.toDetailDto(fragrance);
 	}
 
 }
