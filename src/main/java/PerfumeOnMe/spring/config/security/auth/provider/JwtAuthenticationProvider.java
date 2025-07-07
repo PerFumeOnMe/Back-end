@@ -24,7 +24,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
 		UserDetails userDetails = userDetailsService.loadUserByUsername(loginId);
 
-		return new JwtAuthenticationToken(userDetails);
+		return new JwtAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 	}
 
 	@Override

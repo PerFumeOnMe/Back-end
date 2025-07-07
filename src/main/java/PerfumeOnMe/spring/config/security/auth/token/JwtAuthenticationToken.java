@@ -1,6 +1,9 @@
 package PerfumeOnMe.spring.config.security.auth.token;
 
+import java.util.Collection;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.Getter;
@@ -15,14 +18,14 @@ public class JwtAuthenticationToken extends UsernamePasswordAuthenticationToken 
 		super(principal, credentials);
 		this.principal = principal;
 		this.credentials = credentials;
-		setAuthenticated(false);
 	}
 
-	public JwtAuthenticationToken(UserDetails userDetails) {
-		super(userDetails, null);
+	// GrantedAuthority를 포함한 생성자를 만들어야 신뢰할 수 있는, 인증된 토큰이 됨
+	public JwtAuthenticationToken(UserDetails userDetails, Object o,
+		Collection<? extends GrantedAuthority> authorities) {
+		super(userDetails, null, authorities);
 		this.principal = userDetails;
 		this.credentials = null;
-		setAuthenticated(true);
 	}
 
 	@Override
