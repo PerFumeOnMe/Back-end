@@ -37,7 +37,6 @@ public class UserController {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON201", description = "리소스를 성공적으로 생성했습니다.",
 				content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDTO.SignupResult.class))),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4001", description = "이미 사용된 아이디입니다."),
-			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4002", description = "비밀번호 확인을 실패했습니다."),
 		}
 	)
 	public ResponseEntity<ApiResponse<UserResponseDTO.SignupResult>> signup(

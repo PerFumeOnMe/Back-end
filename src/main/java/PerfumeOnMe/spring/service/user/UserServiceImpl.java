@@ -31,19 +31,13 @@ public class UserServiceImpl implements UserService {
 		String name = request.getName();
 		String loginId = request.getLoginId();
 		String password = request.getPassword();
-		String passwordConfirm = request.getPasswordConfirm();
 
 		/*
-		비즈니스 로직 검증
-		1. loginId 중복 확인
-		2. password와 passwordConfirm 일치 여부 확인
+		비즈니스 로직 검증 - loginId 중복 확인
 		 */
 		Optional<User> findUser = userRepository.findUserByLoginId(loginId);
 		if (findUser.isPresent()) {
 			throw new GeneralException(ErrorStatus.LOGIN_ID_DUPLICATE);
-		}
-		if (!password.equals(passwordConfirm)) {
-			throw new GeneralException(ErrorStatus.PASSWORD_CONFIRM_FAIL);
 		}
 
 		// 사용자 정보 엔티티 변환 및 DB 저장
