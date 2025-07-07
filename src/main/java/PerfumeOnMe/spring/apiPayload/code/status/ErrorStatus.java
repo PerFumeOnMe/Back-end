@@ -19,7 +19,20 @@ public enum ErrorStatus implements BaseErrorCode {
 
 	// 사용자 에러
 	LOGIN_ID_DUPLICATE(HttpStatus.BAD_REQUEST, "MEMBER4001", "이미 사용된 아이디입니다."),
-	PASSWORD_CONFIRM_FAIL(HttpStatus.BAD_REQUEST, "MEMBER4002", "비밀번호 확인을 실패했습니다."),
+	PASSWORD_NOT_MATCH(HttpStatus.BAD_REQUEST, "MEMBER4002", "비밀번호가 일치하지 않습니다."),
+	LOGIN_ID_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4003", "해당 아이디를 가진 사용자가 존재하지 않습니다."),
+	LOGIN_PARSING_FAIL(HttpStatus.BAD_REQUEST, "MEMBER4004", "로그인 DTO 변환을 실패했습니다."),
+	LOGIN_UNKNOWN_ERROR(HttpStatus.BAD_REQUEST, "MEMBER4005", "로그인 중 알 수 없는 오류가 발생했습니다."),
+
+	// 토큰 에러
+	INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN4001", "유효하지 않은 토큰입니다."),
+	REFRESH_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "TOKEN4002", "해당 리프레시 토큰이 존재하지 않습니다."),
+	EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN4003", "만료된 토큰입니다."),
+	LOGOUT_ACCESS_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "TOKEN4004", "로그아웃한 액세스 토큰이 존재하지 않습니다."),
+	MALFORMED_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN4005", "토큰 구조가 잘못됐습니다."),
+	UNSUPPORTED_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN4006", "지원하지 않는 토큰 형식입니다."),
+	INVALID_SIGNATURE(HttpStatus.UNAUTHORIZED, "TOKEN4007", "토큰의 서명이 잘못됐습니다."),
+	TOKEN_NOT_FOUND(HttpStatus.BAD_REQUEST, "TOKEN4008", "토큰이 없습니다."),
 
 	// 데이터시트 에러
 	UNSUPPORTED_BRAND(HttpStatus.BAD_REQUEST, "DATA4001", "지원하지 않는 브랜드입니다."),
