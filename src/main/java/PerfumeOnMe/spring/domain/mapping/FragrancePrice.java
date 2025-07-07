@@ -5,6 +5,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import PerfumeOnMe.spring.domain.Fragrance;
 import PerfumeOnMe.spring.domain.Price;
+import PerfumeOnMe.spring.domain.base.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -27,7 +28,7 @@ import lombok.NoArgsConstructor;
 @DynamicInsert
 @DynamicUpdate
 @Table(name = "fragrance_prices")
-public class FragrancePrice {
+public class FragrancePrice extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
