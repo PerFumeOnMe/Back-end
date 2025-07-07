@@ -20,3 +20,21 @@ spring:
         use_sql_comments: true
         default_batch_fetch_size: 1000
     show-sql: true
+  data:
+    redis:
+      host: # AWS Redis
+      port: 6379
+    cache:
+      type: redis
+  jwt:
+    token:
+      secretKey: # secret key
+      expiration:
+        access: 7200000 # 2시간
+        refresh: 1209600000 # 2주
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
