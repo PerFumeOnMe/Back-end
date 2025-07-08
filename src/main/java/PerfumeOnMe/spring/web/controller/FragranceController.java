@@ -4,20 +4,22 @@ import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import PerfumeOnMe.spring.apiPayload.ApiResponse;
-import PerfumeOnMe.spring.apiPayload.code.status.ErrorStatus;
-import PerfumeOnMe.spring.apiPayload.exception.GeneralException;
 import PerfumeOnMe.spring.service.fragrance.FragranceService;
+import PerfumeOnMe.spring.web.dto.fragrance.FragranceRequestDTO;
 import PerfumeOnMe.spring.web.dto.fragrance.FragranceResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -38,6 +40,9 @@ public class FragranceController {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "FRAGRANCE4001", description = "해당 ID에 해당하는 향수를 찾을 수 없습니다.")
 		}
 	)
+	@Parameters({
+		@Parameter(name = "fragranceId", description = "향수 ID"),
+	})
 	public ResponseEntity<ApiResponse<FragranceResponseDTO.FragranceDetailResult>> getFragranceDetail(
 		@PathVariable("fragranceId") Long fragranceId) {
 		FragranceResponseDTO.FragranceDetailResult result = fragranceService.getFragranceDetail(fragranceId);
@@ -54,18 +59,17 @@ public class FragranceController {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "FRAGRANCE4002", description = "검색어를 2글자 이상 입력해주세요.")
 		}
 	)
+	@Parameters({
+		@Parameter(name = "keyword", description = "검색어"),
+		@Parameter(name = "page", description = "페이지 번호"),
+		@Parameter(name = "size", description = "한 페이지에 불러올 향수 개수")
+	})
 	public ResponseEntity<ApiResponse<Map<String, Object>>> searchFragrances(
-		@RequestParam String keyword, // 검색어
-		@RequestParam int page, // 페이지 번호
-		@RequestParam(defaultValue = "12") int size // 한 페이지에 불러올 향수 수 (default = 12)
+		@Valid @ModelAttribute FragranceRequestDTO.FragranceSearchRequest request
 	) {
-		// 검색어가 공백이거나 2글자 미만이면 KEYWORD_TOO_SHORT 발생
-		if (keyword == null || keyword.trim().length() < 2) {
-			throw new GeneralException(ErrorStatus.KEYWORD_TOO_SHORT);
-		}
-
 		// result 안에 fragranceList 와 hasNext 를 키로 갖는 구조
-		Map<String, Object> result = fragranceService.searchFragrances(keyword, page, size);
+		Map<String, Object> result = fragranceService.searchFragrances(request.getKeyword(), request.getPage(),
+			request.getSize());
 		return ResponseEntity.ok(ApiResponse.onSuccess(result));
 	}
 }
