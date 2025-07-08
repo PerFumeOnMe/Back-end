@@ -12,5 +12,7 @@ public interface UserService {
 
 	AuthResponseDTO.RefreshToken reissue(String refreshToken, HttpServletResponse response);
 
-	void logout(HttpServletRequest request);
+	String logout(HttpServletRequest request);
+
+	void deleteUser(HttpServletRequest request);
 }

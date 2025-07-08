@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
 
 	// 사용자 로그아웃 - 액세스 토큰과 리프레시 토큰 블랙리스트화
 	@Override
-	public void logout(HttpServletRequest request) {
+	public String logout(HttpServletRequest request) {
 
 		// 요청에서 액세스 토큰 추출 및 유효성 검증
 		String accessToken = jwtTokenProvider.resolveToken(request);
@@ -110,5 +110,15 @@ public class UserServiceImpl implements UserService {
 		if (refreshTokenManager.findRefreshToken(loginId)) {
 			refreshTokenManager.deleteRefreshToken(loginId);
 		}
+
+		return loginId;
+	}
+
+	// 회원탈퇴 - 로그아웃 진행 후 사용자 삭제
+	@Override
+	public void deleteUser(HttpServletRequest request) {
+		String loginId = logout(request);
+		Optional<User> findUser = userRepository.findUserByLoginId(loginId);
+		findUser.ifPresent(userRepository::delete);
 	}
 }

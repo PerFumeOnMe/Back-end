@@ -2,6 +2,7 @@ package PerfumeOnMe.spring.web.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -76,6 +77,20 @@ public class UserController {
 	)
 	public ResponseEntity<ApiResponse<Object>> logout(HttpServletRequest request) {
 		userService.logout(request);
+		return ResponseEntity.ok().body(ApiResponse.onSuccess(null));
+	}
+
+	@DeleteMapping("/me")
+	@Operation(
+		summary = "회원탈퇴 API",
+		description = "사용자의 액세스 토큰과 리프레시 토큰을 블랙리스트화하고, 사용자를 삭제하는 API입니다.",
+		responses = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "성공입니다."),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4003", description = "해당 아이디를 가진 사용자가 존재하지 않습니다."),
+		}
+	)
+	public ResponseEntity<ApiResponse<Object>> deleteUser(HttpServletRequest request) {
+		userService.deleteUser(request);
 		return ResponseEntity.ok().body(ApiResponse.onSuccess(null));
 	}
 }
