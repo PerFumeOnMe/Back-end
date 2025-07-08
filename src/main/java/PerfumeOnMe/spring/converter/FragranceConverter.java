@@ -1,5 +1,6 @@
 package PerfumeOnMe.spring.converter;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -18,6 +19,9 @@ import PerfumeOnMe.spring.web.dto.fragrance.FragranceResponseDTO;
 
 public class FragranceConverter {
 
+	/**
+	 * 향수 상세 페이지 조회 API
+	 */
 	public static FragranceResponseDTO.FragranceDetailResult toDetailDto(Fragrance fragrance) {
 		return FragranceResponseDTO.FragranceDetailResult.builder()
 			.id(fragrance.getId())
@@ -104,4 +108,31 @@ public class FragranceConverter {
 			.ingredients(ingredients)
 			.build();
 	}
+
+	/**
+	 * 향수 검색 API
+	 */
+	public static FragranceResponseDTO.FragranceSearchResult toSearchResultDto(Fragrance fragrance) {
+		Integer minPrice = fragrance.getFragrancePriceList().stream()
+			.map(fp -> fp.getPrice().getPrice())
+			.min(Comparator.naturalOrder()) // 각 향수의 최저가
+			.orElse(null);
+
+		return FragranceResponseDTO.FragranceSearchResult.builder()
+			.id(fragrance.getId())
+			.brand(fragrance.getBrand().getShowBrand())
+			.name(fragrance.getName())
+			.minPrice(minPrice)
+			.imageUrl(fragrance.getImageURL())
+			.build();
+	}
+
+	// toSearchResultDto 로 얻은 향수들의 리스트
+	public static List<FragranceResponseDTO.FragranceSearchResult> toSearchResultDtoList(
+		List<Fragrance> fragranceList) {
+		return fragranceList.stream()
+			.map(FragranceConverter::toSearchResultDto)
+			.collect(Collectors.toList());
+	}
+
 }
