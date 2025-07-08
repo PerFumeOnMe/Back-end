@@ -29,9 +29,6 @@ public enum ErrorStatus implements BaseErrorCode {
 	// 향수 상세 페이지 에러
 	FRAGRANCE_NOT_FOUND(HttpStatus.BAD_REQUEST, "FRAGRANCE4001", "해당 ID에 해당하는 향수를 찾을 수 없습니다."),
 
-	// 향수 검색 에러
-	KEYWORD_TOO_SHORT(HttpStatus.BAD_REQUEST, "FRAGRANCE4002", "검색어가 두 글자 이상이어야 합니다."),
-
 	// 예시,,,
 	ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다.");
 
