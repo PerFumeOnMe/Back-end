@@ -10,5 +10,5 @@ import PerfumeOnMe.spring.domain.Fragrance;
 public interface FragranceRepositoryCustom {
 	Optional<Fragrance> findByIdWithAllDetails(Long id);
 
-	Page<Fragrance> findByKeyword(String keyword, Pageable pageable);
+	Page<Fragrance> findBySearchKeyword(String keyword, Pageable pageable);
 }

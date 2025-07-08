@@ -36,7 +36,7 @@ public class FragranceServiceImpl implements FragranceService {
 	@Override
 	public Map<String, Object> searchFragrances(String keyword, int page, int size) {
 		PageRequest pageable = PageRequest.of(page, size);
-		Page<Fragrance> fragrancePage = fragranceRepository.findByKeyword(keyword, pageable);
+		Page<Fragrance> fragrancePage = fragranceRepository.findBySearchKeyword(keyword, pageable);
 
 		List<FragranceResponseDTO.FragranceSearchResult> dtoList = FragranceConverter.toSearchResultDtoList(
 			fragrancePage.getContent());

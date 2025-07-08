@@ -40,7 +40,7 @@ public class FragranceRepositoryImpl implements FragranceRepositoryCustom {
 	}
 
 	@Override
-	public Page<Fragrance> findByKeyword(String keyword, Pageable pageable) {
+	public Page<Fragrance> findBySearchKeyword(String keyword, Pageable pageable) {
 		QFragrance fragrance = QFragrance.fragrance;
 
 		// 실제 결과 데이터 조회
