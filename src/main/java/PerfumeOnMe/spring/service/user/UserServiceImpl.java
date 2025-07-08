@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import PerfumeOnMe.spring.apiPayload.code.status.ErrorStatus;
 import PerfumeOnMe.spring.apiPayload.exception.GeneralException;
 import PerfumeOnMe.spring.config.security.auth.dto.AuthResponseDTO;
+import PerfumeOnMe.spring.config.security.auth.manager.LogoutAccessTokenManager;
 import PerfumeOnMe.spring.config.security.auth.manager.RefreshTokenManager;
 import PerfumeOnMe.spring.config.security.auth.provider.JwtTokenProvider;
 import PerfumeOnMe.spring.config.security.auth.token.JwtAuthenticationToken;
@@ -19,6 +20,7 @@ import PerfumeOnMe.spring.domain.User;
 import PerfumeOnMe.spring.repository.user.UserRepository;
 import PerfumeOnMe.spring.web.dto.user.UserRequestDTO;
 import PerfumeOnMe.spring.web.dto.user.UserResponseDTO;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
@@ -31,6 +33,7 @@ public class UserServiceImpl implements UserService {
 	private final PasswordEncoder passwordEncoder;
 	private final JwtTokenProvider jwtTokenProvider;
 	private final RefreshTokenManager refreshTokenManager;
+	private final LogoutAccessTokenManager logoutAccessTokenManager;
 	private final UserDetailsService userDetailsService;
 
 	// 사용자 회원가입
@@ -86,5 +89,26 @@ public class UserServiceImpl implements UserService {
 		response.setHeader("Authorization", "Bearer " + accessToken);
 
 		return refreshTokenDTO;
+	}
+
+	// 사용자 로그아웃 - 액세스 토큰과 리프레시 토큰 블랙리스트화
+	@Override
+	public void logout(HttpServletRequest request) {
+
+		// 요청에서 액세스 토큰 추출 및 유효성 검증
+		String accessToken = jwtTokenProvider.resolveToken(request);
+		jwtTokenProvider.validateToken(accessToken);
+
+		// 토큰에서 loginId 추출 및 사용자 검증
+		String loginId = jwtTokenProvider.getSubject(accessToken);
+		userDetailsService.loadUserByUsername(loginId);
+
+		// 액세스 토큰 블랙리스트화
+		logoutAccessTokenManager.saveLogoutAccessToken(loginId, accessToken);
+
+		// 리프레시 토큰 삭제
+		if (refreshTokenManager.findRefreshToken(loginId)) {
+			refreshTokenManager.deleteRefreshToken(loginId);
+		}
 	}
 }

@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -55,16 +56,30 @@ public class UserController {
 		description = "헤더에 입력한 Refresh-Token으로 새로운 액세스 토큰과 리프레시 토큰을 발급하는 API입니다.",
 		responses = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "성공입니다."),
-			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "", description = "")
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4003", description = "해당 아이디를 가진 사용자가 존재하지 않습니다."),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "TOKEN4002", description = "해당 리프레시 토큰이 존재하지 않습니다.")
 		},
 		parameters = {
 			@Parameter(name = "refreshToken", description = "Refresh-Token 헤더에 리프레시 토큰을 입력해 주세요.")
 		}
 	)
 	public ResponseEntity<ApiResponse<AuthResponseDTO.RefreshToken>> reissue(
-		@RequestHeader(name = "Refresh-Token") String refreshToken,
-		HttpServletResponse response) {
+		@RequestHeader(name = "Refresh-Token") String refreshToken, HttpServletResponse response) {
 		AuthResponseDTO.RefreshToken result = userService.reissue(refreshToken, response);
 		return ResponseEntity.ok().body(ApiResponse.onSuccess(result));
+	}
+
+	@PostMapping("/logout")
+	@Operation(
+		summary = "로그아웃 API",
+		description = "사용자의 액세스 토큰과 리프레시 토큰을 블랙리스트화하는 API입니다.",
+		responses = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "성공입니다."),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4003", description = "해당 아이디를 가진 사용자가 존재하지 않습니다."),
+		}
+	)
+	public ResponseEntity<ApiResponse<Object>> logout(HttpServletRequest request) {
+		userService.logout(request);
+		return ResponseEntity.ok().body(ApiResponse.onSuccess(null));
 	}
 }
