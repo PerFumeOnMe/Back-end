@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 public class FragranceResponseDTO {
 
-	// 향수 상세 페이지 응답 결과
+	// 향수 상세 DTO
 	@Getter
 	@Builder
 	@AllArgsConstructor
@@ -67,6 +67,19 @@ public class FragranceResponseDTO {
 			private String diffusionPower;
 		}
 	}
+
+	// 향수 검색 DTO
+	@Getter
+	@Builder
+	@AllArgsConstructor
+	public static class FragranceSearchResult {
+		private Long id;
+		private String brand;
+		private String name;
+		private Integer minPrice;
+		private String imageUrl;
+	}
+
 }
 
 
