@@ -72,6 +72,7 @@ public class FragranceResponseDTO {
 	@Getter
 	@Builder
 	@AllArgsConstructor
+	@NoArgsConstructor
 	public static class FragranceSearchResult {
 		private Long id;
 		private String brand;
