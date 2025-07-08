@@ -32,12 +32,5 @@ public class UserRequestDTO {
 			message = "비밀번호는 영어 대소문자, 숫자, 특수문자(@$!%*?&#)만 허용되며, 공백 없이 8자 이상 20자 이하로 입력해주세요."
 		)
 		private String password;
-		@NotBlank
-		@Schema(description = "사용자가 입력한 비밀번호 확인", example = "asdf1234")
-		@Pattern(
-			regexp = "^[A-Za-z\\d@$!%*?&#]{8,20}$",
-			message = "비밀번호는 영어 대소문자, 숫자, 특수문자(@$!%*?&#)만 허용되며, 공백 없이 8자 이상 20자 이하로 입력해주세요."
-		)
-		private String passwordConfirm;
 	}
 }
