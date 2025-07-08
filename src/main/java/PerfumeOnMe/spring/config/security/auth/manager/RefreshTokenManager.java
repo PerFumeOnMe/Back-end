@@ -1,16 +1,19 @@
-package PerfumeOnMe.spring.config.security.auth.repository;
+package PerfumeOnMe.spring.config.security.auth.manager;
 
 import java.time.Duration;
 
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import PerfumeOnMe.spring.config.security.auth.provider.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 
-@Repository
+/*
+리프레시 토큰을 Redis에 저장, 수정, 삭제를 담당하는 클래스
+ */
+@Component
 @RequiredArgsConstructor
-public class RefreshTokenRepository {
+public class RefreshTokenManager {
 
 	private static final String REFRESH_TOKEN_PREFIX = "RT:";
 	private final StringRedisTemplate stringRedisTemplate;

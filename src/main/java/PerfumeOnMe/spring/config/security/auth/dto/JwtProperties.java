@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 import lombok.Getter;
 import lombok.Setter;
 
+/*
+application.yml에 설정해둔 값을 담아오기 위한 DTO
+ */
 @Component
 @Getter
 @Setter

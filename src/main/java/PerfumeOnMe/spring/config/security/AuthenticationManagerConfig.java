@@ -12,6 +12,9 @@ import PerfumeOnMe.spring.config.security.auth.provider.CustomLoginAuthenticatio
 import PerfumeOnMe.spring.config.security.auth.provider.JwtAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 
+/*
+SecurityConfig와의 빈 순환 참조를 방지하기 위해 클래스 분리
+ */
 @Configuration
 @RequiredArgsConstructor
 public class AuthenticationManagerConfig {

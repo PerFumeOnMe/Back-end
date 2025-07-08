@@ -5,6 +5,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+/*
+SecurityConfig와의 빈 순환 참조를 방지하기 위해 클래스 분리
+ */
 @Configuration
 public class PasswordEncoderConfig {
 

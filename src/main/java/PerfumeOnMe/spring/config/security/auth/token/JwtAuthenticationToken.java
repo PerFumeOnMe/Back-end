@@ -8,6 +8,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.Getter;
 
+/*
+JWT 인증용 AuthenticationToken
+ */
 @Getter
 public class JwtAuthenticationToken extends UsernamePasswordAuthenticationToken {
 

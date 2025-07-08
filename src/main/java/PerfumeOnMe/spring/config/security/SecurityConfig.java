@@ -26,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+	// 인증 여부를 확인하지 않을 경로 지정
 	public static final String[] AUTH_WHITELIST = {
 		"/v3/api-docs/**", "/swagger-resources/**", "/swagger-ui.html", "/swagger-ui/**",
 		"/swagger/**", "/users/signup", "/auth/login", "/auth/social/kakao", "/users/reissue"

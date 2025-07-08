@@ -12,6 +12,10 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 
+/*
+로그인 시 사용되는 AuthenticationProvider
+요청에서 아이디와 비밀번호를 추출해 검증하고, 성공하면 Authentication 반환
+ */
 @Component
 @RequiredArgsConstructor
 public class CustomLoginAuthenticationProvider implements AuthenticationProvider {

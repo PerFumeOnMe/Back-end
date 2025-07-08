@@ -22,8 +22,8 @@ import PerfumeOnMe.spring.apiPayload.code.status.ErrorStatus;
 import PerfumeOnMe.spring.apiPayload.exception.GeneralException;
 import PerfumeOnMe.spring.config.security.auth.dto.AuthRequestDTO;
 import PerfumeOnMe.spring.config.security.auth.dto.AuthResponseDTO;
+import PerfumeOnMe.spring.config.security.auth.manager.RefreshTokenManager;
 import PerfumeOnMe.spring.config.security.auth.provider.JwtTokenProvider;
-import PerfumeOnMe.spring.config.security.auth.repository.RefreshTokenRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,15 +32,15 @@ import lombok.RequiredArgsConstructor;
 
 /*
 /auth/login 경로로 요청이 들어오면,
-로그인 검증과 토큰 발급을 진행하고
-Authentication을 SecurityContextHolder에 설정하는 클래스
+로그인 검증과 토큰 발급을 진행하고 Authentication을 SecurityContextHolder에 설정하는 클래스
+성공 및 실패에 따른 핸들러도 구현
  */
 @Component
 @RequiredArgsConstructor
 public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
 
 	private final JwtTokenProvider jwtTokenProvider;
-	private final RefreshTokenRepository refreshTokenRepository;
+	private final RefreshTokenManager refreshTokenManager;
 
 	private final ObjectMapper mapper = new ObjectMapper();
 
@@ -80,7 +80,7 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
 			.build();
 
 		// 리프레시 토큰을 Redis에 저장
-		refreshTokenRepository.saveRefreshToken(loginId, refreshToken);
+		refreshTokenManager.saveRefreshToken(loginId, refreshToken);
 
 		// 응답 헤더 작성
 		response.setCharacterEncoding("UTF-8");

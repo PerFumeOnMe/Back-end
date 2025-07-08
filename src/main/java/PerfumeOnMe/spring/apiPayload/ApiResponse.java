@@ -43,6 +43,7 @@ public class ApiResponse<T> {
 		return new ApiResponse<>(false, code, message, data);
 	}
 
+	// Security Filter 레벨에서 사용하는 ErrorResponse 생성 메서드
 	public static void setErrorResponse(HttpServletResponse response,
 		ErrorStatus code, Throwable e) throws IOException {
 
@@ -53,7 +54,7 @@ public class ApiResponse<T> {
 
 		// 응답 데이터 생성 및 작성
 		ApiResponse<String> res = ApiResponse
-			.onFailure(code.getCode(), code.getMessage(), null); // ???로 찍히는 에러 발생 중
+			.onFailure(code.getCode(), code.getMessage(), null);
 		response.getWriter().write(mapper.writeValueAsString(res));
 	}
 }

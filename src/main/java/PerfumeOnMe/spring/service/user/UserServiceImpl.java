@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import PerfumeOnMe.spring.apiPayload.code.status.ErrorStatus;
 import PerfumeOnMe.spring.apiPayload.exception.GeneralException;
 import PerfumeOnMe.spring.config.security.auth.dto.AuthResponseDTO;
+import PerfumeOnMe.spring.config.security.auth.manager.RefreshTokenManager;
 import PerfumeOnMe.spring.config.security.auth.provider.JwtTokenProvider;
-import PerfumeOnMe.spring.config.security.auth.repository.RefreshTokenRepository;
 import PerfumeOnMe.spring.config.security.auth.token.JwtAuthenticationToken;
 import PerfumeOnMe.spring.converter.UserConverter;
 import PerfumeOnMe.spring.domain.User;
@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtTokenProvider jwtTokenProvider;
-	private final RefreshTokenRepository refreshTokenRepository;
+	private final RefreshTokenManager refreshTokenManager;
 	private final UserDetailsService userDetailsService;
 
 	// 사용자 회원가입
@@ -59,6 +59,7 @@ public class UserServiceImpl implements UserService {
 		return UserConverter.toSignupResult(newUser);
 	}
 
+	// 리프레시 토큰으로 액세스 토큰과 리프레시 토큰 재발급
 	@Override
 	public AuthResponseDTO.RefreshToken reissue(String reqRefreshToken, HttpServletResponse response) {
 
@@ -76,7 +77,7 @@ public class UserServiceImpl implements UserService {
 			.build();
 
 		// 새로 발급한 리프레시 토큰을 Redis에 저장 - 덮어씌우기
-		refreshTokenRepository.saveRefreshToken(loginId, refreshToken);
+		refreshTokenManager.saveRefreshToken(loginId, refreshToken);
 
 		// 응답 헤더 작성
 		response.setCharacterEncoding("UTF-8");
