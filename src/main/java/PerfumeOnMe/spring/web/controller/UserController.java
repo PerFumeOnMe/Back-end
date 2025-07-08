@@ -15,7 +15,6 @@ import PerfumeOnMe.spring.service.user.UserService;
 import PerfumeOnMe.spring.web.dto.user.UserRequestDTO;
 import PerfumeOnMe.spring.web.dto.user.UserResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -58,9 +57,6 @@ public class UserController {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "성공입니다."),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4003", description = "해당 아이디를 가진 사용자가 존재하지 않습니다."),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "TOKEN4002", description = "해당 리프레시 토큰이 존재하지 않습니다.")
-		},
-		parameters = {
-			@Parameter(name = "refreshToken", description = "Refresh-Token 헤더에 리프레시 토큰을 입력해 주세요.")
 		}
 	)
 	public ResponseEntity<ApiResponse<AuthResponseDTO.RefreshToken>> reissue(
