@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 public class FragranceResponseDTO {
 
-	// 향수 상세 DTO
+	// 향수 상세 응답 DTO
 	@Getter
 	@Builder
 	@AllArgsConstructor
@@ -68,7 +68,7 @@ public class FragranceResponseDTO {
 		}
 	}
 
-	// 향수 검색 DTO
+	// 향수 검색 응답 DTO
 	@Getter
 	@Builder
 	@AllArgsConstructor

@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class FragranceRequestDTO {
+
+	// 향수 검색 응답 DTO
 	@Getter
 	@Setter
 	public static class FragranceSearchRequest {
@@ -18,6 +20,6 @@ public class FragranceRequestDTO {
 		private int page;
 
 		@ValidSize
-		private Integer size;
+		private int size;
 	}
 }
