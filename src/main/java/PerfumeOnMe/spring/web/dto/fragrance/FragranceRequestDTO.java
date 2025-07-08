@@ -1,6 +1,8 @@
 package PerfumeOnMe.spring.web.dto.fragrance;
 
 import PerfumeOnMe.spring.validation.annotation.ValidKeyword;
+import PerfumeOnMe.spring.validation.annotation.ValidPage;
+import PerfumeOnMe.spring.validation.annotation.ValidSize;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,8 +14,10 @@ public class FragranceRequestDTO {
 		@ValidKeyword
 		private String keyword;
 
+		@ValidPage
 		private int page;
 
-		private Integer size = 12; // default
+		@ValidSize
+		private Integer size;
 	}
 }
