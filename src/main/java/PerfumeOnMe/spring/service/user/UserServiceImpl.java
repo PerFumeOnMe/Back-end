@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
 
 	// 리프레시 토큰으로 액세스 토큰과 리프레시 토큰 재발급
 	@Override
-	public AuthResponseDTO.RefreshToken reissue(String reqRefreshToken, HttpServletResponse response) {
+	public AuthResponseDTO.LoginResult reissue(String reqRefreshToken, HttpServletResponse response) {
 
 		// 리프레시 토큰에서 Subject 추출
 		String loginId = jwtTokenProvider.getSubject(reqRefreshToken);
@@ -74,8 +74,7 @@ public class UserServiceImpl implements UserService {
 		JwtAuthenticationToken request = new JwtAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 		String accessToken = jwtTokenProvider.createAccessToken(request);
 		String refreshToken = jwtTokenProvider.createRefreshToken(request);
-		AuthResponseDTO.RefreshToken refreshTokenDTO = AuthResponseDTO
-			.RefreshToken.builder()
+		AuthResponseDTO.LoginResult loginResultDTO = AuthResponseDTO.LoginResult.builder()
 			.refreshToken(refreshToken)
 			.build();
 
@@ -88,7 +87,7 @@ public class UserServiceImpl implements UserService {
 		response.setStatus(HttpServletResponse.SC_OK);
 		response.setHeader("Authorization", "Bearer " + accessToken);
 
-		return refreshTokenDTO;
+		return loginResultDTO;
 	}
 
 	// 사용자 로그아웃 - 액세스 토큰과 리프레시 토큰 블랙리스트화
