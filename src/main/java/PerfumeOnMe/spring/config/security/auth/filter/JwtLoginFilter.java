@@ -25,6 +25,7 @@ import PerfumeOnMe.spring.config.security.auth.dto.AuthResponseDTO;
 import PerfumeOnMe.spring.config.security.auth.manager.LogoutAccessTokenManager;
 import PerfumeOnMe.spring.config.security.auth.manager.RefreshTokenManager;
 import PerfumeOnMe.spring.config.security.auth.provider.JwtTokenProvider;
+import PerfumeOnMe.spring.config.security.auth.userDetails.CustomUserDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -74,6 +75,7 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
 
 		// Authentication에서 principal String 추출
 		String loginId = authResult.getName();
+		Long userId = ((CustomUserDetails)authResult.getPrincipal()).getUserId();
 
 		// 사용자의 로그아웃 액세스 토큰이 존재하는 경우 삭제
 		if (logoutAccessTokenManager.findLogoutAccessToken(loginId)) {
@@ -83,9 +85,9 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
 		// 토큰 생성 및 DTO에 담기
 		String accessToken = jwtTokenProvider.createAccessToken(authResult);
 		String refreshToken = jwtTokenProvider.createRefreshToken(authResult);
-		AuthResponseDTO.RefreshToken refreshTokenDTO = AuthResponseDTO
-			.RefreshToken.builder()
+		AuthResponseDTO.LoginResult loginResultDTO = AuthResponseDTO.LoginResult.builder()
 			.refreshToken(refreshToken)
+			.userId(userId)
 			.build();
 
 		// 리프레시 토큰을 Redis에 저장
@@ -98,7 +100,7 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
 		response.setHeader("Authorization", "Bearer " + accessToken);
 
 		// 응답 데이터 생성 및 작성
-		ApiResponse<AuthResponseDTO.RefreshToken> res = ApiResponse.onSuccess(refreshTokenDTO);
+		ApiResponse<AuthResponseDTO.LoginResult> res = ApiResponse.onSuccess(loginResultDTO);
 		response.getWriter().write(mapper.writeValueAsString(res));
 
 		// SecurityContextHolder에 인증 설정

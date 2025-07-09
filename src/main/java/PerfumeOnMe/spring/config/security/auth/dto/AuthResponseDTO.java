@@ -11,7 +11,8 @@ public class AuthResponseDTO {
 	@Builder
 	@AllArgsConstructor
 	@NoArgsConstructor
-	public static class RefreshToken {
+	public static class LoginResult {
 		private String refreshToken;
+		private Long userId;
 	}
 }
