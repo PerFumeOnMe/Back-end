@@ -7,6 +7,8 @@ import PerfumeOnMe.spring.domain.base.BaseEntity;
 import PerfumeOnMe.spring.domain.enums.KeywordCategory;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -33,6 +35,7 @@ public class ImageKeywordDescription extends BaseEntity {
 	@Column(length = 20, nullable = false)
 	private String keyword;
 
+	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private KeywordCategory category;
 
