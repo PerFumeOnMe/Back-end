@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import PerfumeOnMe.spring.apiPayload.code.status.ErrorStatus;
+import PerfumeOnMe.spring.apiPayload.exception.GeneralException;
+import PerfumeOnMe.spring.config.security.auth.manager.LogoutAccessTokenManager;
 import PerfumeOnMe.spring.config.security.auth.provider.JwtTokenProvider;
 import PerfumeOnMe.spring.config.security.auth.token.JwtAuthenticationToken;
 import jakarta.servlet.FilterChain;
@@ -27,6 +30,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private final JwtTokenProvider jwtTokenProvider;
 	private final AuthenticationManager authenticationManager;
+	private final LogoutAccessTokenManager logoutAccessTokenManager;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -36,6 +40,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 		if (StringUtils.hasText(accessToken)) {
 			String loginId = jwtTokenProvider.getSubject(accessToken);
+
+			// 로그아웃된 액세스 토큰이 아닌 경우에만 JWT 인증 시도 및 설정
+			if (logoutAccessTokenManager.findLogoutAccessToken(loginId)) {
+				throw new GeneralException(ErrorStatus.LOGOUT_ACCESS_TOKEN);
+			}
+
 			JwtAuthenticationToken authRequest = new JwtAuthenticationToken(loginId, accessToken);
 			Authentication authResult = authenticationManager.authenticate(authRequest);
 			SecurityContextHolder.getContext().setAuthentication(authResult);
