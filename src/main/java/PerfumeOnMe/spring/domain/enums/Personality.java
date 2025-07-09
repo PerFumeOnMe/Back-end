@@ -3,7 +3,7 @@ package PerfumeOnMe.spring.domain.enums;
 import lombok.Getter;
 
 @Getter
-public enum Character {
+public enum Personality {
 	QUIET("조용한"),
 	LOGICAL("논리적인"),
 	STRONG("개성 강한"),
@@ -17,7 +17,7 @@ public enum Character {
 
 	private final String displayName;
 
-	Character(String displayName) {
+	Personality(String displayName) {
 		this.displayName = displayName;
 	}
 }

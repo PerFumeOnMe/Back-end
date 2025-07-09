@@ -5,8 +5,8 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import PerfumeOnMe.spring.domain.base.BaseEntity;
 import PerfumeOnMe.spring.domain.enums.Ambience;
-import PerfumeOnMe.spring.domain.enums.Character;
 import PerfumeOnMe.spring.domain.enums.Gender;
+import PerfumeOnMe.spring.domain.enums.Personality;
 import PerfumeOnMe.spring.domain.enums.Season;
 import PerfumeOnMe.spring.domain.enums.Style;
 import jakarta.persistence.Column;
@@ -64,7 +64,7 @@ public class ImageKeyword extends BaseEntity {
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private Character character;
+	private Personality personality;
 
 	@Column(nullable = false, columnDefinition = "TEXT")
 	private String imageUrl;
