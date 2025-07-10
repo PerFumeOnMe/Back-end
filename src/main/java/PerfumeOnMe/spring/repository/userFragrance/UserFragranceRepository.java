@@ -12,4 +12,7 @@ public interface UserFragranceRepository extends JpaRepository<UserFragrance, Lo
 	boolean existsByUserAndFragrance(User user, Fragrance fragrance);
 
 	Optional<UserFragrance> findByUserAndFragrance(User user, Fragrance fragrance);
+
+	boolean existsByUserIdAndFragranceId(Long userId, Long fragranceId);
+
 }
