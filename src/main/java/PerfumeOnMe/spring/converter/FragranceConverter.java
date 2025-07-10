@@ -112,6 +112,8 @@ public class FragranceConverter {
 	/**
 	 * 향수 검색 API
 	 */
+
+	// 향수 반환 dto 변환 처리
 	public static FragranceResponseDTO.FragranceSearchResult toSearchResultDto(Fragrance fragrance) {
 		Integer minPrice = fragrance.getFragrancePriceList().stream()
 			.map(fp -> fp.getPrice().getPrice())
