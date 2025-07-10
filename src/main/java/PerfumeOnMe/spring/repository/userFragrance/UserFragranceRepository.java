@@ -8,7 +8,7 @@ import PerfumeOnMe.spring.domain.Fragrance;
 import PerfumeOnMe.spring.domain.User;
 import PerfumeOnMe.spring.domain.mapping.UserFragrance;
 
-public interface UserFragranceRepository extends JpaRepository<UserFragrance, Long> {
+public interface UserFragranceRepository extends JpaRepository<UserFragrance, Long>, UserFragranceRepositoryCustom {
 	boolean existsByUserAndFragrance(User user, Fragrance fragrance);
 
 	Optional<UserFragrance> findByUserAndFragrance(User user, Fragrance fragrance);
