@@ -44,7 +44,8 @@ public enum ErrorStatus implements BaseErrorCode {
 
 	// 향수 즐겨찾기 에러
 	ALREADY_FAVORITES_ERROR(HttpStatus.BAD_REQUEST, "FAVORITES4001", "이미 즐겨찾기에 등록한 향수입니다."),
-  
+	FAVORITE_NOT_FOUND(HttpStatus.BAD_REQUEST, "FAVORITES4002", "즐겨찾기 목록에 존재하지 않는 향수입니다."),
+
 	// 향수 필터링 에러
 	INVALID_GENDER(HttpStatus.BAD_REQUEST, "FILTER4001", "유효하지 않은 성별입니다."),
 	INVALID_FRAGRANCE_TYPE(HttpStatus.BAD_REQUEST, "FILTER4002", "유효하지 않은 향수 타입입니다."),

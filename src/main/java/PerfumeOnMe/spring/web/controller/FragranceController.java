@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -98,6 +99,28 @@ public class FragranceController {
 		@PathVariable("fragranceId") Long fragranceId,
 		@AuthenticationPrincipal CustomUserDetails userDetails) {
 		FragranceResponseDTO.FavoriteResponseDTO result = fragranceService.addFavorite(userDetails.getUserId(),
+			fragranceId);
+		return ResponseEntity.ok(ApiResponse.onSuccess(result));
+	}
+
+	// 향수 즐겨찾기 취소 API
+	@DeleteMapping("/{fragranceId}/favorites")
+	@Operation(
+		summary = "향수 즐겨찾기 취소",
+		description = "향수 ID로 향수 즐겨찾기를 취소하는 API입니다.",
+		responses = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "즐겨찾기에서 향수를 제거했습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FragranceResponseDTO.FavoriteCancelResponseDTO.class))),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "FAVORITES4002", description = "즐겨찾기 목록에 존재하지 않는 향수입니다."),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "FRAGRANCE4001", description = "해당 ID에 해당하는 향수를 찾을 수 없습니다.")
+		}
+	)
+	@Parameters({
+		@Parameter(name = "fragranceId", description = "향수 ID"),
+	})
+	public ResponseEntity<ApiResponse<FragranceResponseDTO.FavoriteCancelResponseDTO>> deleteFavorite(
+		@PathVariable("fragranceId") Long fragranceId,
+		@AuthenticationPrincipal CustomUserDetails userDetails) {
+		FragranceResponseDTO.FavoriteCancelResponseDTO result = fragranceService.deleteFavorite(userDetails.getUserId(),
 			fragranceId);
 		return ResponseEntity.ok(ApiResponse.onSuccess(result));
 	}
