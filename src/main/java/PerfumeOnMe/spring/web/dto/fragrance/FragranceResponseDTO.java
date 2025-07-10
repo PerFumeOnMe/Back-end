@@ -27,6 +27,7 @@ public class FragranceResponseDTO {
 		private List<String> locations;
 		private List<String> seasons;
 		private String homePageUrl;
+		private boolean liked;
 
 		@Getter
 		@Builder
@@ -79,6 +80,7 @@ public class FragranceResponseDTO {
 		private String name;
 		private Integer minPrice;
 		private String imageUrl;
+		private boolean liked;
 	}
 
 	// 향수 즐겨찾기 등록 응답 DTO
