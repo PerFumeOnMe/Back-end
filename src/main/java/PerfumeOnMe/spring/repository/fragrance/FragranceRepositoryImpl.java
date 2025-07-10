@@ -37,13 +37,24 @@ public class FragranceRepositoryImpl implements FragranceRepositoryCustom {
 
 	private final JPAQueryFactory queryFactory;
 
+	// Q 도메인 객체를 클래스 레벨에서 선언
+	private final QFragrance f = QFragrance.fragrance;
+	private final QFragrancePrice fp = QFragrancePrice.fragrancePrice;
+	private final QPrice price = QPrice.price1;
+	private final QFragranceLocation fl = QFragranceLocation.fragranceLocation;
+	private final QLocation l = QLocation.location;
+	private final QFragranceSeason fs = QFragranceSeason.fragranceSeason;
+	private final QSeason s = QSeason.season;
+	private final QFragranceTopNote ftn = QFragranceTopNote.fragranceTopNote;
+	private final QFragranceMiddleNote fmn = QFragranceMiddleNote.fragranceMiddleNote;
+	private final QFragranceBaseNote fbn = QFragranceBaseNote.fragranceBaseNote;
+	private final QNote topNote = new QNote("topNote");
+	private final QNote middleNote = new QNote("middleNote");
+	private final QNote baseNote = new QNote("baseNote");
+
 	// 향수 상세
 	@Override
 	public Optional<Fragrance> findByIdWithAllDetails(Long id) {
-		QFragrance f = QFragrance.fragrance;
-		QFragrancePrice fp = QFragrancePrice.fragrancePrice;
-		QPrice price = QPrice.price1;
-
 		Fragrance result = queryFactory.selectFrom(f)
 			.leftJoin(f.fragrancePriceList, fp).fetchJoin()
 			.leftJoin(fp.price, price).fetchJoin()
@@ -56,21 +67,20 @@ public class FragranceRepositoryImpl implements FragranceRepositoryCustom {
 	//향수 검색
 	@Override
 	public Page<Fragrance> findBySearchKeyword(String keyword, Pageable pageable) {
-		QFragrance fragrance = QFragrance.fragrance;
 
 		// 실제 결과 데이터 조회
 		List<Fragrance> content = queryFactory
-			.selectFrom(fragrance)
-			.where(containsKeyword(fragrance.name, keyword))
+			.selectFrom(f)
+			.where(containsKeyword(f.name, keyword))
 			.offset(pageable.getOffset()) // 몇 번째부터 가져올지 (page * size)
 			.limit(pageable.getPageSize()) // 몇 개 가져올지
 			.fetch();
 
 		// 카운트 쿼리 -> 총 조회된 향수가 몇 개인지
 		Long count = queryFactory
-			.select(fragrance.count())
-			.from(fragrance)
-			.where(containsKeyword(fragrance.name, keyword))
+			.select(f.count())
+			.from(f)
+			.where(containsKeyword(f.name, keyword))
 			.fetchOne();
 
 		// Page 객체 생성
@@ -84,19 +94,6 @@ public class FragranceRepositoryImpl implements FragranceRepositoryCustom {
 	// 향수 필터링
 	@Override
 	public Page<Fragrance> findByFilter(FragranceRequestDTO.FragranceFilterRequest r, Pageable pageable) {
-		QFragrance f = QFragrance.fragrance;
-		QFragrancePrice fp = QFragrancePrice.fragrancePrice;
-		QPrice price = QPrice.price1;
-		QFragranceLocation fl = QFragranceLocation.fragranceLocation;
-		QLocation l = QLocation.location;
-		QFragranceSeason fs = QFragranceSeason.fragranceSeason;
-		QSeason s = QSeason.season;
-		QFragranceTopNote ftn = QFragranceTopNote.fragranceTopNote;
-		QFragranceMiddleNote fmn = QFragranceMiddleNote.fragranceMiddleNote;
-		QFragranceBaseNote fbn = QFragranceBaseNote.fragranceBaseNote;
-		QNote topNote = new QNote("topNote");
-		QNote middleNote = new QNote("middleNote");
-		QNote baseNote = new QNote("baseNote");
 
 		BooleanBuilder whereClause = new BooleanBuilder();
 
