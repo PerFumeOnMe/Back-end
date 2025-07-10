@@ -22,6 +22,7 @@ import PerfumeOnMe.spring.apiPayload.code.status.ErrorStatus;
 import PerfumeOnMe.spring.apiPayload.exception.GeneralException;
 import PerfumeOnMe.spring.config.security.auth.dto.AuthRequestDTO;
 import PerfumeOnMe.spring.config.security.auth.dto.AuthResponseDTO;
+import PerfumeOnMe.spring.config.security.auth.manager.LogoutAccessTokenManager;
 import PerfumeOnMe.spring.config.security.auth.manager.RefreshTokenManager;
 import PerfumeOnMe.spring.config.security.auth.provider.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
@@ -41,6 +42,7 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
 
 	private final JwtTokenProvider jwtTokenProvider;
 	private final RefreshTokenManager refreshTokenManager;
+	private final LogoutAccessTokenManager logoutAccessTokenManager;
 
 	private final ObjectMapper mapper = new ObjectMapper();
 
@@ -70,8 +72,15 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
 		FilterChain chain, Authentication authResult) throws IOException, ServletException {
 
-		// 토큰 생성 및 DTO에 담기
+		// Authentication에서 principal String 추출
 		String loginId = authResult.getName();
+
+		// 사용자의 로그아웃 액세스 토큰이 존재하는 경우 삭제
+		if (logoutAccessTokenManager.findLogoutAccessToken(loginId)) {
+			logoutAccessTokenManager.deleteLogoutAccessToken(loginId);
+		}
+
+		// 토큰 생성 및 DTO에 담기
 		String accessToken = jwtTokenProvider.createAccessToken(authResult);
 		String refreshToken = jwtTokenProvider.createRefreshToken(authResult);
 		AuthResponseDTO.RefreshToken refreshTokenDTO = AuthResponseDTO

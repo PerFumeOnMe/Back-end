@@ -28,7 +28,7 @@ public enum ErrorStatus implements BaseErrorCode {
 	INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN4001", "유효하지 않은 토큰입니다."),
 	REFRESH_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "TOKEN4002", "해당 리프레시 토큰이 존재하지 않습니다."),
 	EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN4003", "만료된 토큰입니다."),
-	LOGOUT_ACCESS_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "TOKEN4004", "로그아웃한 액세스 토큰이 존재하지 않습니다."),
+	LOGOUT_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN4004", "로그아웃한 액세스 토큰입니다."),
 	MALFORMED_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN4005", "토큰 구조가 잘못됐습니다."),
 	UNSUPPORTED_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN4006", "지원하지 않는 토큰 형식입니다."),
 	INVALID_SIGNATURE(HttpStatus.UNAUTHORIZED, "TOKEN4007", "토큰의 서명이 잘못됐습니다."),
@@ -44,6 +44,14 @@ public enum ErrorStatus implements BaseErrorCode {
 
 	// 향수 즐겨찾기 에러
 	ALREADY_FAVORITES_ERROR(HttpStatus.BAD_REQUEST, "FAVORITES4001", "이미 즐겨찾기에 등록한 향수입니다."),
+  
+	// 향수 필터링 에러
+	INVALID_GENDER(HttpStatus.BAD_REQUEST, "FILTER4001", "유효하지 않은 성별입니다."),
+	INVALID_FRAGRANCE_TYPE(HttpStatus.BAD_REQUEST, "FILTER4002", "유효하지 않은 향수 타입입니다."),
+	INVALID_NOTE_ID(HttpStatus.BAD_REQUEST, "FILTER4003", "유효하지 않은 노트 ID 입니다."),
+	INVALID_SEASON_ID(HttpStatus.BAD_REQUEST, "FILTER4004", "유효하지 않은 계절 ID 입니다."),
+	INVALID_SITUATION_ID(HttpStatus.BAD_REQUEST, "FILTER4005", "유효하지 않은 장소 ID 입니다."),
+	INVALID_PRICE_RANGE(HttpStatus.BAD_REQUEST, "FILTER4006", "가격 범위가 올바르지 않습니다."),
 
 	// 예시,,,
 	ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다.");
