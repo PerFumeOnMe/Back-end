@@ -42,6 +42,17 @@ public enum ErrorStatus implements BaseErrorCode {
 	// 향수 상세 페이지 에러
 	FRAGRANCE_NOT_FOUND(HttpStatus.BAD_REQUEST, "FRAGRANCE4001", "해당 ID에 해당하는 향수를 찾을 수 없습니다."),
 
+	// 향수 즐겨찾기 에러
+	ALREADY_FAVORITES_ERROR(HttpStatus.BAD_REQUEST, "FAVORITES4001", "이미 즐겨찾기에 등록한 향수입니다."),
+  
+	// 향수 필터링 에러
+	INVALID_GENDER(HttpStatus.BAD_REQUEST, "FILTER4001", "유효하지 않은 성별입니다."),
+	INVALID_FRAGRANCE_TYPE(HttpStatus.BAD_REQUEST, "FILTER4002", "유효하지 않은 향수 타입입니다."),
+	INVALID_NOTE_ID(HttpStatus.BAD_REQUEST, "FILTER4003", "유효하지 않은 노트 ID 입니다."),
+	INVALID_SEASON_ID(HttpStatus.BAD_REQUEST, "FILTER4004", "유효하지 않은 계절 ID 입니다."),
+	INVALID_SITUATION_ID(HttpStatus.BAD_REQUEST, "FILTER4005", "유효하지 않은 장소 ID 입니다."),
+	INVALID_PRICE_RANGE(HttpStatus.BAD_REQUEST, "FILTER4006", "가격 범위가 올바르지 않습니다."),
+
 	// 예시,,,
 	ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다.");
 

@@ -3,13 +3,16 @@ package PerfumeOnMe.spring.web.controller;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import PerfumeOnMe.spring.apiPayload.ApiResponse;
+import PerfumeOnMe.spring.config.security.auth.userDetails.CustomUserDetails;
 import PerfumeOnMe.spring.service.fragrance.FragranceService;
 import PerfumeOnMe.spring.web.dto.fragrance.FragranceRequestDTO;
 import PerfumeOnMe.spring.web.dto.fragrance.FragranceResponseDTO;
@@ -30,7 +33,9 @@ public class FragranceController {
 
 	private final FragranceService fragranceService;
 
-	// 향수 상세 API
+	/**
+	 * 향수 상세 API
+	 */
 	@GetMapping("/{fragranceId}")
 	@Operation(
 		summary = "향수 상세 조회",
@@ -49,7 +54,9 @@ public class FragranceController {
 		return ResponseEntity.ok(ApiResponse.onSuccess(result));
 	}
 
-	// 향수 검색 API
+	/**
+	 * 향수 검색 API
+	 */
 	@GetMapping("/search")
 	@Operation(
 		summary = "향수 키워드 검색 (무한 스크롤)",
@@ -72,4 +79,62 @@ public class FragranceController {
 			request.getSize());
 		return ResponseEntity.ok(ApiResponse.onSuccess(result));
 	}
+
+	// 향수 즐겨찾기 등록 API
+	@PostMapping("/{fragranceId}/favorites")
+	@Operation(
+		summary = "향수 즐겨찾기 등록",
+		description = "향수 ID로 향수 즐겨찾기를 등록하는 API입니다.",
+		responses = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "향수를 즐겨찾기에 등록했습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FragranceResponseDTO.FavoriteResponseDTO.class))),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "FAVORITES4001", description = "이미 즐겨찾기에 등록한 향수입니다."),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "FRAGRANCE4001", description = "해당 ID에 해당하는 향수를 찾을 수 없습니다.")
+		}
+	)
+	@Parameters({
+		@Parameter(name = "fragranceId", description = "향수 ID"),
+	})
+	public ResponseEntity<ApiResponse<FragranceResponseDTO.FavoriteResponseDTO>> addFavorite(
+		@PathVariable("fragranceId") Long fragranceId,
+		@AuthenticationPrincipal CustomUserDetails userDetails) {
+		FragranceResponseDTO.FavoriteResponseDTO result = fragranceService.addFavorite(userDetails.getUserId(),
+			fragranceId);
+		return ResponseEntity.ok(ApiResponse.onSuccess(result));
+	}
+
+	/**
+	 * 향수 필터링 API
+	 */
+	@GetMapping("/filter")
+	@Operation(
+		summary = "향수 필터링 검색 (무한 스크롤)",
+		description = "필터링을 통해 걸러진 향수 목록을, 페이징 처리된 결과로 반환합니다.",
+		responses = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FragranceResponseDTO.FragranceSearchResult.class))),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "FILTER4001", description = "유효하지 않은 성별입니다."),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "FILTER4002", description = "유효하지 않은 향수 타입입니다."),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "FILTER4003", description = "유효하지 않은 노트 ID 입니다."),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "FILTER4004", description = "유효하지 않은 계절 ID 입니다."),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "FILTER4005", description = "유효하지 않은 장소 ID 입니다."),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "FILTER4006", description = "가격 범위가 올바르지 않습니다.")
+		}
+	)
+	@Parameters({
+		@Parameter(name = "noteCategoryId", description = "향수 카테고리(노트) ID"),
+		@Parameter(name = "fragranceType", description = "향수 타입 필터"),
+		@Parameter(name = "gender", description = "성별 필터"),
+		@Parameter(name = "situationId", description = "사용하는 상황 필터(Location ID)"),
+		@Parameter(name = "seasonId", description = "계절 필터(계절 ID)"),
+		@Parameter(name = "priceMin", description = "최소 가격"),
+		@Parameter(name = "priceMax", description = "최대 가격"),
+		@Parameter(name = "page", description = "페이지 번호 (0부터 시작)"),
+		@Parameter(name = "size", description = "한 페이지에 불러올 향수 개수")
+	})
+	public ResponseEntity<ApiResponse<FragranceResponseDTO.FragranceSearchFinalResult>> searchFragrancesByFilter(
+		@Valid @ModelAttribute FragranceRequestDTO.FragranceFilterRequest request
+	) {
+		FragranceResponseDTO.FragranceSearchFinalResult result = fragranceService.searchFragrancesByFilter(request);
+		return ResponseEntity.ok(ApiResponse.onSuccess(result));
+	}
+
 }
