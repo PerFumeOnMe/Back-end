@@ -1,8 +1,6 @@
 package PerfumeOnMe.spring.service.fragrance;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -44,26 +42,35 @@ public class FragranceServiceImpl implements FragranceService {
 
 	// 향수 상세 API
 	@Override
-	public FragranceResponseDTO.FragranceDetailResult getFragranceDetail(Long fragranceId) {
+	public FragranceResponseDTO.FragranceDetailResult getFragranceDetail(Long fragranceId, Long userId) {
 		Fragrance fragrance = fragranceRepository.findByIdWithAllDetails(fragranceId)
 			.orElseThrow(() -> new GeneralException(ErrorStatus.FRAGRANCE_NOT_FOUND));
-		return FragranceConverter.toDetailDto(fragrance);
+
+		boolean liked = Like(userId, fragranceId);
+
+		return FragranceConverter.toDetailDto(fragrance, liked);
 	}
 
 	// 향수 검색 API
 	@Override
-	public Map<String, Object> searchFragrances(String keyword, int page, int size) {
+	public FragranceResponseDTO.FragranceSearchFinalResult searchFragrances(String keyword, int page, int size,
+		Long userId) {
 		PageRequest pageable = PageRequest.of(page, size);
 		Page<Fragrance> fragrancePage = fragranceRepository.findBySearchKeyword(keyword, pageable);
 
-		List<FragranceResponseDTO.FragranceSearchResult> dtoList = FragranceConverter.toSearchResultDtoList(
-			fragrancePage.getContent());
+		List<FragranceResponseDTO.FragranceSearchResult> content = fragrancePage.getContent().stream()
+			.map(fragrance -> {
+				// 즐겨찾기 확인
+				boolean liked = Like(userId, fragrance.getId());
+				return FragranceConverter.toSearchResultDto(fragrance, liked);
+			})
+			.collect(Collectors.toList());
 
-		Map<String, Object> result = new HashMap<>();
-		result.put("content", dtoList);
-		result.put("hasNext", fragrancePage.hasNext());
+		return FragranceResponseDTO.FragranceSearchFinalResult.builder()
+			.content(content)
+			.hasNext(fragrancePage.hasNext())
+			.build();
 
-		return result;
 	}
 
 	// 향수 즐겨찾기 등록 API
@@ -107,7 +114,7 @@ public class FragranceServiceImpl implements FragranceService {
 	// 향수 필터링 API
 	@Override
 	public FragranceResponseDTO.FragranceSearchFinalResult searchFragrancesByFilter(
-		FragranceRequestDTO.FragranceFilterRequest request) {
+		FragranceRequestDTO.FragranceFilterRequest request, Long userId) {
 
 		//  Enum 유효성 검사
 		if (request.getGender() != null) {
@@ -147,13 +154,22 @@ public class FragranceServiceImpl implements FragranceService {
 		Page<Fragrance> fragrancePage = fragranceRepository.findByFilter(request, pageable);
 
 		List<FragranceResponseDTO.FragranceSearchResult> content = fragrancePage.getContent().stream()
-			.map(FragranceConverter::toSearchResultDto)
+			.map(fragrance -> {
+				// 즐겨찾기 확인
+				boolean liked = Like(userId, fragrance.getId());
+				return FragranceConverter.toSearchResultDto(fragrance, liked);
+			})
 			.collect(Collectors.toList());
 
 		return FragranceResponseDTO.FragranceSearchFinalResult.builder()
 			.content(content)
 			.hasNext(fragrancePage.hasNext())
 			.build();
+	}
+
+	// 사용자 id 와 향수 id 를 받아와 즐겨찾기 테이블에 해댱 향수가 있는지 없는지 확인하는 메서드
+	private boolean Like(Long userId, Long fragranceId) {
+		return userFragranceRepository.existsByUserIdAndFragranceId(userId, fragranceId);
 	}
 
 }
