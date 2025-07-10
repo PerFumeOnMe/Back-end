@@ -86,6 +86,12 @@ public class FragranceController {
 		description = "필터링을 통해 걸러진 향수 목록을, 페이징 처리된 결과로 반환합니다.",
 		responses = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FragranceResponseDTO.FragranceSearchResult.class))),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "FILTER4001", description = "유효하지 않은 성별입니다."),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "FILTER4002", description = "유효하지 않은 향수 타입입니다."),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "FILTER4003", description = "유효하지 않은 노트 ID 입니다."),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "FILTER4004", description = "유효하지 않은 계절 ID 입니다."),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "FILTER4005", description = "유효하지 않은 장소 ID 입니다."),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "FILTER4006", description = "가격 범위가 올바르지 않습니다.")
 		}
 	)
 	@Parameters({
