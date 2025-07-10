@@ -1,7 +1,5 @@
 package PerfumeOnMe.spring.web.controller;
 
-import java.util.Map;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -50,8 +48,10 @@ public class FragranceController {
 		@Parameter(name = "fragranceId", description = "향수 ID"),
 	})
 	public ResponseEntity<ApiResponse<FragranceResponseDTO.FragranceDetailResult>> getFragranceDetail(
-		@PathVariable("fragranceId") Long fragranceId) {
-		FragranceResponseDTO.FragranceDetailResult result = fragranceService.getFragranceDetail(fragranceId);
+		@PathVariable("fragranceId") Long fragranceId,
+		@AuthenticationPrincipal CustomUserDetails userDetails) {
+		FragranceResponseDTO.FragranceDetailResult result = fragranceService.getFragranceDetail(fragranceId,
+			userDetails.getUserId());
 		return ResponseEntity.ok(ApiResponse.onSuccess(result));
 	}
 
@@ -72,13 +72,16 @@ public class FragranceController {
 		@Parameter(name = "page", description = "페이지 번호"),
 		@Parameter(name = "size", description = "한 페이지에 불러올 향수 개수")
 	})
-	public ResponseEntity<ApiResponse<Map<String, Object>>> searchFragrances(
-		@Valid @ModelAttribute FragranceRequestDTO.FragranceSearchRequest request
+	public ResponseEntity<ApiResponse<FragranceResponseDTO.FragranceSearchFinalResult>> searchFragrances(
+		@Valid @ModelAttribute FragranceRequestDTO.FragranceSearchRequest request,
+		@AuthenticationPrincipal CustomUserDetails userDetails
 	) {
-		// result 안에 fragranceList 와 hasNext 를 키로 갖는 구조
-		Map<String, Object> result = fragranceService.searchFragrances(request.getKeyword(), request.getPage(),
-			request.getSize());
+		FragranceResponseDTO.FragranceSearchFinalResult result = fragranceService.searchFragrances(
+			request.getKeyword(), request.getPage(),
+			request.getSize(), userDetails.getUserId());
+
 		return ResponseEntity.ok(ApiResponse.onSuccess(result));
+
 	}
 
 	// 향수 즐겨찾기 등록 API
@@ -154,9 +157,11 @@ public class FragranceController {
 		@Parameter(name = "size", description = "한 페이지에 불러올 향수 개수")
 	})
 	public ResponseEntity<ApiResponse<FragranceResponseDTO.FragranceSearchFinalResult>> searchFragrancesByFilter(
-		@Valid @ModelAttribute FragranceRequestDTO.FragranceFilterRequest request
+		@Valid @ModelAttribute FragranceRequestDTO.FragranceFilterRequest request,
+		@AuthenticationPrincipal CustomUserDetails userDetails
 	) {
-		FragranceResponseDTO.FragranceSearchFinalResult result = fragranceService.searchFragrancesByFilter(request);
+		FragranceResponseDTO.FragranceSearchFinalResult result = fragranceService.searchFragrancesByFilter(request,
+			userDetails.getUserId());
 		return ResponseEntity.ok(ApiResponse.onSuccess(result));
 	}
 
