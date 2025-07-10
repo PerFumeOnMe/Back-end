@@ -17,15 +17,15 @@ import PerfumeOnMe.spring.apiPayload.exception.GeneralException;
 import PerfumeOnMe.spring.converter.FragranceConverter;
 import PerfumeOnMe.spring.domain.Fragrance;
 import PerfumeOnMe.spring.domain.User;
-import PerfumeOnMe.spring.domain.mapping.UserFragrance;
-import PerfumeOnMe.spring.repository.user.UserRepository;
-import PerfumeOnMe.spring.repository.userFragrance.UserFragranceRepository;
 import PerfumeOnMe.spring.domain.enums.FragranceGender;
 import PerfumeOnMe.spring.domain.enums.FragranceType;
+import PerfumeOnMe.spring.domain.mapping.UserFragrance;
 import PerfumeOnMe.spring.repository.fragrance.FragranceRepository;
 import PerfumeOnMe.spring.repository.location.LocationRepository;
 import PerfumeOnMe.spring.repository.note.NoteRepository;
 import PerfumeOnMe.spring.repository.season.SeasonRepository;
+import PerfumeOnMe.spring.repository.user.UserRepository;
+import PerfumeOnMe.spring.repository.userFragrance.UserFragranceRepository;
 import PerfumeOnMe.spring.web.dto.fragrance.FragranceRequestDTO;
 import PerfumeOnMe.spring.web.dto.fragrance.FragranceResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -86,8 +86,24 @@ public class FragranceServiceImpl implements FragranceService {
 
 		userFragranceRepository.save(favorite);
 		return FragranceConverter.toFavoriteResponseDTO(favorite);
-  }
-  
+	}
+
+	// 향수 즐겨찾기 취소 API
+	@Override
+	@Transactional(readOnly = false)
+	public FragranceResponseDTO.FavoriteCancelResponseDTO deleteFavorite(Long userId, Long fragranceId) {
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> new GeneralException(ErrorStatus.LOGIN_ID_NOT_FOUND));
+		Fragrance fragrance = fragranceRepository.findById(fragranceId)
+			.orElseThrow(() -> new GeneralException(ErrorStatus.FRAGRANCE_NOT_FOUND));
+
+		UserFragrance favorite = userFragranceRepository.findByUserAndFragrance(user, fragrance)
+			.orElseThrow(() -> new GeneralException(ErrorStatus.FAVORITE_NOT_FOUND));
+
+		userFragranceRepository.delete(favorite);
+		return FragranceConverter.toFavoriteCancelResponseDTO(favorite);
+	}
+
 	// 향수 필터링 API
 	@Override
 	public FragranceResponseDTO.FragranceSearchFinalResult searchFragrancesByFilter(

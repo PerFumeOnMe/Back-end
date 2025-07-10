@@ -145,4 +145,12 @@ public class FragranceConverter {
 			.build();
 	}
 
+	// 향수 즐겨찾기 취소 API
+	public static FragranceResponseDTO.FavoriteCancelResponseDTO toFavoriteCancelResponseDTO(
+		UserFragrance userFragrance) {
+		return FragranceResponseDTO.FavoriteCancelResponseDTO.builder()
+			.fragranceId(userFragrance.getFragrance().getId())
+			.build();
+	}
+
 }

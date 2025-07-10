@@ -15,6 +15,9 @@ public interface FragranceService {
 	// 향수 즐겨찾기 등록 API
 	FragranceResponseDTO.FavoriteResponseDTO addFavorite(Long userId, Long fragranceId);
 
+	// 향수 즐겨찾기 취소 API
+	FragranceResponseDTO.FavoriteCancelResponseDTO deleteFavorite(Long userId, Long fragranceId);
+
 	// 향수 필터링 API
 	FragranceResponseDTO.FragranceSearchFinalResult searchFragrancesByFilter(
 		FragranceRequestDTO.FragranceFilterRequest request);
