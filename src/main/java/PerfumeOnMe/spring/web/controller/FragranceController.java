@@ -3,13 +3,16 @@ package PerfumeOnMe.spring.web.controller;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import PerfumeOnMe.spring.apiPayload.ApiResponse;
+import PerfumeOnMe.spring.config.security.auth.userDetails.CustomUserDetails;
 import PerfumeOnMe.spring.service.fragrance.FragranceService;
 import PerfumeOnMe.spring.web.dto.fragrance.FragranceRequestDTO;
 import PerfumeOnMe.spring.web.dto.fragrance.FragranceResponseDTO;
@@ -74,6 +77,28 @@ public class FragranceController {
 		// result 안에 fragranceList 와 hasNext 를 키로 갖는 구조
 		Map<String, Object> result = fragranceService.searchFragrances(request.getKeyword(), request.getPage(),
 			request.getSize());
+		return ResponseEntity.ok(ApiResponse.onSuccess(result));
+	}
+
+	// 향수 즐겨찾기 등록 API
+	@PostMapping("/{fragranceId}/favorites")
+	@Operation(
+		summary = "향수 즐겨찾기 등록",
+		description = "향수 ID로 향수 즐겨찾기를 등록하는 API입니다.",
+		responses = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "향수를 즐겨찾기에 등록했습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FragranceResponseDTO.FavoriteResponseDTO.class))),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "FAVORITES4001", description = "이미 즐겨찾기에 등록한 향수입니다."),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "FRAGRANCE4001", description = "해당 ID에 해당하는 향수를 찾을 수 없습니다.")
+		}
+	)
+	@Parameters({
+		@Parameter(name = "fragranceId", description = "향수 ID"),
+	})
+	public ResponseEntity<ApiResponse<FragranceResponseDTO.FavoriteResponseDTO>> addFavorite(
+		@PathVariable("fragranceId") Long fragranceId,
+		@AuthenticationPrincipal CustomUserDetails userDetails) {
+		FragranceResponseDTO.FavoriteResponseDTO result = fragranceService.addFavorite(userDetails.getUserId(),
+			fragranceId);
 		return ResponseEntity.ok(ApiResponse.onSuccess(result));
 	}
 
