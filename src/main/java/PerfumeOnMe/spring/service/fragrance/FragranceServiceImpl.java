@@ -13,7 +13,11 @@ import PerfumeOnMe.spring.apiPayload.code.status.ErrorStatus;
 import PerfumeOnMe.spring.apiPayload.exception.GeneralException;
 import PerfumeOnMe.spring.converter.FragranceConverter;
 import PerfumeOnMe.spring.domain.Fragrance;
+import PerfumeOnMe.spring.domain.User;
+import PerfumeOnMe.spring.domain.mapping.UserFragrance;
 import PerfumeOnMe.spring.repository.fragrance.FragranceRepository;
+import PerfumeOnMe.spring.repository.user.UserRepository;
+import PerfumeOnMe.spring.repository.userFragrance.UserFragranceRepository;
 import PerfumeOnMe.spring.web.dto.fragrance.FragranceResponseDTO;
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +27,8 @@ import lombok.RequiredArgsConstructor;
 public class FragranceServiceImpl implements FragranceService {
 
 	private final FragranceRepository fragranceRepository;
+	private final UserRepository userRepository;
+	private final UserFragranceRepository userFragranceRepository;
 
 	// 향수 상세 API
 	@Override
@@ -46,6 +52,28 @@ public class FragranceServiceImpl implements FragranceService {
 		result.put("hasNext", fragrancePage.hasNext());
 
 		return result;
+	}
+
+	// 향수 즐겨찾기 등록 API
+	@Override
+	@Transactional(readOnly = false)
+	public FragranceResponseDTO.FavoriteResponseDTO addFavorite(Long userId, Long fragranceId) {
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> new GeneralException(ErrorStatus.LOGIN_ID_NOT_FOUND));
+		Fragrance fragrance = fragranceRepository.findById(fragranceId)
+			.orElseThrow(() -> new GeneralException(ErrorStatus.FRAGRANCE_NOT_FOUND));
+
+		if (userFragranceRepository.existsByUserAndFragrance(user, fragrance)) {
+			throw new GeneralException(ErrorStatus.ALREADY_FAVORITES_ERROR);
+		}
+
+		UserFragrance favorite = UserFragrance.builder()
+			.user(user)
+			.fragrance(fragrance)
+			.build();
+
+		userFragranceRepository.save(favorite);
+		return FragranceConverter.toFavoriteResponseDTO(favorite);
 	}
 
 }

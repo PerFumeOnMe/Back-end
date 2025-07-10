@@ -81,6 +81,15 @@ public class FragranceResponseDTO {
 		private String imageUrl;
 	}
 
+	// 향수 즐겨찾기 등록 응답 DTO
+	@Getter
+	@Builder
+	@AllArgsConstructor
+	@NoArgsConstructor
+	public static class FavoriteResponseDTO {
+		private Long fragranceId;
+	}
+
 }
 
 

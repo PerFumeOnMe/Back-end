@@ -8,4 +8,6 @@ import PerfumeOnMe.spring.domain.Fragrance;
 
 public interface FragranceRepository extends JpaRepository<Fragrance, Long>, FragranceRepositoryCustom {
 	Optional<Fragrance> findByName(String name);
+
+	Optional<Fragrance> findById(Long id);
 }

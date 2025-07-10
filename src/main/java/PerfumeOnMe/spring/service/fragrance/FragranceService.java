@@ -10,5 +10,8 @@ public interface FragranceService {
 
 	// 향수 검색 API
 	Map<String, Object> searchFragrances(String keyword, int page, int size);
+
+	// 향수 즐겨찾기 등록 API
+	FragranceResponseDTO.FavoriteResponseDTO addFavorite(Long userId, Long fragranceId);
 }
 

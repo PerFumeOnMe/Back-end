@@ -15,6 +15,7 @@ import PerfumeOnMe.spring.domain.mapping.FragranceMiddleNote;
 import PerfumeOnMe.spring.domain.mapping.FragrancePrice;
 import PerfumeOnMe.spring.domain.mapping.FragranceSeason;
 import PerfumeOnMe.spring.domain.mapping.FragranceTopNote;
+import PerfumeOnMe.spring.domain.mapping.UserFragrance;
 import PerfumeOnMe.spring.web.dto.fragrance.FragranceResponseDTO;
 
 public class FragranceConverter {
@@ -133,6 +134,13 @@ public class FragranceConverter {
 		return fragranceList.stream()
 			.map(FragranceConverter::toSearchResultDto)
 			.collect(Collectors.toList());
+	}
+
+	// 향수 즐겨찾기 등록 API
+	public static FragranceResponseDTO.FavoriteResponseDTO toFavoriteResponseDTO(UserFragrance userFragrance) {
+		return FragranceResponseDTO.FavoriteResponseDTO.builder()
+			.fragranceId(userFragrance.getFragrance().getId())
+			.build();
 	}
 
 }

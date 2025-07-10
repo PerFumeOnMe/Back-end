@@ -9,4 +9,6 @@ import PerfumeOnMe.spring.domain.User;
 public interface UserRepository extends JpaRepository<User, Long>, UserRepositoryCustom {
 
 	Optional<User> findUserByLoginId(String loginId);
+
+	Optional<User> findById(Long id);
 }
