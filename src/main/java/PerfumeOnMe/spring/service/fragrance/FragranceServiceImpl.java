@@ -46,22 +46,23 @@ public class FragranceServiceImpl implements FragranceService {
 		Fragrance fragrance = fragranceRepository.findByIdWithAllDetails(fragranceId)
 			.orElseThrow(() -> new GeneralException(ErrorStatus.FRAGRANCE_NOT_FOUND));
 
-		boolean liked = Like(userId, fragranceId);
+		boolean liked = (userId != null) && Like(userId, fragranceId);
 
 		return FragranceConverter.toDetailDto(fragrance, liked);
 	}
 
 	// 향수 검색 API
 	@Override
-	public FragranceResponseDTO.FragranceSearchFinalResult searchFragrances(String keyword, int page, int size,
+	public FragranceResponseDTO.FragranceSearchFinalResult searchFragrances(
+		FragranceRequestDTO.FragranceSearchRequest request,
 		Long userId) {
-		PageRequest pageable = PageRequest.of(page, size);
-		Page<Fragrance> fragrancePage = fragranceRepository.findBySearchKeyword(keyword, pageable);
+		PageRequest pageable = PageRequest.of(request.getPage(), request.getSize());
+		Page<Fragrance> fragrancePage = fragranceRepository.findBySearchKeyword(request.getKeyword(), pageable);
 
 		List<FragranceResponseDTO.FragranceSearchResult> content = fragrancePage.getContent().stream()
 			.map(fragrance -> {
 				// 즐겨찾기 확인
-				boolean liked = Like(userId, fragrance.getId());
+				boolean liked = (userId != null) && Like(userId, fragrance.getId());
 				return FragranceConverter.toSearchResultDto(fragrance, liked);
 			})
 			.collect(Collectors.toList());
@@ -156,7 +157,28 @@ public class FragranceServiceImpl implements FragranceService {
 		List<FragranceResponseDTO.FragranceSearchResult> content = fragrancePage.getContent().stream()
 			.map(fragrance -> {
 				// 즐겨찾기 확인
-				boolean liked = Like(userId, fragrance.getId());
+				boolean liked = (userId != null) && Like(userId, fragrance.getId());
+				return FragranceConverter.toSearchResultDto(fragrance, liked);
+			})
+			.collect(Collectors.toList());
+
+		return FragranceResponseDTO.FragranceSearchFinalResult.builder()
+			.content(content)
+			.hasNext(fragrancePage.hasNext())
+			.build();
+	}
+
+	// 향수 전체 리스트 API
+	@Override
+	public FragranceResponseDTO.FragranceSearchFinalResult getFragranceListAll(
+		FragranceRequestDTO.FragranceAllRequest request, Long userId) {
+		PageRequest pageable = PageRequest.of(request.getPage(), request.getSize());
+		Page<Fragrance> fragrancePage = fragranceRepository.findAll(pageable); // 향수 전체 목록 가져오기
+
+		List<FragranceResponseDTO.FragranceSearchResult> content = fragrancePage.getContent().stream()
+			.map(fragrance -> {
+				// 즐겨찾기 확인
+				boolean liked = (userId != null) && Like(userId, fragrance.getId());
 				return FragranceConverter.toSearchResultDto(fragrance, liked);
 			})
 			.collect(Collectors.toList());
