@@ -50,4 +50,15 @@ public class FragranceRequestDTO {
 
 	}
 
+	// 향수 전체 리스트 요청 DTO
+	@Getter
+	@Setter
+	public static class FragranceAllRequest {
+		@ValidPage
+		private int page;
+
+		@ValidSize
+		private int size;
+	}
+
 }
