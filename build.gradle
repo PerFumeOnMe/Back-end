@@ -73,8 +73,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     // Query Parameter Log
     implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
-    //Apache POI
+    // Apache POI
     implementation 'org.apache.poi:poi-ooxml:5.2.3'
+    // OAuth2.0
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 }
 
 tasks.named('test') {
@@ -83,4 +85,8 @@ tasks.named('test') {
 
 clean {
     delete file('src/main/generated')
+}
+
+jar {
+    enabled = false
 }
