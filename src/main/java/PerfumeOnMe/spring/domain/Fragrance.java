@@ -10,7 +10,6 @@ import PerfumeOnMe.spring.domain.base.BaseEntity;
 import PerfumeOnMe.spring.domain.enums.Brand;
 import PerfumeOnMe.spring.domain.enums.FragranceGender;
 import PerfumeOnMe.spring.domain.enums.FragranceType;
-import PerfumeOnMe.spring.domain.mapping.Diary;
 import PerfumeOnMe.spring.domain.mapping.FragranceBaseNote;
 import PerfumeOnMe.spring.domain.mapping.FragranceLocation;
 import PerfumeOnMe.spring.domain.mapping.FragranceMiddleNote;
@@ -103,16 +102,12 @@ public class Fragrance extends BaseEntity {
 
 	@OneToMany(mappedBy = "fragrance", cascade = CascadeType.ALL)
 	@Builder.Default
-	private List<Diary> diaryList = new ArrayList<>();
-
-	@OneToMany(mappedBy = "fragrance", cascade = CascadeType.ALL)
-	@Builder.Default
 	private List<FragranceSeason> fragranceSeasonList = new ArrayList<>();
 
 	@OneToMany(mappedBy = "fragrance", cascade = CascadeType.ALL)
 	@Builder.Default
 	private List<FragranceLocation> fragranceLocationList = new ArrayList<>();
-	
+
 	@OneToMany(mappedBy = "fragrance", cascade = CascadeType.ALL)
 	@Builder.Default
 	private List<FragrancePrice> fragrancePriceList = new ArrayList<>();
