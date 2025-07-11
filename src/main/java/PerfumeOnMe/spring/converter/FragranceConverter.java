@@ -23,7 +23,7 @@ public class FragranceConverter {
 	/**
 	 * 향수 상세 페이지 조회 API
 	 */
-	public static FragranceResponseDTO.FragranceDetailResult toDetailDto(Fragrance fragrance) {
+	public static FragranceResponseDTO.FragranceDetailResult toDetailDto(Fragrance fragrance, boolean liked) {
 		return FragranceResponseDTO.FragranceDetailResult.builder()
 			.id(fragrance.getId())
 			.brand(fragrance.getBrand().getShowBrand())
@@ -56,6 +56,8 @@ public class FragranceConverter {
 				.map(Season::getName)
 				.collect(Collectors.toList()))
 			.homePageUrl(fragrance.getHomePageURL())
+			.imageURL(fragrance.getImageURL())
+			.liked(liked)
 			.build();
 	}
 
@@ -115,7 +117,7 @@ public class FragranceConverter {
 	 */
 
 	// 향수 반환 dto 변환 처리
-	public static FragranceResponseDTO.FragranceSearchResult toSearchResultDto(Fragrance fragrance) {
+	public static FragranceResponseDTO.FragranceSearchResult toSearchResultDto(Fragrance fragrance, boolean liked) {
 		Integer minPrice = fragrance.getFragrancePriceList().stream()
 			.map(fp -> fp.getPrice().getPrice())
 			.min(Comparator.naturalOrder()) // 각 향수의 최저가
@@ -127,20 +129,21 @@ public class FragranceConverter {
 			.name(fragrance.getName())
 			.minPrice(minPrice)
 			.imageUrl(fragrance.getImageURL())
+			.liked(liked)
 			.build();
-	}
-
-	// toSearchResultDto 로 얻은 향수들의 리스트
-	public static List<FragranceResponseDTO.FragranceSearchResult> toSearchResultDtoList(
-		List<Fragrance> fragranceList) {
-		return fragranceList.stream()
-			.map(FragranceConverter::toSearchResultDto)
-			.collect(Collectors.toList());
 	}
 
 	// 향수 즐겨찾기 등록 API
 	public static FragranceResponseDTO.FavoriteResponseDTO toFavoriteResponseDTO(UserFragrance userFragrance) {
 		return FragranceResponseDTO.FavoriteResponseDTO.builder()
+			.fragranceId(userFragrance.getFragrance().getId())
+			.build();
+	}
+
+	// 향수 즐겨찾기 취소 API
+	public static FragranceResponseDTO.FavoriteCancelResponseDTO toFavoriteCancelResponseDTO(
+		UserFragrance userFragrance) {
+		return FragranceResponseDTO.FavoriteCancelResponseDTO.builder()
 			.fragranceId(userFragrance.getFragrance().getId())
 			.build();
 	}
