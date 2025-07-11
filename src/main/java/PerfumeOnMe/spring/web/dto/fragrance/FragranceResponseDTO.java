@@ -27,6 +27,7 @@ public class FragranceResponseDTO {
 		private List<String> locations;
 		private List<String> seasons;
 		private String homePageUrl;
+		private String imageURL;
 		private boolean liked;
 
 		@Getter

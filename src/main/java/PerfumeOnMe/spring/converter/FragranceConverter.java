@@ -56,6 +56,7 @@ public class FragranceConverter {
 				.map(Season::getName)
 				.collect(Collectors.toList()))
 			.homePageUrl(fragrance.getHomePageURL())
+			.imageURL(fragrance.getImageURL())
 			.liked(liked)
 			.build();
 	}
