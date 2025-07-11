@@ -8,7 +8,8 @@ public interface FragranceService {
 	FragranceResponseDTO.FragranceDetailResult getFragranceDetail(Long fragranceId, Long userId);
 
 	// 향수 검색 API
-	FragranceResponseDTO.FragranceSearchFinalResult searchFragrances(String keyword, int page, int size, Long userId);
+	FragranceResponseDTO.FragranceSearchFinalResult searchFragrances(FragranceRequestDTO.FragranceSearchRequest request,
+		Long userId);
 
 	// 향수 즐겨찾기 등록 API
 	FragranceResponseDTO.FavoriteResponseDTO addFavorite(Long userId, Long fragranceId);
@@ -19,5 +20,9 @@ public interface FragranceService {
 	// 향수 필터링 API
 	FragranceResponseDTO.FragranceSearchFinalResult searchFragrancesByFilter(
 		FragranceRequestDTO.FragranceFilterRequest request, Long userId);
+
+	// 향수 전체 리스트 조회 API
+	FragranceResponseDTO.FragranceSearchFinalResult getFragranceListAll(FragranceRequestDTO.FragranceAllRequest request,
+		Long userId);
 }
 
