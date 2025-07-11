@@ -30,7 +30,7 @@ public class SecurityConfig {
 	public static final String[] AUTH_WHITELIST = {
 		"/v3/api-docs/**", "/swagger-resources/**", "/swagger-ui.html", "/swagger-ui/**",
 		"/swagger/**", "/users/signup", "/auth/login", "/auth/social/kakao", "/users/reissue",
-		"/health"
+		"/health", "/fragrances/allow/**"
 	};
 	private final JwtAuthenticationFilter JwtAuthenticationFilter;
 	private final JwtExceptionHandlerFilter JwtExceptionHandlerFilter;
@@ -44,7 +44,7 @@ public class SecurityConfig {
 			// 요청 경로별 인증 확인 설정
 			.authorizeHttpRequests(auth -> auth
 				.requestMatchers(AUTH_WHITELIST).permitAll()
-				.anyRequest().permitAll() // 개발 진행할 때 임시로 풀어두기 -> 나중에 authenticated()로 변경
+				.anyRequest().authenticated() // 개발 진행할 때 임시로 풀어두기 -> 나중에 authenticated()로 변경
 			)
 			// filter 레벨에서 발생하는 예외 핸들러 설정
 			.exceptionHandling(exception -> exception

@@ -35,7 +35,7 @@ public class FragranceController {
 	/**
 	 * 향수 상세 API
 	 */
-	@GetMapping("/{fragranceId}")
+	@GetMapping("/allow/{fragranceId}")
 	@Operation(
 		summary = "향수 상세 조회",
 		description = "향수 ID로 상세 정보를 조회하는 API입니다.",
@@ -50,15 +50,16 @@ public class FragranceController {
 	public ResponseEntity<ApiResponse<FragranceResponseDTO.FragranceDetailResult>> getFragranceDetail(
 		@PathVariable("fragranceId") Long fragranceId,
 		@AuthenticationPrincipal CustomUserDetails userDetails) {
+		Long userId = (userDetails != null) ? userDetails.getUserId() : null;
 		FragranceResponseDTO.FragranceDetailResult result = fragranceService.getFragranceDetail(fragranceId,
-			userDetails.getUserId());
+			userId);
 		return ResponseEntity.ok(ApiResponse.onSuccess(result));
 	}
 
 	/**
 	 * 향수 검색 API
 	 */
-	@GetMapping("/search")
+	@GetMapping("/allow/search")
 	@Operation(
 		summary = "향수 키워드 검색 (무한 스크롤)",
 		description = "keyword 로 향수 이름을 검색하고, 페이징 처리된 결과를 반환합니다.",
@@ -76,9 +77,8 @@ public class FragranceController {
 		@Valid @ModelAttribute FragranceRequestDTO.FragranceSearchRequest request,
 		@AuthenticationPrincipal CustomUserDetails userDetails
 	) {
-		FragranceResponseDTO.FragranceSearchFinalResult result = fragranceService.searchFragrances(
-			request.getKeyword(), request.getPage(),
-			request.getSize(), userDetails.getUserId());
+		Long userId = (userDetails != null) ? userDetails.getUserId() : null;
+		FragranceResponseDTO.FragranceSearchFinalResult result = fragranceService.searchFragrances(request, userId);
 
 		return ResponseEntity.ok(ApiResponse.onSuccess(result));
 
@@ -131,7 +131,7 @@ public class FragranceController {
 	/**
 	 * 향수 필터링 API
 	 */
-	@GetMapping("/filter")
+	@GetMapping("/allow/filter")
 	@Operation(
 		summary = "향수 필터링 검색 (무한 스크롤)",
 		description = "필터링을 통해 걸러진 향수 목록을, 페이징 처리된 결과로 반환합니다.",
@@ -160,9 +160,31 @@ public class FragranceController {
 		@Valid @ModelAttribute FragranceRequestDTO.FragranceFilterRequest request,
 		@AuthenticationPrincipal CustomUserDetails userDetails
 	) {
+		Long userId = (userDetails != null) ? userDetails.getUserId() : null;
 		FragranceResponseDTO.FragranceSearchFinalResult result = fragranceService.searchFragrancesByFilter(request,
-			userDetails.getUserId());
+			userId);
 		return ResponseEntity.ok(ApiResponse.onSuccess(result));
 	}
 
+	/**
+	 * 향수 전체 리스트 API
+	 */
+
+	@GetMapping("/allow/all")
+	@Operation(
+		summary = "향수 전체 리스트 조회",
+		description = "향수 전체 목록을 조회하는 API 입니다.",
+		responses = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "성공입니다", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FragranceResponseDTO.FragranceSearchResult.class))),
+		}
+	)
+	public ResponseEntity<ApiResponse<FragranceResponseDTO.FragranceSearchFinalResult>> getFragrancesAll(
+		FragranceRequestDTO.FragranceAllRequest request,
+		@AuthenticationPrincipal CustomUserDetails userDetails
+	) {
+		Long userId = (userDetails != null) ? userDetails.getUserId() : null;
+		FragranceResponseDTO.FragranceSearchFinalResult result = fragranceService.getFragranceListAll(request,
+			userId);
+		return ResponseEntity.ok(ApiResponse.onSuccess(result));
+	}
 }
