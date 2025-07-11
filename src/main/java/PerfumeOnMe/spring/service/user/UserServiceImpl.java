@@ -10,11 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import PerfumeOnMe.spring.apiPayload.code.status.ErrorStatus;
 import PerfumeOnMe.spring.apiPayload.exception.GeneralException;
+import PerfumeOnMe.spring.config.security.auth.converter.AuthConverter;
 import PerfumeOnMe.spring.config.security.auth.dto.AuthResponseDTO;
 import PerfumeOnMe.spring.config.security.auth.manager.LogoutAccessTokenManager;
 import PerfumeOnMe.spring.config.security.auth.manager.RefreshTokenManager;
 import PerfumeOnMe.spring.config.security.auth.provider.JwtTokenProvider;
 import PerfumeOnMe.spring.config.security.auth.token.JwtAuthenticationToken;
+import PerfumeOnMe.spring.config.security.auth.userDetails.CustomUserDetails;
 import PerfumeOnMe.spring.converter.UserConverter;
 import PerfumeOnMe.spring.domain.User;
 import PerfumeOnMe.spring.repository.user.UserRepository;
@@ -74,9 +76,8 @@ public class UserServiceImpl implements UserService {
 		JwtAuthenticationToken request = new JwtAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 		String accessToken = jwtTokenProvider.createAccessToken(request);
 		String refreshToken = jwtTokenProvider.createRefreshToken(request);
-		AuthResponseDTO.LoginResult loginResultDTO = AuthResponseDTO.LoginResult.builder()
-			.refreshToken(refreshToken)
-			.build();
+		Long userId = ((CustomUserDetails)userDetails).getUserId();
+		AuthResponseDTO.LoginResult loginResultDTO = AuthConverter.toLoginResult(refreshToken, userId);
 
 		// 새로 발급한 리프레시 토큰을 Redis에 저장 - 덮어씌우기
 		refreshTokenManager.saveRefreshToken(loginId, refreshToken);
