@@ -5,7 +5,8 @@ import java.time.LocalDate;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import PerfumeOnMe.spring.domain.Fragrance;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import PerfumeOnMe.spring.domain.User;
 import PerfumeOnMe.spring.domain.base.BaseEntity;
 import jakarta.persistence.Column;
@@ -41,13 +42,13 @@ public class Diary extends BaseEntity {
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "fragrance_id")
-	private Fragrance fragrance;
+	@Column(nullable = false, length = 150)
+	private String fragranceName;
+
+	@Column(nullable = false)
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	private LocalDate date;
 
 	@Column(columnDefinition = "TEXT", nullable = false)
 	private String content;
-
-	@Column(nullable = false)
-	private LocalDate date;
 }
