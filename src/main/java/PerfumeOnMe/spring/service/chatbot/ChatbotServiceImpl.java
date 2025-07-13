@@ -25,6 +25,7 @@ import PerfumeOnMe.spring.web.dto.chatbot.ChatBotRequestDTO;
 import PerfumeOnMe.spring.web.dto.chatbot.ChatBotResponseDTO;
 import PerfumeOnMe.spring.web.dto.chatbot.ChatCompletionMessage;
 import PerfumeOnMe.spring.web.dto.chatbot.ChatCompletionRequest;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
@@ -40,6 +41,13 @@ public class ChatbotServiceImpl implements ChatbotService {
 	@Value("${openai.model}")
 	private String model; // OpenAI 모델 이름 - gpt-3.5-turbo
 
+	private String systemPrompt; // ← 캐시된 프롬프트
+
+	@PostConstruct
+	public void init() {
+		this.systemPrompt = promptLoader.loadDefaultPrompt(); // 프롬프트 파일 로딩
+	}
+	
 	/**
 	 * userId: 현재 로그인한 사용자 ID
 	 * request: 사용자 질문이 담긴 DTO
@@ -50,9 +58,6 @@ public class ChatbotServiceImpl implements ChatbotService {
 		if (request.getMessage() == null) {
 			throw new GeneralException(ErrorStatus.REQUIRED_MESSAGES);
 		}
-
-		String systemPrompt = promptLoader.loadDefaultPrompt(); // 프롬프트 파일 로딩
-
 		User user = userRepository.findById(userId)
 			.orElseThrow(() -> new GeneralException(ErrorStatus.LOGIN_ID_NOT_FOUND));
 
