@@ -5,7 +5,7 @@ spring:
     import:
       - application-secret.yml
   datasource:
-    url: # RDS1
+    url: # RDS
     username: # Username
     password: # Password
     driver-class-name: com.mysql.cj.jdbc.Driver
