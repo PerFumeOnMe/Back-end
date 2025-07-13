@@ -26,12 +26,12 @@ spring:
       port: 6379
     cache:
       type: redis
-jwt:
-  token:
-    secretKey: # secret key
-    expiration:
-      access: 7200000 # 2시간
-      refresh: 1209600000 # 2주
+  jwt:
+    token:
+      secretKey: # secret key
+      expiration:
+        access: 7200000 # 2시간
+        refresh: 1209600000 # 2주
 server:
   servlet:
     encoding:
