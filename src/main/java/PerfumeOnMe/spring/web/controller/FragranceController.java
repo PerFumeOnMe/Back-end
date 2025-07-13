@@ -61,7 +61,7 @@ public class FragranceController {
 	 */
 	@GetMapping("/allow/search")
 	@Operation(
-		summary = "향수 키워드 검색 (무한 스크롤)",
+		summary = "향수 키워드 검색",
 		description = "keyword 로 향수 이름을 검색하고, 페이징 처리된 결과를 반환합니다.",
 		responses = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FragranceResponseDTO.FragranceSearchResult.class))),
@@ -133,7 +133,7 @@ public class FragranceController {
 	 */
 	@GetMapping("/allow/filter")
 	@Operation(
-		summary = "향수 필터링 검색 (무한 스크롤)",
+		summary = "향수 필터링 검색 ",
 		description = "필터링을 통해 걸러진 향수 목록을, 페이징 처리된 결과로 반환합니다.",
 		responses = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FragranceResponseDTO.FragranceSearchResult.class))),
