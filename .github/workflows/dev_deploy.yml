@@ -89,6 +89,9 @@ jobs:
               -e REDIS_HOST=${{ secrets.ENV_REDIS_HOST }} \
               -e REDIS_PORT=${{ secrets.ENV_REDIS_PORT }} \
               -e JWT_SECRET=${{ secrets.ENV_JWT_SECRET }} \
+              -e OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} \
+              -e KAKAO_REST_API_KEY=${{ secrets.KAKAO_REST_API_KEY }} \
+              -e KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }} \
               chanee29/perfumeonme
 
       - name: Remove GitHub IP FROM security group
