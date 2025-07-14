@@ -24,8 +24,8 @@ spring:
     redis:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT:6379}
-    cache:
-      type: redis
+  cache:
+    type: redis
   security:
     oauth2:
       kakao:
