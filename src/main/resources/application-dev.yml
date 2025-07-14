@@ -2,9 +2,10 @@ spring:
   config:
     activate:
       on-profile: dev
-    import:
-      - application-secret.yml
   datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   sql:
     init:
@@ -20,11 +21,14 @@ spring:
         default_batch_fetch_size: 100
     show-sql: true
   data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT:6379}
     cache:
       type: redis
   jwt:
     token:
-      secretKey: ${jwt.secret.secret_key}
+      secretKey: ${JWT_SECRET}
       expiration:
         access: 7200000 # 2시간
         refresh: 1209600000 # 2주

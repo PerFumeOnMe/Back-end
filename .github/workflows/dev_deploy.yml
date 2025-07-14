@@ -16,12 +16,12 @@ jobs:
         with:
           java-version: '21'
           distribution: 'adopt'
-      - name: Copy Secret
-        env:
-          OCCUPY_SECRET: ${{ secrets.OCCUPY_SECRET }}
-          OCCUPY_SECRET_DIR: src/main/resources
-          OCCUPY_SECRET_DIR_FILE_NAME: application-secret.yml
-        run: echo $OCCUPY_SECRET | base64 --decode > $OCCUPY_SECRET_DIR/$OCCUPY_SECRET_DIR_FILE_NAME
+      #      - name: Copy Secret
+      #        env:
+      #          OCCUPY_SECRET: ${{ secrets.OCCUPY_SECRET }}
+      #          OCCUPY_SECRET_DIR: src/main/resources
+      #          OCCUPY_SECRET_DIR_FILE_NAME: application-secret.yml
+      #        run: echo $OCCUPY_SECRET | base64 --decode > $OCCUPY_SECRET_DIR/$OCCUPY_SECRET_DIR_FILE_NAME
 
       - name: gradlew mod modify
         run: chmod +x gradlew
@@ -81,7 +81,14 @@ jobs:
             sudo docker rm perfumeonme || true
             sudo docker rmi chanee29/perfumeonme || true
             sudo docker pull chanee29/perfumeonme
-            sudo docker run -d -p 8080:8080 --name perfumeonme chanee29/perfumeonme
+            sudo docker run -d -p 8080:8080 --name perfumeonme \
+              -e DB_URL=${{ secrets.ENV_DB_URL }} \
+              -e DB_USERNAME=${{ secrets.ENV_DB_USERNAME }} \
+              -e DB_PASSWORD=${{ secrets.ENV_DB_PASSWORD }} \
+              -e REDIS_HOST=${{ secrets.ENV_REDIS_HOST }} \
+              -e REDIS_PORT=${{ secrets.ENV_REDIS_PORT }} \
+              -e JWT_SECRET=${{ secrets.ENV_JWT_SECRET }} \
+              chanee29/perfumeonme
 
       - name: Remove GitHub IP FROM security group
         run: |
