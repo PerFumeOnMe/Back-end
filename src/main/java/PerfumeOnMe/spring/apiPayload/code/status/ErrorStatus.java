@@ -60,6 +60,11 @@ public enum ErrorStatus implements BaseErrorCode {
 	INVALID_SITUATION_ID(HttpStatus.BAD_REQUEST, "FILTER4005", "유효하지 않은 장소 ID 입니다."),
 	INVALID_PRICE_RANGE(HttpStatus.BAD_REQUEST, "FILTER4006", "가격 범위가 올바르지 않습니다."),
 
+	// 챗봇 에러
+	FILE_NOT_FOUND(HttpStatus.BAD_REQUEST, "CHATBOT4001", "프롬프트 파일을 찾을 수 없습니다."),
+	PROMPT_LOADING_FAIL(HttpStatus.BAD_REQUEST, "CHATBOT4002", "프롬프트 로딩에 실패하였습니다."),
+	REQUIRED_MESSAGES(HttpStatus.BAD_REQUEST, "CHATBOT4003", "메세지를 입력하세요."),
+
 	// 예시,,,
 	ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다.");
 

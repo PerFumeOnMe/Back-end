@@ -1,61 +1,88 @@
-name: Perfume on Me Dev CI/CD
+name: PerfumeonMe Dev CI/CD
 
 on:
-  pull_request:
-    types: [closed]
-  workflow_dispatch: # (2).수동 실행도 가능하도록
-
+  push:
+    branches: [ "develop" ]
 jobs:
-  build:
-    runs-on: ubuntu-latest # (3). CI/CD 작업을 수행할 OS환경 /  하단의 develop을 release로 바꾸면 배포 스크립트
-    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'develop'
+  deploy:
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2 # (4).코드 check out
+        uses: actions/checkout@v3
 
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
-          java-version: 21 # (5).자바 설치
+          java-version: '21'
           distribution: 'adopt'
+      - name: Copy Secret
+        env:
+          OCCUPY_SECRET: ${{ secrets.OCCUPY_SECRET }}
+          OCCUPY_SECRET_DIR: src/main/resources
+          OCCUPY_SECRET_DIR_FILE_NAME: application-secret.yml
+        run: echo $OCCUPY_SECRET | base64 --decode > $OCCUPY_SECRET_DIR/$OCCUPY_SECRET_DIR_FILE_NAME
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x ./gradlew
-        shell: bash # (6).권한 부여
+      - name: gradlew mod modify
+        run: chmod +x gradlew
 
-      - name: Build with Gradle
-        run: ./gradlew clean build -x test
-        shell: bash # (7).build시작
-
-      - name: Get current time
-        uses: 1466587594/get-current-time@v2
-        id: current-time
+      # gradle 캐싱 (0) - 주석처리할수도있음
+      - name: Gradle Caching
+        uses: actions/cache@v3
         with:
-          format: YYYY-MM-DDTHH-mm-ss
-          utcOffset: "+09:00" # (8).build시점의 시간확보
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
-      - name: Show Current Time
-        run: echo "CurrentTime=${{ steps.current-time.outputs.formattedTime }}"
-        shell: bash # (9).확보한 시간 보여주기
+      # Spring Boot 어플리케이션 BUILD(1)
+      - name: Spring Boot Build
+        run: ./gradlew clean build --exclude-task test
 
-      - name: Generate deployment package
+      - name: Docker Image Build
+        run: docker build -t chanee29/perfumeonme .
+
+      - name: docker login
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: docker Hub Push
+        run: docker push chanee29/perfumeonme
+
+      - name: get GitHub IP
+        id: ip
+        uses: haythem/public-ip@v1.2
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_PASSWORD }}
+          aws-region: ap-northeast-1
+
+      - name: Add GitHub IP to AWS
         run: |
-          mkdir -p deploy
-          cp build/libs/*.jar deploy/application.jar
-          cp Procfile deploy/Procfile
-          cp -r .ebextensions_dev deploy/.ebextensions
-          cp -r .platform deploy/.platform
-          cd deploy && zip -r deploy.zip .
+          aws ec2 authorize-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
 
-      - name: Beanstalk Deploy
-        uses: einaregilsson/beanstalk-deploy@v20
+      - name: AWS EC2 Connection
+        uses: appleboy/ssh-action@v0.1.6
         with:
-          aws_access_key: ${{ secrets.AWS_ACTION_ACCESS_KEY_ID }}
-          aws_secret_key: ${{ secrets.AWS_ACTION_SECRET_ACCESS_KEY }}
-          application_name: perfume-dev-app
-          environment_name: Perfume-dev-app-env
-          version_label: github-action-${{ steps.current-time.outputs.formattedTime }}
-          region: ap-northeast-1
-          deployment_package: deploy/deploy.zip
-          wait_for_deployment: false
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          port: ${{ secrets.EC2_SSH_PORT }}
+          timeout: 60s
+          script: |
+            sudo docker stop perfumeonme || true
+            sudo docker rm perfumeonme || true
+            sudo docker rmi chanee29/perfumeonme || true
+            sudo docker pull chanee29/perfumeonme
+            sudo docker run -d -p 8080:8080 --name perfumeonme chanee29/perfumeonme
+
+      - name: Remove GitHub IP FROM security group
+        run: |
+          aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32

@@ -2,6 +2,8 @@ spring:
   config:
     activate:
       on-profile: dev
+    import:
+      - application-secret.yml
   datasource:
     url: # RDS
     username: # Username
@@ -28,7 +30,7 @@ spring:
       type: redis
   jwt:
     token:
-      secretKey: # secret key
+      secretKey: ${jwt.secret.secret_key}
       expiration:
         access: 7200000 # 2시간
         refresh: 1209600000 # 2주
