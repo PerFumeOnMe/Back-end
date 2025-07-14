@@ -5,9 +5,6 @@ spring:
     import:
       - application-secret.yml
   datasource:
-    url: # RDS
-    username: # Username
-    password: # Password
     driver-class-name: com.mysql.cj.jdbc.Driver
   sql:
     init:
@@ -23,9 +20,6 @@ spring:
         default_batch_fetch_size: 100
     show-sql: true
   data:
-    redis:
-      host: # AWS Redis
-      port: 6379
     cache:
       type: redis
   jwt:
