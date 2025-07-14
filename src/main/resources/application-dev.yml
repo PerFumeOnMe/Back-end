@@ -54,3 +54,6 @@ server:
       charset: UTF-8
       force: true
       enabled: true
+openai:
+  api-key: ${OPENAI_API_KEY}
+  model: gpt-4
