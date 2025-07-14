@@ -1,0 +1,55 @@
+package PerfumeOnMe.spring.config.security.oauth.controller;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import PerfumeOnMe.spring.apiPayload.ApiResponse;
+import PerfumeOnMe.spring.config.security.auth.dto.AuthResponseDTO;
+import PerfumeOnMe.spring.config.security.oauth.service.OAuthService;
+import PerfumeOnMe.spring.config.security.oauth.service.OAuthServiceFactory;
+import PerfumeOnMe.spring.config.security.oauth.util.OAuthProviderResolver;
+import PerfumeOnMe.spring.domain.enums.Social;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/auth/social")
+public class OAuthController {
+
+	private final OAuthServiceFactory serviceFactory;
+
+	@GetMapping("/{provider}")
+	@Operation(
+		summary = "소셜 로그인 API",
+		description = "소셜 액세스 토큰을 발급하고, 해당 토큰으로 사용자 정보를 가져와 회원가입 및 로그인을 진행하는 API입니다.",
+		responses = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "성공입니다."),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4003", description = "해당 아이디를 가진 사용자가 존재하지 않습니다."),
+		},
+		parameters = {
+			@Parameter(name = "code", description = "인가 코드가 필요합니다."),
+			@Parameter(name = "provider", description = "예시: kakao")
+		}
+	)
+	public ResponseEntity<ApiResponse<AuthResponseDTO.LoginResult>> oAuthLogin(
+		@RequestParam("code") String code,
+		@PathVariable("provider") String provider,
+		HttpServletResponse response) {
+
+		// provider에 맞는 OAuthService 얻기
+		Social social = OAuthProviderResolver.resolve(provider);
+		OAuthService oAuthService = serviceFactory.getOAuthService(social);
+
+		// 결과 얻기
+		AuthResponseDTO.LoginResult result = oAuthService.oAuthLogin(code, response);
+
+		return ResponseEntity.ok().body(ApiResponse.onSuccess(result));
+	}
+}
