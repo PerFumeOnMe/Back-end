@@ -19,6 +19,7 @@ import PerfumeOnMe.spring.config.security.auth.token.JwtAuthenticationToken;
 import PerfumeOnMe.spring.config.security.auth.userDetails.CustomUserDetails;
 import PerfumeOnMe.spring.converter.UserConverter;
 import PerfumeOnMe.spring.domain.User;
+import PerfumeOnMe.spring.domain.enums.Social;
 import PerfumeOnMe.spring.repository.user.UserRepository;
 import PerfumeOnMe.spring.web.dto.user.UserRequestDTO;
 import PerfumeOnMe.spring.web.dto.user.UserResponseDTO;
@@ -68,16 +69,22 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public AuthResponseDTO.LoginResult reissue(String reqRefreshToken, HttpServletResponse response) {
 
+		if (reqRefreshToken == null || reqRefreshToken.isBlank()) {
+			throw new GeneralException(ErrorStatus.REFRESH_TOKEN_NOT_FOUND);
+		}
+
 		// 리프레시 토큰에서 Subject 추출
 		String loginId = jwtTokenProvider.getSubject(reqRefreshToken);
 
 		// 토큰 생성 및 DTO에 담기
 		UserDetails userDetails = userDetailsService.loadUserByUsername(loginId);
-		JwtAuthenticationToken request = new JwtAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+		Social social = ((CustomUserDetails)userDetails).getSocial();
+		JwtAuthenticationToken request = new JwtAuthenticationToken(
+			userDetails, null, userDetails.getAuthorities(), social);
 		String accessToken = jwtTokenProvider.createAccessToken(request);
 		String refreshToken = jwtTokenProvider.createRefreshToken(request);
 		Long userId = ((CustomUserDetails)userDetails).getUserId();
-		AuthResponseDTO.LoginResult loginResultDTO = AuthConverter.toLoginResult(refreshToken, userId);
+		AuthResponseDTO.LoginResult loginResultDTO = AuthConverter.toLoginResult(refreshToken, userId, social);
 
 		// 새로 발급한 리프레시 토큰을 Redis에 저장 - 덮어씌우기
 		refreshTokenManager.saveRefreshToken(loginId, refreshToken);
