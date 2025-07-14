@@ -70,38 +70,40 @@ jobs:
 
       - name: AWS EC2 Connection
         uses: appleboy/ssh-action@v0.1.6
-        env:
-          ENV_DB_URL: ${{ secrets.ENV_DB_URL }}
-          ENV_DB_USERNAME: ${{ secrets.ENV_DB_USERNAME }}
-          ENV_DB_PASSWORD: ${{ secrets.ENV_DB_PASSWORD }}
-          ENV_REDIS_HOST: ${{ secrets.ENV_REDIS_HOST }}
-          ENV_REDIS_PORT: ${{ secrets.ENV_REDIS_PORT }}
-          ENV_JWT_SECRET: ${{ secrets.ENV_JWT_SECRET }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
-          KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           port: ${{ secrets.EC2_SSH_PORT }}
-          timeout: 60s
+          timeout: 300s
           script: |
             sudo docker stop perfumeonme || true
             sudo docker rm perfumeonme || true
             sudo docker rmi chanee29/perfumeonme || true
             sudo docker pull chanee29/perfumeonme
+            
+            echo "🚀 Starting new container with the following environment variables:"
+            echo "SPRING_PROFILES_ACTIVE=dev"
+            echo "DB_URL=${{ secrets.ENV_DB_URL }}"
+            echo "DB_USERNAME=${{ secrets.ENV_DB_USERNAME }}"
+            echo "REDIS_HOST=${{ secrets.ENV_REDIS_HOST }}"
+            echo "REDIS_PORT=${{ secrets.ENV_REDIS_PORT }}"
+            echo "JWT_SECRET=${{ secrets.ENV_JWT_SECRET }}"
+            echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}"
+            echo "KAKAO_REST_API_KEY=${{ secrets.KAKAO_REST_API_KEY }}"
+            echo "KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }}"
+            
             sudo docker run -d -p 8080:8080 --name perfumeonme \
               -e SPRING_PROFILES_ACTIVE=dev \
-              -e DB_URL=$ENV_DB_URL \
-              -e DB_USERNAME=$ENV_DB_USERNAME \
-              -e DB_PASSWORD=$ENV_DB_PASSWORD \
-              -e REDIS_HOST=$ENV_REDIS_HOST \
-              -e REDIS_PORT=$ENV_REDIS_PORT \
-              -e JWT_SECRET=$ENV_JWT_SECRET \
-              -e OPENAI_API_KEY=$OPENAI_API_KEY \
-              -e KAKAO_REST_API_KEY=$KAKAO_REST_API_KEY \
-              -e KAKAO_CLIENT_SECRET=$KAKAO_CLIENT_SECRET \
+              -e DB_URL=${{ secrets.ENV_DB_URL }} \
+              -e DB_USERNAME=${{ secrets.ENV_DB_USERNAME }} \
+              -e DB_PASSWORD=${{ secrets.ENV_DB_PASSWORD }} \
+              -e REDIS_HOST=${{ secrets.ENV_REDIS_HOST }} \
+              -e REDIS_PORT=${{ secrets.ENV_REDIS_PORT }} \
+              -e JWT_SECRET=${{ secrets.ENV_JWT_SECRET }} \
+              -e OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} \
+              -e KAKAO_REST_API_KEY=${{ secrets.KAKAO_REST_API_KEY }} \
+              -e KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }} \
               chanee29/perfumeonme
 
       - name: Remove GitHub IP FROM security group
