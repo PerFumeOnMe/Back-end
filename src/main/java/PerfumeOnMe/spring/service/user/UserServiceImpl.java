@@ -10,13 +10,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import PerfumeOnMe.spring.apiPayload.code.status.ErrorStatus;
 import PerfumeOnMe.spring.apiPayload.exception.GeneralException;
+import PerfumeOnMe.spring.config.security.auth.converter.AuthConverter;
 import PerfumeOnMe.spring.config.security.auth.dto.AuthResponseDTO;
 import PerfumeOnMe.spring.config.security.auth.manager.LogoutAccessTokenManager;
 import PerfumeOnMe.spring.config.security.auth.manager.RefreshTokenManager;
 import PerfumeOnMe.spring.config.security.auth.provider.JwtTokenProvider;
 import PerfumeOnMe.spring.config.security.auth.token.JwtAuthenticationToken;
+import PerfumeOnMe.spring.config.security.auth.userDetails.CustomUserDetails;
 import PerfumeOnMe.spring.converter.UserConverter;
 import PerfumeOnMe.spring.domain.User;
+import PerfumeOnMe.spring.domain.enums.Social;
 import PerfumeOnMe.spring.repository.user.UserRepository;
 import PerfumeOnMe.spring.web.dto.user.UserRequestDTO;
 import PerfumeOnMe.spring.web.dto.user.UserResponseDTO;
@@ -64,20 +67,24 @@ public class UserServiceImpl implements UserService {
 
 	// 리프레시 토큰으로 액세스 토큰과 리프레시 토큰 재발급
 	@Override
-	public AuthResponseDTO.RefreshToken reissue(String reqRefreshToken, HttpServletResponse response) {
+	public AuthResponseDTO.LoginResult reissue(String reqRefreshToken, HttpServletResponse response) {
+
+		if (reqRefreshToken == null || reqRefreshToken.isBlank()) {
+			throw new GeneralException(ErrorStatus.REFRESH_TOKEN_NOT_FOUND);
+		}
 
 		// 리프레시 토큰에서 Subject 추출
 		String loginId = jwtTokenProvider.getSubject(reqRefreshToken);
 
 		// 토큰 생성 및 DTO에 담기
 		UserDetails userDetails = userDetailsService.loadUserByUsername(loginId);
-		JwtAuthenticationToken request = new JwtAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+		Social social = ((CustomUserDetails)userDetails).getSocial();
+		JwtAuthenticationToken request = new JwtAuthenticationToken(
+			userDetails, null, userDetails.getAuthorities(), social);
 		String accessToken = jwtTokenProvider.createAccessToken(request);
 		String refreshToken = jwtTokenProvider.createRefreshToken(request);
-		AuthResponseDTO.RefreshToken refreshTokenDTO = AuthResponseDTO
-			.RefreshToken.builder()
-			.refreshToken(refreshToken)
-			.build();
+		Long userId = ((CustomUserDetails)userDetails).getUserId();
+		AuthResponseDTO.LoginResult loginResultDTO = AuthConverter.toLoginResult(refreshToken, userId, social);
 
 		// 새로 발급한 리프레시 토큰을 Redis에 저장 - 덮어씌우기
 		refreshTokenManager.saveRefreshToken(loginId, refreshToken);
@@ -88,7 +95,7 @@ public class UserServiceImpl implements UserService {
 		response.setStatus(HttpServletResponse.SC_OK);
 		response.setHeader("Authorization", "Bearer " + accessToken);
 
-		return refreshTokenDTO;
+		return loginResultDTO;
 	}
 
 	// 사용자 로그아웃 - 액세스 토큰과 리프레시 토큰 블랙리스트화

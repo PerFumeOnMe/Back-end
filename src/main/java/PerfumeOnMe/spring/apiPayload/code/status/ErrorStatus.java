@@ -26,13 +26,19 @@ public enum ErrorStatus implements BaseErrorCode {
 
 	// 토큰 에러
 	INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN4001", "유효하지 않은 토큰입니다."),
-	REFRESH_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "TOKEN4002", "해당 리프레시 토큰이 존재하지 않습니다."),
+	REFRESH_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "TOKEN4002", "리프레시 토큰을 입력해야 합니다."),
 	EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN4003", "만료된 토큰입니다."),
 	LOGOUT_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN4004", "로그아웃한 액세스 토큰입니다."),
 	MALFORMED_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN4005", "토큰 구조가 잘못됐습니다."),
 	UNSUPPORTED_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN4006", "지원하지 않는 토큰 형식입니다."),
 	INVALID_SIGNATURE(HttpStatus.UNAUTHORIZED, "TOKEN4007", "토큰의 서명이 잘못됐습니다."),
 	TOKEN_NOT_FOUND(HttpStatus.BAD_REQUEST, "TOKEN4008", "토큰이 없습니다."),
+
+	// OAuth 에러
+	UNSUPPORTED_SOCIAL(HttpStatus.BAD_REQUEST, "OAUTH4001", "지원하지 않는 소셜 로그인 방식입니다."),
+
+	// JSON Parsing 에러
+	PARSE_ERROR(HttpStatus.BAD_REQUEST, "OAUTH4002", "파싱 중 오류가 생겼습니다."),
 
 	// 데이터시트 에러
 	UNSUPPORTED_BRAND(HttpStatus.BAD_REQUEST, "DATA4001", "지원하지 않는 브랜드입니다."),

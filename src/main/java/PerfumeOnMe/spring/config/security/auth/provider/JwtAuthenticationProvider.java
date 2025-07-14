@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import PerfumeOnMe.spring.config.security.auth.token.JwtAuthenticationToken;
+import PerfumeOnMe.spring.domain.enums.Social;
 import lombok.RequiredArgsConstructor;
 
 /*
@@ -29,7 +30,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
 		UserDetails userDetails = userDetailsService.loadUserByUsername(loginId);
 
-		return new JwtAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+		return new JwtAuthenticationToken(userDetails, null, userDetails.getAuthorities(), Social.LOCAL);
 	}
 
 	@Override

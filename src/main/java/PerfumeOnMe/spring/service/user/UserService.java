@@ -10,7 +10,7 @@ public interface UserService {
 
 	UserResponseDTO.SignupResult signup(UserRequestDTO.Signup request);
 
-	AuthResponseDTO.RefreshToken reissue(String refreshToken, HttpServletResponse response);
+	AuthResponseDTO.LoginResult reissue(String refreshToken, HttpServletResponse response);
 
 	String logout(HttpServletRequest request);
 

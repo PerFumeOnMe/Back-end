@@ -60,9 +60,9 @@ public class UserController {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "TOKEN4002", description = "해당 리프레시 토큰이 존재하지 않습니다.")
 		}
 	)
-	public ResponseEntity<ApiResponse<AuthResponseDTO.RefreshToken>> reissue(
+	public ResponseEntity<ApiResponse<AuthResponseDTO.LoginResult>> reissue(
 		@RequestHeader(name = "Refresh-Token") String refreshToken, HttpServletResponse response) {
-		AuthResponseDTO.RefreshToken result = userService.reissue(refreshToken, response);
+		AuthResponseDTO.LoginResult result = userService.reissue(refreshToken, response);
 		return ResponseEntity.ok().body(ApiResponse.onSuccess(result));
 	}
 

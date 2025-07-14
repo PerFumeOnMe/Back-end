@@ -9,22 +9,20 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import PerfumeOnMe.spring.apiPayload.code.status.ErrorStatus;
 import PerfumeOnMe.spring.apiPayload.exception.GeneralException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
 /*
 Security Filter에서 발생하는 예외를 잡아 통일해둔 API 응답에 맞게 처리하는 클래스
  */
+@Slf4j
 @Component
 public class JwtExceptionHandlerFilter extends OncePerRequestFilter {
-
-	private final ObjectMapper mapper = new ObjectMapper();
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -39,6 +37,7 @@ public class JwtExceptionHandlerFilter extends OncePerRequestFilter {
 		} catch (BadCredentialsException e) {
 			setErrorResponse(response, ErrorStatus.PASSWORD_NOT_MATCH, e);
 		} catch (Exception e) {
+			log.error(e.getMessage(), e); // Exception Logging
 			setErrorResponse(response, ErrorStatus._INTERNAL_SERVER_ERROR, e);
 		}
 	}

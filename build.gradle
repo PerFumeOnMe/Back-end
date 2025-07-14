@@ -77,6 +77,8 @@ dependencies {
     implementation 'org.apache.poi:poi-ooxml:5.2.3'
     // WebClient
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    // OAuth2.0
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 }
 
 tasks.named('test') {
@@ -85,4 +87,8 @@ tasks.named('test') {
 
 clean {
     delete file('src/main/generated')
+}
+
+jar {
+    enabled = false
 }
