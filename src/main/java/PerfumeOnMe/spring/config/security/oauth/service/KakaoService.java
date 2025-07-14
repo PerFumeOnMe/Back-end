@@ -14,7 +14,7 @@ import PerfumeOnMe.spring.config.security.auth.token.JwtAuthenticationToken;
 import PerfumeOnMe.spring.config.security.auth.userDetails.CustomUserDetails;
 import PerfumeOnMe.spring.config.security.oauth.converter.OAuthConverter;
 import PerfumeOnMe.spring.config.security.oauth.dto.KakaoResponseDTO;
-import PerfumeOnMe.spring.config.security.oauth.util.KakaoUtil;
+import PerfumeOnMe.spring.config.security.oauth.util.KakaoClient;
 import PerfumeOnMe.spring.domain.User;
 import PerfumeOnMe.spring.domain.enums.Social;
 import PerfumeOnMe.spring.repository.user.UserRepository;
@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class KakaoService implements OAuthService {
 
-	private final KakaoUtil kakaoUtil;
+	private final KakaoClient kakaoClient;
 	private final UserRepository userRepository;
 	private final JwtTokenProvider jwtTokenProvider;
 	private final UserDetailsService userDetailsService;
@@ -38,10 +38,10 @@ public class KakaoService implements OAuthService {
 	public AuthResponseDTO.LoginResult oAuthLogin(String code, HttpServletResponse response) {
 
 		// 카카오 토큰 요청
-		KakaoResponseDTO.Token token = kakaoUtil.requestToken(code);
+		KakaoResponseDTO.Token token = kakaoClient.requestToken(code);
 
 		// 카카오 사용자 정보 요청
-		KakaoResponseDTO.UserInfo userInfo = kakaoUtil.requestUserInfo(token.getAccess_token());
+		KakaoResponseDTO.UserInfo userInfo = kakaoClient.requestUserInfo(token.getAccess_token());
 		String name = (userInfo.getKakao_account().getName());
 		String email = userInfo.getKakao_account().getEmail();
 		String nickname = userInfo.getKakao_account().getProfile().getNickname();
