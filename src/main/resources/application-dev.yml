@@ -30,8 +30,8 @@ jwt:
   token:
     secretKey: ${JWT_SECRET:default_dummy}
     expiration:
-      access: 7200000 # 2시간
-      refresh: 1209600000 # 2주
+      access: 7200000 # 2H
+      refresh: 1209600000 # 2Week
 server:
   servlet:
     encoding:
