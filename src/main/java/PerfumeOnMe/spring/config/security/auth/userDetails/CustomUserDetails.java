@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import PerfumeOnMe.spring.domain.enums.Social;
 import lombok.RequiredArgsConstructor;
 
 /*
@@ -19,6 +20,7 @@ public class CustomUserDetails implements UserDetails {
 	private final String name;
 	private final String loginId;
 	private final String password;
+	private final Social social;
 
 	@Override
 	public boolean isAccountNonExpired() {
@@ -61,5 +63,9 @@ public class CustomUserDetails implements UserDetails {
 
 	public String getName() {
 		return name;
+	}
+
+	public Social getSocial() {
+		return social;
 	}
 }

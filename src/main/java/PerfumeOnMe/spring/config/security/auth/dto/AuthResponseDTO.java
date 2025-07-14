@@ -1,5 +1,6 @@
 package PerfumeOnMe.spring.config.security.auth.dto;
 
+import PerfumeOnMe.spring.domain.enums.Social;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,5 +15,6 @@ public class AuthResponseDTO {
 	public static class LoginResult {
 		private String refreshToken;
 		private Long userId;
+		private Social social;
 	}
 }

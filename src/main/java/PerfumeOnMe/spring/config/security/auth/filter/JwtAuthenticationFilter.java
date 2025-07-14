@@ -14,6 +14,7 @@ import PerfumeOnMe.spring.apiPayload.exception.GeneralException;
 import PerfumeOnMe.spring.config.security.auth.manager.LogoutAccessTokenManager;
 import PerfumeOnMe.spring.config.security.auth.provider.JwtTokenProvider;
 import PerfumeOnMe.spring.config.security.auth.token.JwtAuthenticationToken;
+import PerfumeOnMe.spring.domain.enums.Social;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -46,7 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				throw new GeneralException(ErrorStatus.LOGOUT_ACCESS_TOKEN);
 			}
 
-			JwtAuthenticationToken authRequest = new JwtAuthenticationToken(loginId, accessToken);
+			JwtAuthenticationToken authRequest = new JwtAuthenticationToken(loginId, accessToken, Social.LOCAL);
 			Authentication authResult = authenticationManager.authenticate(authRequest);
 			SecurityContextHolder.getContext().setAuthentication(authResult);
 		}

@@ -27,6 +27,7 @@ import PerfumeOnMe.spring.config.security.auth.manager.LogoutAccessTokenManager;
 import PerfumeOnMe.spring.config.security.auth.manager.RefreshTokenManager;
 import PerfumeOnMe.spring.config.security.auth.provider.JwtTokenProvider;
 import PerfumeOnMe.spring.config.security.auth.userDetails.CustomUserDetails;
+import PerfumeOnMe.spring.domain.enums.Social;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -86,7 +87,7 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
 		// 토큰 생성 및 DTO에 담기
 		String accessToken = jwtTokenProvider.createAccessToken(authResult);
 		String refreshToken = jwtTokenProvider.createRefreshToken(authResult);
-		AuthResponseDTO.LoginResult loginResultDTO = AuthConverter.toLoginResult(refreshToken, userId);
+		AuthResponseDTO.LoginResult loginResultDTO = AuthConverter.toLoginResult(refreshToken, userId, Social.LOCAL);
 
 		// 리프레시 토큰을 Redis에 저장
 		refreshTokenManager.saveRefreshToken(loginId, refreshToken);

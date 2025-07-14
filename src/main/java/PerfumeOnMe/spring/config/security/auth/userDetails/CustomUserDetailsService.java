@@ -24,6 +24,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 			.orElseThrow(() -> new UsernameNotFoundException("해당 사용자를 찾을 수 없습니다."));
 
 		return new CustomUserDetails(
-			user.getId(), user.getName(), user.getLoginId(), user.getPassword());
+			user.getId(), user.getName(), user.getLoginId(), user.getPassword(), user.getSocial());
 	}
 }
