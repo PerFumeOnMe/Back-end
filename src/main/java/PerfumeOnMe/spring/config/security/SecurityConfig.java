@@ -29,8 +29,9 @@ public class SecurityConfig {
 	// 인증 여부를 확인하지 않을 경로 지정
 	public static final String[] AUTH_WHITELIST = {
 		"/v3/api-docs/**", "/swagger-resources/**", "/swagger-ui.html", "/swagger-ui/**",
-		"/swagger/**", "/users/signup", "/auth/login", "/auth/social/kakao", "/users/reissue",
-		"/health", "/fragrances/allow/**"
+		"/swagger/**", "/users/signup", "/auth/login", "/auth/social/**", "/users/reissue",
+		"/health", "/fragrances/allow/**", "/auth/social/**", "/favicon.ico", "/images/**",
+		"/css/**", "/js/**", "/webjars/**"
 	};
 	private final JwtAuthenticationFilter JwtAuthenticationFilter;
 	private final JwtExceptionHandlerFilter JwtExceptionHandlerFilter;
@@ -71,7 +72,7 @@ public class SecurityConfig {
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration config = new CorsConfiguration();
-		config.setAllowedOrigins(List.of("*")); // 변경 예정
+		config.setAllowedOrigins(List.of("*")); // spring: [localhost:8080, localhost:5000], localhost:8081
 		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		config.setAllowedHeaders(List.of("Authorization", "Refresh-Token", "Content-Type"));
 		config.setAllowCredentials(false); // origin 바꾸면 true로 설정
