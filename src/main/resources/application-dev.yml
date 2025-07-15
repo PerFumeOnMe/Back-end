@@ -12,7 +12,7 @@ spring:
       mode: never
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: create #none으로 수정해야함
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
