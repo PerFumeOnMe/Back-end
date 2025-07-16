@@ -1,5 +1,6 @@
 package PerfumeOnMe.spring.service.user;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,9 +19,14 @@ import PerfumeOnMe.spring.config.security.auth.provider.JwtTokenProvider;
 import PerfumeOnMe.spring.config.security.auth.token.JwtAuthenticationToken;
 import PerfumeOnMe.spring.config.security.auth.userDetails.CustomUserDetails;
 import PerfumeOnMe.spring.converter.UserConverter;
+import PerfumeOnMe.spring.converter.UserNoteConverter;
+import PerfumeOnMe.spring.domain.Note;
 import PerfumeOnMe.spring.domain.User;
 import PerfumeOnMe.spring.domain.enums.Social;
+import PerfumeOnMe.spring.domain.mapping.UserNote;
+import PerfumeOnMe.spring.repository.note.NoteRepository;
 import PerfumeOnMe.spring.repository.user.UserRepository;
+import PerfumeOnMe.spring.repository.userNote.UserNoteRepository;
 import PerfumeOnMe.spring.web.dto.user.UserRequestDTO;
 import PerfumeOnMe.spring.web.dto.user.UserResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,6 +44,8 @@ public class UserServiceImpl implements UserService {
 	private final RefreshTokenManager refreshTokenManager;
 	private final LogoutAccessTokenManager logoutAccessTokenManager;
 	private final UserDetailsService userDetailsService;
+	private final UserNoteRepository userNoteRepository;
+	private final NoteRepository noteRepository;
 
 	// 사용자 회원가입
 	@Override
@@ -127,5 +135,52 @@ public class UserServiceImpl implements UserService {
 		String loginId = logout(request);
 		Optional<User> findUser = userRepository.findUserByLoginId(loginId);
 		findUser.ifPresent(userRepository::delete);
+	}
+
+	// 온보딩 요청 정보 설정 메서드
+	public void saveUserNote(User user, List<Long> noteCategoryIdList) {
+		noteCategoryIdList.forEach(noteCategoryId -> {
+			Note note = noteRepository.findById(noteCategoryId)
+				.orElseThrow(() -> new GeneralException(ErrorStatus.INVALID_NOTE_ID));
+			UserNote userNote = UserNoteConverter.toUserNote(note);
+			userNoteRepository.save(userNote);
+			user.addUserNote(userNote); // 양방향 연관관계만 설정
+		});
+	}
+
+	// 온보딩
+	@Override
+	public void onboarding(UserRequestDTO.Onboarding request, CustomUserDetails userDetails) {
+
+		// 닉네임 중복 검증
+		if (userRepository.findUserByNickname(request.getNickname()).isPresent()) {
+			throw new GeneralException(ErrorStatus.NICKNAME_DUPLICATE);
+		}
+
+		// 사용자 조회
+		User findUser = userRepository.findUserByLoginId(userDetails.getUsername())
+			.orElseThrow(() -> new GeneralException(ErrorStatus.LOGIN_ID_NOT_FOUND));
+
+		// 온보딩 요청 정보 설정 - nickname, imageURL, gender, age
+		findUser.onboarding(request);
+
+		// 온보딩 요청 정보 설정 - noteCategoryId
+		saveUserNote(findUser, request.getNoteCategoryId());
+	}
+
+	// 사용자 선호 향 수정
+	@Override
+	public void updateUserNote(UserRequestDTO.UserNoteUpdate request, CustomUserDetails userDetails) {
+
+		// 사용자 조회
+		User findUser = userRepository.findUserByLoginId(userDetails.getUsername())
+			.orElseThrow(() -> new GeneralException(ErrorStatus.LOGIN_ID_NOT_FOUND));
+
+		// 사용자 선호 노트 정보 삭제
+		userNoteRepository.deleteAllByUser(findUser);
+		findUser.getUserNoteList().clear();
+
+		// 온보딩 요청 정보 설정 - noteCategoryId
+		saveUserNote(findUser, request.getNoteCategoryId());
 	}
 }

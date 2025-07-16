@@ -41,4 +41,20 @@ public class UserNote extends BaseEntity {
 	@JoinColumn(name = "note_id")
 	private Note note;
 
+	// 연관관계 편의 메서드
+	public void setUser(User user) {
+		if (this.user != null) {
+			user.getUserNoteList().remove(this);
+		}
+		this.user = user;
+		user.getUserNoteList().add(this);
+	}
+
+	public void setNote(Note note) {
+		if (this.note != null) {
+			note.getUserNoteList().remove(this);
+		}
+		this.note = note;
+		note.getUserNoteList().add(this);
+	}
 }
