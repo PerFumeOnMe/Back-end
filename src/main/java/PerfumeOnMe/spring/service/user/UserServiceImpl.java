@@ -142,7 +142,7 @@ public class UserServiceImpl implements UserService {
 		noteCategoryIdList.forEach(noteCategoryId -> {
 			Note note = noteRepository.findById(noteCategoryId)
 				.orElseThrow(() -> new GeneralException(ErrorStatus.INVALID_NOTE_ID));
-			UserNote userNote = UserNoteConverter.toUserNote(note, user);
+			UserNote userNote = UserNoteConverter.toUserNote(note);
 			userNoteRepository.save(userNote);
 			user.addUserNote(userNote); // 양방향 연관관계만 설정
 			note.getUserNoteList().add(userNote); // 양방향이지만 단방향처럼 사용 중이라 삭제해도 됨
