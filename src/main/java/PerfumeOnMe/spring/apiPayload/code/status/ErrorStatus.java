@@ -66,6 +66,11 @@ public enum ErrorStatus implements BaseErrorCode {
 	PROMPT_LOADING_FAIL(HttpStatus.BAD_REQUEST, "CHATBOT4002", "프롬프트 로딩에 실패하였습니다."),
 	REQUIRED_MESSAGES(HttpStatus.BAD_REQUEST, "CHATBOT4003", "메세지를 입력하세요."),
 
+	// 이미지 키워드 에러
+	INVALID_IMAGEKEYWORD_VALUE(HttpStatus.BAD_REQUEST, "IMAGEKEYWORD4001", "잘못된 키워드값입니다. 키워드 값을 확인해주세요."),
+	EXPIRED_IMAGEKEYWORD_RESULT(HttpStatus.REQUEST_TIMEOUT, "IMAGEKEYWORD4002", "생성할 이미지 키워드 결과가 만료되었습니다."),
+	ALREADY_KEYWORD_NAME(HttpStatus.BAD_REQUEST, "IMAGEKEYWORD4003", "동일한 이름으로 저장된 결과가 존재합니다."),
+	INVALID_IMAGEKWEYWORD_ID(HttpStatus.BAD_REQUEST, "IMAGEKEYWORD4004", "해당 ID의 이미지 결과가 존재하지 않습니다."),
 	// 예시,,,
 	ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다.");
 
