@@ -18,4 +18,6 @@ public interface UserService {
 	void deleteUser(HttpServletRequest request);
 
 	void onboarding(UserRequestDTO.Onboarding request, CustomUserDetails userDetails);
+
+	void updateUserNote(UserRequestDTO.UserNoteUpdate request, CustomUserDetails userDetails);
 }

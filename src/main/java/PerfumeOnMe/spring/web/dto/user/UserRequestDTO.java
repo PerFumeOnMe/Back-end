@@ -67,4 +67,14 @@ public class UserRequestDTO {
 		@ValidUserNote
 		private List<Long> noteCategoryId;
 	}
+
+	// 사용자 선호 향 수정
+	@Getter
+	@NoArgsConstructor
+	public static class UserNoteUpdate {
+		@NotNull
+		@Schema(description = "사용자가 설정한 선호하는 향", example = "[5,11,2]")
+		@ValidUserNote
+		private List<Long> noteCategoryId;
+	}
 }

@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -110,6 +111,22 @@ public class UserController {
 	public ResponseEntity<ApiResponse<Object>> onboarding(@Valid @RequestBody UserRequestDTO.Onboarding request,
 		@AuthenticationPrincipal CustomUserDetails userDetails) {
 		userService.onboarding(request, userDetails);
+		return ResponseEntity.ok().body(ApiResponse.onSuccess(null));
+	}
+
+	@PatchMapping("/notes")
+	@Operation(
+		summary = "선호 향 수정 API",
+		description = "사용자의 선호하는 향 리스트를 입력받아 수정하는 API입니다.",
+		responses = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "성공입니다."),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4003", description = "해당 아이디를 가진 사용자가 존재하지 않습니다."),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "FILTER4003", description = "유효하지 않은 노트 ID 입니다."),
+		}
+	)
+	public ResponseEntity<ApiResponse<Object>> updateUserNote(@Valid @RequestBody UserRequestDTO.UserNoteUpdate request,
+		@AuthenticationPrincipal CustomUserDetails userDetails) {
+		userService.updateUserNote(request, userDetails);
 		return ResponseEntity.ok().body(ApiResponse.onSuccess(null));
 	}
 }

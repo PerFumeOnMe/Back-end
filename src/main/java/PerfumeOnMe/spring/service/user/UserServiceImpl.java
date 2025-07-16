@@ -1,5 +1,6 @@
 package PerfumeOnMe.spring.service.user;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.security.core.userdetails.UserDetails;
@@ -136,6 +137,18 @@ public class UserServiceImpl implements UserService {
 		findUser.ifPresent(userRepository::delete);
 	}
 
+	// 온보딩 요청 정보 설정 메서드
+	public void saveUserNote(User user, List<Long> noteCategoryIdList) {
+		noteCategoryIdList.forEach(noteCategoryId -> {
+			Note note = noteRepository.findById(noteCategoryId)
+				.orElseThrow(() -> new GeneralException(ErrorStatus.INVALID_NOTE_ID));
+			UserNote userNote = UserNoteConverter.toUserNote(note, user);
+			userNoteRepository.save(userNote);
+			user.addUserNote(userNote); // 양방향 연관관계만 설정
+			note.getUserNoteList().add(userNote); // 양방향이지만 단방향처럼 사용 중이라 삭제해도 됨
+		});
+	}
+
 	// 온보딩
 	@Override
 	public void onboarding(UserRequestDTO.Onboarding request, CustomUserDetails userDetails) {
@@ -153,13 +166,22 @@ public class UserServiceImpl implements UserService {
 		findUser.onboarding(request);
 
 		// 온보딩 요청 정보 설정 - noteCategoryId
-		request.getNoteCategoryId().forEach(id -> {
-			Note note = noteRepository.findById(id)
-				.orElseThrow(() -> new GeneralException(ErrorStatus.INVALID_NOTE_ID));
-			UserNote userNote = UserNoteConverter.toUserNote(note, findUser);
-			userNoteRepository.save(userNote);
-			findUser.addUserNote(userNote); // 양방향 연관관계만 설정
-			note.getUserNoteList().add(userNote); // 양방향이지만 단방향처럼 사용 중이라 삭제해도 됨
-		});
+		saveUserNote(findUser, request.getNoteCategoryId());
+	}
+
+	// 사용자 선호 향 수정
+	@Override
+	public void updateUserNote(UserRequestDTO.UserNoteUpdate request, CustomUserDetails userDetails) {
+
+		// 사용자 조회
+		User findUser = userRepository.findUserByLoginId(userDetails.getUsername())
+			.orElseThrow(() -> new GeneralException(ErrorStatus.LOGIN_ID_NOT_FOUND));
+
+		// 사용자 선호 노트 정보 삭제
+		userNoteRepository.deleteAllByUser(findUser);
+		findUser.getUserNoteList().clear();
+
+		// 온보딩 요청 정보 설정 - noteCategoryId
+		saveUserNote(findUser, request.getNoteCategoryId());
 	}
 }
