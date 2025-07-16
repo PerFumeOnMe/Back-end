@@ -20,7 +20,7 @@ public enum ErrorStatus implements BaseErrorCode {
 	// 사용자 에러
 	LOGIN_ID_DUPLICATE(HttpStatus.BAD_REQUEST, "MEMBER4001", "이미 사용된 아이디입니다."),
 	PASSWORD_NOT_MATCH(HttpStatus.BAD_REQUEST, "MEMBER4002", "비밀번호가 일치하지 않습니다."),
-	LOGIN_ID_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4003", "해당 아이디를 가진 사용자가 존재하지 않습니다."),
+	LOGIN_ID_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4003", "해당 로그인 아이디를 가진 사용자가 존재하지 않습니다."),
 	LOGIN_PARSING_FAIL(HttpStatus.BAD_REQUEST, "MEMBER4004", "로그인 DTO 변환을 실패했습니다."),
 	LOGIN_UNKNOWN_ERROR(HttpStatus.BAD_REQUEST, "MEMBER4005", "로그인 중 알 수 없는 오류가 발생했습니다."),
 	NICKNAME_DUPLICATE(HttpStatus.BAD_REQUEST, "MEMBER4006", "이미 사용된 닉네임입니다."),
