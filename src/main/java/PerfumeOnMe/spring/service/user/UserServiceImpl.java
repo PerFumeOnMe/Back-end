@@ -18,9 +18,14 @@ import PerfumeOnMe.spring.config.security.auth.provider.JwtTokenProvider;
 import PerfumeOnMe.spring.config.security.auth.token.JwtAuthenticationToken;
 import PerfumeOnMe.spring.config.security.auth.userDetails.CustomUserDetails;
 import PerfumeOnMe.spring.converter.UserConverter;
+import PerfumeOnMe.spring.converter.UserNoteConverter;
+import PerfumeOnMe.spring.domain.Note;
 import PerfumeOnMe.spring.domain.User;
 import PerfumeOnMe.spring.domain.enums.Social;
+import PerfumeOnMe.spring.domain.mapping.UserNote;
+import PerfumeOnMe.spring.repository.note.NoteRepository;
 import PerfumeOnMe.spring.repository.user.UserRepository;
+import PerfumeOnMe.spring.repository.userNote.UserNoteRepository;
 import PerfumeOnMe.spring.web.dto.user.UserRequestDTO;
 import PerfumeOnMe.spring.web.dto.user.UserResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,6 +43,8 @@ public class UserServiceImpl implements UserService {
 	private final RefreshTokenManager refreshTokenManager;
 	private final LogoutAccessTokenManager logoutAccessTokenManager;
 	private final UserDetailsService userDetailsService;
+	private final UserNoteRepository userNoteRepository;
+	private final NoteRepository noteRepository;
 
 	// 사용자 회원가입
 	@Override
@@ -127,5 +134,32 @@ public class UserServiceImpl implements UserService {
 		String loginId = logout(request);
 		Optional<User> findUser = userRepository.findUserByLoginId(loginId);
 		findUser.ifPresent(userRepository::delete);
+	}
+
+	// 온보딩
+	@Override
+	public void onboarding(UserRequestDTO.Onboarding request, CustomUserDetails userDetails) {
+
+		// 닉네임 중복 검증
+		if (userRepository.findUserByNickname(request.getNickname()).isPresent()) {
+			throw new GeneralException(ErrorStatus.NICKNAME_DUPLICATE);
+		}
+
+		// 사용자 조회
+		User findUser = userRepository.findUserByLoginId(userDetails.getUsername())
+			.orElseThrow(() -> new GeneralException(ErrorStatus.LOGIN_ID_NOT_FOUND));
+
+		// 온보딩 요청 정보 설정 - nickname, imageURL, gender, age
+		findUser.onboarding(request);
+
+		// 온보딩 요청 정보 설정 - noteCategoryId
+		request.getNoteCategoryId().forEach(id -> {
+			Note note = noteRepository.findById(id)
+				.orElseThrow(() -> new GeneralException(ErrorStatus.INVALID_NOTE_ID));
+			UserNote userNote = UserNoteConverter.toUserNote(note, findUser);
+			userNoteRepository.save(userNote);
+			findUser.addUserNote(userNote); // 양방향 연관관계만 설정
+			note.getUserNoteList().add(userNote); // 양방향이지만 단방향처럼 사용 중이라 삭제해도 됨
+		});
 	}
 }

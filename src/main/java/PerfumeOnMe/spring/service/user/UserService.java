@@ -1,6 +1,7 @@
 package PerfumeOnMe.spring.service.user;
 
 import PerfumeOnMe.spring.config.security.auth.dto.AuthResponseDTO;
+import PerfumeOnMe.spring.config.security.auth.userDetails.CustomUserDetails;
 import PerfumeOnMe.spring.web.dto.user.UserRequestDTO;
 import PerfumeOnMe.spring.web.dto.user.UserResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,4 +16,6 @@ public interface UserService {
 	String logout(HttpServletRequest request);
 
 	void deleteUser(HttpServletRequest request);
+
+	void onboarding(UserRequestDTO.Onboarding request, CustomUserDetails userDetails);
 }
