@@ -54,23 +54,11 @@ public class FragranceServiceImpl implements FragranceService {
 	// 향수 검색 API
 	@Override
 	public FragranceResponseDTO.FragranceSearchFinalResult searchFragrances(
-		FragranceRequestDTO.FragranceSearchRequest request,
-		Long userId) {
+		FragranceRequestDTO.FragranceSearchRequest request, Long userId) {
 		PageRequest pageable = PageRequest.of(request.getPage(), request.getSize());
 		Page<Fragrance> fragrancePage = fragranceRepository.findBySearchKeyword(request.getKeyword(), pageable);
 
-		List<FragranceResponseDTO.FragranceSearchResult> content = fragrancePage.getContent().stream()
-			.map(fragrance -> {
-				// 즐겨찾기 확인
-				boolean liked = (userId != null) && Like(userId, fragrance.getId());
-				return FragranceConverter.toSearchResultDto(fragrance, liked);
-			})
-			.collect(Collectors.toList());
-
-		return FragranceResponseDTO.FragranceSearchFinalResult.builder()
-			.content(content)
-			.hasNext(fragrancePage.hasNext())
-			.build();
+		return getFragranceSearchFinalResult(userId, fragrancePage);
 
 	}
 
@@ -154,18 +142,7 @@ public class FragranceServiceImpl implements FragranceService {
 		Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), Sort.by("name"));
 		Page<Fragrance> fragrancePage = fragranceRepository.findByFilter(request, pageable);
 
-		List<FragranceResponseDTO.FragranceSearchResult> content = fragrancePage.getContent().stream()
-			.map(fragrance -> {
-				// 즐겨찾기 확인
-				boolean liked = (userId != null) && Like(userId, fragrance.getId());
-				return FragranceConverter.toSearchResultDto(fragrance, liked);
-			})
-			.collect(Collectors.toList());
-
-		return FragranceResponseDTO.FragranceSearchFinalResult.builder()
-			.content(content)
-			.hasNext(fragrancePage.hasNext())
-			.build();
+		return getFragranceSearchFinalResult(userId, fragrancePage);
 	}
 
 	// 향수 전체 리스트 API
@@ -175,6 +152,17 @@ public class FragranceServiceImpl implements FragranceService {
 		PageRequest pageable = PageRequest.of(request.getPage(), request.getSize());
 		Page<Fragrance> fragrancePage = fragranceRepository.findAll(pageable); // 향수 전체 목록 가져오기
 
+		return getFragranceSearchFinalResult(userId, fragrancePage);
+	}
+
+	// 사용자 id 와 향수 id 를 받아와 즐겨찾기 테이블에 해댱 향수가 있는지 없는지 확인하는 메서드
+	private boolean Like(Long userId, Long fragranceId) {
+		return userFragranceRepository.existsByUserIdAndFragranceId(userId, fragranceId);
+	}
+
+	// 향수 목록 dto 반환 및 paging 처리 메서드 생성 (중복제거)
+	private FragranceResponseDTO.FragranceSearchFinalResult getFragranceSearchFinalResult(Long userId,
+		Page<Fragrance> fragrancePage) {
 		List<FragranceResponseDTO.FragranceSearchResult> content = fragrancePage.getContent().stream()
 			.map(fragrance -> {
 				// 즐겨찾기 확인
@@ -183,15 +171,7 @@ public class FragranceServiceImpl implements FragranceService {
 			})
 			.collect(Collectors.toList());
 
-		return FragranceResponseDTO.FragranceSearchFinalResult.builder()
-			.content(content)
-			.hasNext(fragrancePage.hasNext())
-			.build();
-	}
-
-	// 사용자 id 와 향수 id 를 받아와 즐겨찾기 테이블에 해댱 향수가 있는지 없는지 확인하는 메서드
-	private boolean Like(Long userId, Long fragranceId) {
-		return userFragranceRepository.existsByUserIdAndFragranceId(userId, fragranceId);
+		return FragranceConverter.toSearchFinalResult(content, fragrancePage.hasNext());
 	}
 
 }
