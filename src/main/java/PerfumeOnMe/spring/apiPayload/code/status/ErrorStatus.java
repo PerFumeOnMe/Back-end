@@ -66,6 +66,10 @@ public enum ErrorStatus implements BaseErrorCode {
 	PROMPT_LOADING_FAIL(HttpStatus.BAD_REQUEST, "CHATBOT4002", "프롬프트 로딩에 실패하였습니다."),
 	REQUIRED_MESSAGES(HttpStatus.BAD_REQUEST, "CHATBOT4003", "메세지를 입력하세요."),
 
+	// 다이어리 에러
+	DIARY_NOT_FOUND(HttpStatus.BAD_REQUEST, "DIARY4001", "해당 다이어리를 찾을 수 없습니다."),
+	USER_DIARY_FORBIDDEN(HttpStatus.BAD_REQUEST, "DIARY4002", "다이어리 소유자의 요청이 아닙니다."),
+
 	// 예시,,,
 	ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다.");
 
