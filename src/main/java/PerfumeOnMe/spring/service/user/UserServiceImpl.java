@@ -2,7 +2,10 @@ package PerfumeOnMe.spring.service.user;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,15 +21,21 @@ import PerfumeOnMe.spring.config.security.auth.manager.RefreshTokenManager;
 import PerfumeOnMe.spring.config.security.auth.provider.JwtTokenProvider;
 import PerfumeOnMe.spring.config.security.auth.token.JwtAuthenticationToken;
 import PerfumeOnMe.spring.config.security.auth.userDetails.CustomUserDetails;
+import PerfumeOnMe.spring.converter.FragranceConverter;
 import PerfumeOnMe.spring.converter.UserConverter;
 import PerfumeOnMe.spring.converter.UserNoteConverter;
+import PerfumeOnMe.spring.domain.Fragrance;
 import PerfumeOnMe.spring.domain.Note;
 import PerfumeOnMe.spring.domain.User;
 import PerfumeOnMe.spring.domain.enums.Social;
+import PerfumeOnMe.spring.domain.mapping.UserFragrance;
 import PerfumeOnMe.spring.domain.mapping.UserNote;
 import PerfumeOnMe.spring.repository.note.NoteRepository;
 import PerfumeOnMe.spring.repository.user.UserRepository;
+import PerfumeOnMe.spring.repository.userFragrance.UserFragranceRepository;
 import PerfumeOnMe.spring.repository.userNote.UserNoteRepository;
+import PerfumeOnMe.spring.web.dto.fragrance.FragranceRequestDTO;
+import PerfumeOnMe.spring.web.dto.fragrance.FragranceResponseDTO;
 import PerfumeOnMe.spring.web.dto.user.UserRequestDTO;
 import PerfumeOnMe.spring.web.dto.user.UserResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
@@ -46,6 +55,7 @@ public class UserServiceImpl implements UserService {
 	private final UserDetailsService userDetailsService;
 	private final UserNoteRepository userNoteRepository;
 	private final NoteRepository noteRepository;
+	private final UserFragranceRepository userFragranceRepository;
 
 	// 사용자 회원가입
 	@Override
@@ -182,5 +192,39 @@ public class UserServiceImpl implements UserService {
 
 		// 온보딩 요청 정보 설정 - noteCategoryId
 		saveUserNote(findUser, request.getNoteCategoryId());
+	}
+
+	// 마이페이지 프로필 조회 - 닉네임, 선호하는 향 3가지, 프로필 사진
+	@Override
+	public UserResponseDTO.MyPageProfileResponse getUserProfile(Long userId) {
+		// 사용자 조회
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> new GeneralException(ErrorStatus.LOGIN_ID_NOT_FOUND));
+
+		return UserConverter.toMyPageProfileResponse(user);
+	}
+
+	// 마이페이지 즐겨찾기 목록 조회
+	@Override
+	public FragranceResponseDTO.FragranceSearchFinalResult getFavoriteFragrances(
+		FragranceRequestDTO.FragranceAllRequest request, Long userId) {
+
+		PageRequest pageable = PageRequest.of(request.getPage(), request.getSize());
+		Page<UserFragrance> userFragranceList = userFragranceRepository.findAllByUserId(userId, pageable);
+
+		List<FragranceResponseDTO.FragranceSearchResult> content = userFragranceList.getContent().stream()
+			.map(fragrance -> { // fragrance = UserFragrance
+				Fragrance f = fragrance.getFragrance();
+				boolean liked = (userId != null) && Like(userId, f.getId());
+				return FragranceConverter.toSearchResultDto(f, liked);
+			})
+			.collect(Collectors.toList());
+
+		return FragranceConverter.toSearchFinalResult(content, userFragranceList.hasNext());
+	}
+
+	// 사용자 id 와 향수 id 를 받아와 즐겨찾기 테이블에 해댱 향수가 있는지 없는지 확인하는 메서드
+	private boolean Like(Long userId, Long fragranceId) {
+		return userFragranceRepository.existsByUserIdAndFragranceId(userId, fragranceId);
 	}
 }
