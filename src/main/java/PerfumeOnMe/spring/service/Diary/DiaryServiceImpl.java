@@ -1,5 +1,8 @@
 package PerfumeOnMe.spring.service.Diary;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -71,4 +74,19 @@ public class DiaryServiceImpl implements DiaryService {
 
 		diaryRepository.delete(diary);
 	}
+
+	// 일별 다이어리 상세 조회 API
+	@Override
+	public List<DiaryResponseDTO.SearchDailyDiaryResponse> searchDailyDiary(Long userId, LocalDate date) {
+		// 해당 날짜의 다이어리들 조회
+		List<Diary> diaries = diaryRepository.findAllByUserIdAndDate(userId, date);
+
+		if (diaries.isEmpty()) {
+			throw new GeneralException(ErrorStatus.USER_DIARY_NOT_FOUND);
+		}
+
+		return DiaryResponseDTO.SearchDailyDiaryResponse.fromEntityList(diaries);
+	}
 }
+
+
