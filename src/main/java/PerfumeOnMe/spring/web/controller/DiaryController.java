@@ -1,8 +1,12 @@
 package PerfumeOnMe.spring.web.controller;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +21,7 @@ import PerfumeOnMe.spring.service.Diary.DiaryService;
 import PerfumeOnMe.spring.web.dto.diary.DiaryRequestDTO;
 import PerfumeOnMe.spring.web.dto.diary.DiaryResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -83,5 +88,26 @@ public class DiaryController {
 		@AuthenticationPrincipal CustomUserDetails userDetails) {
 		diaryService.deleteDiary(userDetails.getUserId(), diaryId);
 		return ResponseEntity.ok(ApiResponse.of(SuccessStatus.DIARY_DELETED, null));
+	}
+
+	// 일별 다이어리 상세 조회 API
+	@GetMapping("/daily/{date}")
+	@Operation(
+		summary = "일별 다이어리 상세 조회",
+		description = "일별 다이어리를 상세 조회하는 API입니다.",
+		responses = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "다이어리가 조회되었습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = DiaryResponseDTO.SearchDailyDiaryResponse.class))),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "DIARY4003", description = "해당 날짜에 해당하는 다이어리를 찾을 수 없습니다.")
+		}
+	)
+	public ResponseEntity<ApiResponse<List<DiaryResponseDTO.SearchDailyDiaryResponse>>> searchDailyDiary(
+		@Parameter(
+			description = "조회할 날짜 (예: 2025-07-17)"
+		)
+		@PathVariable LocalDate date,
+		@AuthenticationPrincipal CustomUserDetails userDetails) {
+		List<DiaryResponseDTO.SearchDailyDiaryResponse> result = diaryService.searchDailyDiary(userDetails.getUserId(),
+			date);
+		return ResponseEntity.ok(ApiResponse.onSuccess(result));
 	}
 }
