@@ -14,7 +14,8 @@ public enum SuccessStatus implements BaseCode {
 	// 일반적인 응답
 	_OK(HttpStatus.OK, "COMMON200", "성공입니다."),
 	_CREATED(HttpStatus.OK, "COMMON201", "리소스를 성공적으로 생성했습니다."),
-	DIARY_UPDATED(HttpStatus.OK, "DIARY200", "다이어리가 수정되었습니다.");
+	DIARY_UPDATED(HttpStatus.OK, "DIARY200", "다이어리가 수정되었습니다."),
+	DIARY_DELETED(HttpStatus.OK, "DIARY201", "다이어리가 삭제되었습니다.");
 
 	private final HttpStatus httpStatus;
 	private final String code;

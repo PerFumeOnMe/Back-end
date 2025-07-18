@@ -56,4 +56,19 @@ public class DiaryServiceImpl implements DiaryService {
 		// 다이어리 저장
 		diaryRepository.save(diary);
 	}
+
+	// 다이어리 삭제 API
+	@Override
+	public void deleteDiary(Long userId, Long diaryId) {
+		// 다이어리 존재 여부 확인
+		Diary diary = diaryRepository.findById(diaryId)
+			.orElseThrow(() -> new GeneralException(ErrorStatus.DIARY_NOT_FOUND));
+
+		// 다이어리 소유자 확인
+		if (!diary.getUser().getId().equals(userId)) {
+			throw new GeneralException(ErrorStatus.USER_DIARY_FORBIDDEN);
+		}
+
+		diaryRepository.delete(diary);
+	}
 }
