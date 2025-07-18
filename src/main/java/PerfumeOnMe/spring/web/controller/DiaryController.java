@@ -2,12 +2,15 @@ package PerfumeOnMe.spring.web.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import PerfumeOnMe.spring.apiPayload.ApiResponse;
+import PerfumeOnMe.spring.apiPayload.code.status.SuccessStatus;
 import PerfumeOnMe.spring.config.security.auth.userDetails.CustomUserDetails;
 import PerfumeOnMe.spring.service.Diary.DiaryService;
 import PerfumeOnMe.spring.web.dto.diary.DiaryRequestDTO;
@@ -42,5 +45,24 @@ public class DiaryController {
 		@AuthenticationPrincipal CustomUserDetails userDetails) {
 		DiaryResponseDTO.AddDiaryResponse result = diaryService.addDiary(userDetails.getUserId(), request);
 		return ResponseEntity.ok(ApiResponse.onSuccess(result));
+	}
+
+	// 다이어리 수정 API
+	@PatchMapping("/{diaryId}/update")
+	@Operation(
+		summary = "다이어리 수정",
+		description = "다이어리를 수정하는 API입니다.",
+		responses = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "다이어리가 수정되었습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "DIARY4001", description = "해당 다이어리를 찾을 수 없습니다."),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "DIARY4002", description = "다이어리 소유자의 요청이 아닙니다.")
+		}
+	)
+	public ResponseEntity<ApiResponse<Void>> updateDiary(
+		@PathVariable Long diaryId,
+		@RequestBody @Valid DiaryRequestDTO.UpdateDiaryRequest request,
+		@AuthenticationPrincipal CustomUserDetails userDetails) {
+		diaryService.updateDiary(userDetails.getUserId(), diaryId, request);
+		return ResponseEntity.ok(ApiResponse.of(SuccessStatus.DIARY_UPDATED, null));
 	}
 }
