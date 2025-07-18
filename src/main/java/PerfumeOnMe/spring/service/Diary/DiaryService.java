@@ -10,4 +10,7 @@ public interface DiaryService {
 
 	// 다이어리 수정 API
 	void updateDiary(Long userId, Long diaryId, DiaryRequestDTO.UpdateDiaryRequest updateDiaryRequest);
+
+	// 다이어리 삭제 API
+	void deleteDiary(Long userId, Long diaryId);
 }

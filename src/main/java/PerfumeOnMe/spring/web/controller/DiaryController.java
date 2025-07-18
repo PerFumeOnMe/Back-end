@@ -2,6 +2,7 @@ package PerfumeOnMe.spring.web.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -64,5 +65,23 @@ public class DiaryController {
 		@AuthenticationPrincipal CustomUserDetails userDetails) {
 		diaryService.updateDiary(userDetails.getUserId(), diaryId, request);
 		return ResponseEntity.ok(ApiResponse.of(SuccessStatus.DIARY_UPDATED, null));
+	}
+
+	// 다이어리 삭제 API
+	@DeleteMapping("/{diaryId}/delete")
+	@Operation(
+		summary = "다이어리 삭제",
+		description = "다이어리를 삭제하는 API입니다.",
+		responses = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "다이어리가 삭제되었습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "DIARY4001", description = "해당 다이어리를 찾을 수 없습니다."),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "DIARY4002", description = "다이어리 소유자의 요청이 아닙니다.")
+		}
+	)
+	public ResponseEntity<ApiResponse<Void>> deleteDiary(
+		@PathVariable Long diaryId,
+		@AuthenticationPrincipal CustomUserDetails userDetails) {
+		diaryService.deleteDiary(userDetails.getUserId(), diaryId);
+		return ResponseEntity.ok(ApiResponse.of(SuccessStatus.DIARY_DELETED, null));
 	}
 }
