@@ -110,4 +110,27 @@ public class DiaryController {
 			date);
 		return ResponseEntity.ok(ApiResponse.onSuccess(result));
 	}
+
+	// 월별 다이어리 조회 API
+	@GetMapping("/monthly/{year}/{month}")
+	@Operation(
+		summary = "월별 다이어리 조회",
+		description = "월별 다이어리를 조회하는 API입니다.",
+		responses = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "다이어리가 조회되었습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = DiaryResponseDTO.SearchMonthlyDiaryResponse.class))),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "DIARY4004", description = "해당 월에 작성된 다이어리가 없습니다.")
+		}
+	)
+	public ResponseEntity<ApiResponse<List<DiaryResponseDTO.SearchMonthlyDiaryResponse>>> searchMonthlyDiary(
+		@PathVariable Integer year,
+		@PathVariable Integer month,
+		@AuthenticationPrincipal CustomUserDetails userDetails) {
+
+		LocalDate startDate = LocalDate.of(year, month, 1);
+		LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
+
+		List<DiaryResponseDTO.SearchMonthlyDiaryResponse> result =
+			diaryService.searchMonthlyDiary(userDetails.getUserId(), startDate, endDate);
+		return ResponseEntity.ok(ApiResponse.onSuccess(result));
+	}
 }
