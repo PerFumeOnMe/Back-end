@@ -49,4 +49,27 @@ public class DiaryResponseDTO {
 		}
 	}
 
+	// 월별 다이어리 조회 응답 DTO
+	@Getter
+	@Builder
+	@AllArgsConstructor
+	@NoArgsConstructor
+	public static class SearchMonthlyDiaryResponse {
+		private Long id;
+		private String fragranceName;
+		private LocalDate date;
+		private String content;
+
+		public static List<SearchMonthlyDiaryResponse> fromEntityList(List<Diary> diaries) {
+			return diaries.stream()
+				.map(diary -> SearchMonthlyDiaryResponse.builder()
+					.id(diary.getId())
+					.fragranceName(diary.getFragranceName())
+					.date(diary.getDate())
+					.content(diary.getContent())
+					.build())
+				.toList();
+		}
+	}
+
 }
