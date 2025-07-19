@@ -70,6 +70,7 @@ public enum ErrorStatus implements BaseErrorCode {
 	DIARY_NOT_FOUND(HttpStatus.BAD_REQUEST, "DIARY4001", "해당 다이어리를 찾을 수 없습니다."),
 	USER_DIARY_FORBIDDEN(HttpStatus.BAD_REQUEST, "DIARY4002", "다이어리 소유자의 요청이 아닙니다."),
 	USER_DIARY_NOT_FOUND(HttpStatus.BAD_REQUEST, "DIARY4003", "해당 날짜에 해당하는 다이어리를 찾을 수 없습니다."),
+	MONTH_DIARY_NOT_FOUND(HttpStatus.BAD_REQUEST, "DIARY4004", "해당 월에 작성된 다이어리가 없습니다."),
 
 	// 예시,,,
 	ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다.");

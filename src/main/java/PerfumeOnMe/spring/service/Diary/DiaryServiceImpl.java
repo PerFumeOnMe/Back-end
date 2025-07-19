@@ -87,6 +87,20 @@ public class DiaryServiceImpl implements DiaryService {
 
 		return DiaryResponseDTO.SearchDailyDiaryResponse.fromEntityList(diaries);
 	}
+
+	// 월별 다이어리 조회 API
+	@Override
+	public List<DiaryResponseDTO.SearchMonthlyDiaryResponse> searchMonthlyDiary(Long userId, LocalDate startDate,
+		LocalDate endDate) {
+		// 해당 월의 다이어리들 조회
+		List<Diary> diaries = diaryRepository.findAllByUserIdAndDateBetween(userId, startDate, endDate);
+
+		if (diaries.isEmpty()) {
+			throw new GeneralException(ErrorStatus.MONTH_DIARY_NOT_FOUND);
+		}
+
+		return DiaryResponseDTO.SearchMonthlyDiaryResponse.fromEntityList(diaries);
+	}
 }
 
 

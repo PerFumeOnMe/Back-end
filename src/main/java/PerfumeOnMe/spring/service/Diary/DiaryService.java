@@ -19,4 +19,8 @@ public interface DiaryService {
 
 	// 일별 다이어리 상세 조회 API
 	List<DiaryResponseDTO.SearchDailyDiaryResponse> searchDailyDiary(Long userId, LocalDate date);
+
+	// 월별 다이어리 조회 API
+	List<DiaryResponseDTO.SearchMonthlyDiaryResponse> searchMonthlyDiary(Long userId, LocalDate startDate,
+		LocalDate endDate);
 }
