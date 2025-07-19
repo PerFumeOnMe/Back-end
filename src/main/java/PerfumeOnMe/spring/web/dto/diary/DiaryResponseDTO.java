@@ -29,6 +29,7 @@ public class DiaryResponseDTO {
 	@NoArgsConstructor
 	public static class SearchDailyDiaryResponse {
 		private Long id;
+		private String fragranceName;
 		private LocalDate date;
 		private String content;
 		private LocalDateTime createdAt;
@@ -38,6 +39,7 @@ public class DiaryResponseDTO {
 			return diaries.stream()
 				.map(diary -> SearchDailyDiaryResponse.builder()
 					.id(diary.getId())
+					.fragranceName(diary.getFragranceName())
 					.date(diary.getDate())
 					.content(diary.getContent())
 					.createdAt(diary.getCreatedAt())
