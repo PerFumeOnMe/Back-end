@@ -20,7 +20,7 @@ public class AmazonConfig {
 
 	private AWSCredentials awsCredentials;
 
-	@Value(("{cloud.aws.s3.bucket}"))
+	@Value("${cloud.aws.s3.bucket}")
 	private String bucket;
 
 	@Value("${cloud.aws.credentials.accessKey}")

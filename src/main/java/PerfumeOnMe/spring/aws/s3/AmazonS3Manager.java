@@ -1,11 +1,15 @@
 package PerfumeOnMe.spring.aws.s3;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.Date;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
@@ -42,4 +46,30 @@ public class AmazonS3Manager {
 		return amazonS3.getUrl(amazonConfig.getBucket(), keyName).toString();
 	}
 
+	// Presigned URL 생성
+	public URL generatePresignedUploadUrl(Uuid uuid, long expirationMillis, String fileExtension) {
+		String keyName = amazonConfig.getProfilePath() + "/" + uuid.getUuid() + "." + fileExtension;
+
+		Date expiration = new Date(System.currentTimeMillis() + expirationMillis);
+
+		GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(
+			amazonConfig.getBucket(), keyName)
+			.withMethod(HttpMethod.PUT)
+			.withExpiration(expiration)
+			.withContentType("image/" + fileExtension); // 예: image/png
+
+		return amazonS3.generatePresignedUrl(request);
+	}
+
+	public String getBucket() {
+		return amazonConfig.getBucket();
+	}
+
+	public String getRegion() {
+		return amazonConfig.getRegion();
+	}
+
+	public String getProfilePath() {
+		return amazonConfig.getProfilePath();
+	}
 }
