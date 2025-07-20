@@ -11,6 +11,7 @@ import PerfumeOnMe.spring.converter.ImageKeywordConverter;
 import PerfumeOnMe.spring.domain.ImageKeyword;
 import PerfumeOnMe.spring.domain.User;
 import PerfumeOnMe.spring.repository.imagekeyword.ImageKeywordRepository;
+import PerfumeOnMe.spring.repository.imagekeyworddescription.ImageKeywordDescriptionRepository;
 import PerfumeOnMe.spring.repository.user.UserRepository;
 import PerfumeOnMe.spring.web.dto.imagekeyword.ImageKeywordResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class ImageKeywordServiceImpl implements ImageKeywordService {
 	private final ImageKeywordRepository imageKeywordRepository;
 	private final UserRepository userRepository;
+	private final ImageKeywordDescriptionRepository imageKeywordDescriptionRepository;
 
 	@Override
 	@Transactional(readOnly = true)
@@ -31,5 +33,17 @@ public class ImageKeywordServiceImpl implements ImageKeywordService {
 		List<ImageKeyword> imageKeywords = imageKeywordRepository.findAllByUserOrderByCreatedAtDesc(user);
 
 		return ImageKeywordConverter.toImageKeywordListResponse(imageKeywords);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public ImageKeywordResponseDTO.ImageKeywordDetailResponseDTO getImageKeywordDetail(Long userId,
+		Long imageKeywordId) {
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> new GeneralException(ErrorStatus.LOGIN_ID_NOT_FOUND));
+
+		ImageKeyword keyword = imageKeywordRepository.findByIdAndUser(imageKeywordId, user)
+			.orElseThrow(() -> new GeneralException(ErrorStatus.INVALID_IMAGEKEYWORD_ID));
+		return ImageKeywordConverter.toImageKeywordDetailResponse(keyword, imageKeywordDescriptionRepository);
 	}
 }

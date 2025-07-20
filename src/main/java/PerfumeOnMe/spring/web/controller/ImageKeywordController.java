@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -53,6 +54,25 @@ public class ImageKeywordController {
 	) {
 		List<ImageKeywordResponseDTO.ImageKeywordListResponseDTO> result = imageKeywordService.getImageKeywordList(
 			userDetails.getUserId());
+		return ResponseEntity.ok(ApiResponse.onSuccess(result));
+	}
+
+	// 이미지 키워드 결과 상세조회
+	@GetMapping("/{imageKeywordId}")
+	@Operation(
+		summary = "이미지 키워드 상세 조회",
+		description = "저장된 이미지 키워드 결과의 상세정보를 조회하는 API입니다.",
+		responses = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "성공입니다"),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "IK4004", description = "해당 ID의 이미지 키워드 결과를 찾을 수 없습니다.")
+		}
+	)
+	public ResponseEntity<ApiResponse<ImageKeywordResponseDTO.ImageKeywordDetailResponseDTO>> getImageKeywordDetail(
+		@PathVariable Long imageKeywordId,
+		@AuthenticationPrincipal CustomUserDetails userDetails
+	) {
+		ImageKeywordResponseDTO.ImageKeywordDetailResponseDTO result =
+			imageKeywordService.getImageKeywordDetail(userDetails.getUserId(), imageKeywordId);
 		return ResponseEntity.ok(ApiResponse.onSuccess(result));
 	}
 
