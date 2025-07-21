@@ -20,4 +20,13 @@ public enum Ambience {
 	Ambience(String displayName) {
 		this.displayName = displayName;
 	}
+
+	public static Ambience fromDisplayName(String displayName) {
+		for (Ambience value : Ambience.values()) {
+			if (value.getDisplayName().equals(displayName)) {
+				return value;
+			}
+		}
+		throw new IllegalArgumentException("Invalid displayName for Ambience: " + displayName);
+	}
 }

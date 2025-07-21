@@ -13,4 +13,13 @@ public enum Gender {
 	Gender(String displayName) {
 		this.displayName = displayName;
 	}
+
+	public static Gender fromDisplayName(String displayName) {
+		for (Gender g : Gender.values()) {
+			if (g.getDisplayName().equals(displayName)) {
+				return g;
+			}
+		}
+		throw new IllegalArgumentException("Invalid displayName for Gender: " + displayName);
+	}
 }
