@@ -77,4 +77,10 @@ public class UserRequestDTO {
 		@ValidUserNote
 		private List<Long> noteCategoryId;
 	}
+
+	// 프로필 사진 변경
+	@Getter
+	public static class ProfileImageUpdateRequest {
+		private String imageUrl; // s3Url (업로드 완료된 S3 이미지 주소)
+	}
 }
