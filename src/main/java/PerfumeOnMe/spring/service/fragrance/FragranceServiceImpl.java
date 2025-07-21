@@ -192,7 +192,8 @@ public class FragranceServiceImpl implements FragranceService {
 			.map(userNote -> userNote.getNote().getId())
 			.toList();
 
-		List<Fragrance> userMdChoice = fragranceRepository.findByUserMdChoice(fragranceGender, noteList);
+		List<Fragrance> userMdChoice = fragranceRepository
+			.findByUserMdChoice((fragranceGender == null ? null : fragranceGender.name()), noteList);
 		return getFragranceMdChoiceFinalResult(user.getId(), userMdChoice);
 	}
 

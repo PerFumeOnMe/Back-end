@@ -11,11 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.core.types.dsl.StringPath;
-import com.querydsl.jpa.JPAExpressions;
-import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import PerfumeOnMe.spring.domain.Fragrance;
@@ -33,6 +29,8 @@ import PerfumeOnMe.spring.domain.mapping.QFragrancePrice;
 import PerfumeOnMe.spring.domain.mapping.QFragranceSeason;
 import PerfumeOnMe.spring.domain.mapping.QFragranceTopNote;
 import PerfumeOnMe.spring.web.dto.fragrance.FragranceRequestDTO;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 
 @Repository
@@ -40,7 +38,6 @@ import lombok.RequiredArgsConstructor;
 public class FragranceRepositoryImpl implements FragranceRepositoryCustom {
 
 	private final JPAQueryFactory queryFactory;
-
 	// Q 도메인 객체를 클래스 레벨에서 선언
 	private final QFragrance f = QFragrance.fragrance;
 	private final QFragrancePrice fp = QFragrancePrice.fragrancePrice;
@@ -55,6 +52,8 @@ public class FragranceRepositoryImpl implements FragranceRepositoryCustom {
 	private final QNote topNote = new QNote("topNote");
 	private final QNote middleNote = new QNote("middleNote");
 	private final QNote baseNote = new QNote("baseNote");
+	@PersistenceContext
+	private EntityManager em;
 
 	// 향수 상세
 	@Override
@@ -156,39 +155,5 @@ public class FragranceRepositoryImpl implements FragranceRepositoryCustom {
 			.fetchOne();
 
 		return new PageImpl<>(result, pageable, total != null ? total : 0);
-	}
-
-	@Override
-	public List<Fragrance> findByUserMdChoice(FragranceGender gender, List<Long> userNoteIdList) {
-
-		QFragranceTopNote ftnSub = new QFragranceTopNote("ftnSub");
-		QFragranceMiddleNote fmnSub = new QFragranceMiddleNote("fmnSub");
-		QFragranceBaseNote fbnSub = new QFragranceBaseNote("fbnSub");
-
-		BooleanBuilder predicate = new BooleanBuilder();
-		predicate.and(f.gender.eq(gender));
-
-		JPQLQuery<Long> topCount = JPAExpressions.select(ftnSub.countDistinct())
-			.from(ftnSub).where(ftnSub.fragrance.id.eq(f.id).and(ftnSub.note.id.in(userNoteIdList)));
-		JPQLQuery<Long> middleCount = JPAExpressions.select(fmnSub.countDistinct())
-			.from(fmnSub).where(fmnSub.fragrance.id.eq(f.id).and(fmnSub.note.id.in(userNoteIdList)));
-		JPQLQuery<Long> baseCount = JPAExpressions.select(ftnSub.countDistinct())
-			.from(fbnSub).where(fbnSub.fragrance.id.eq(f.id).and(fbnSub.note.id.in(userNoteIdList)));
-
-		NumberExpression<Long> totalCount = Expressions.numberTemplate(Long.class, "({0} + {1} + {2}",
-			topCount, middleCount, baseCount);
-
-		NumberExpression<Integer> priorityOrder = Expressions.cases()
-			.when(totalCount.eq(3L)).then(1)
-			.when(totalCount.eq(2L)).then(2)
-			.when(totalCount.eq(1L)).then(3)
-			.otherwise(4);
-
-		return queryFactory.selectFrom(f)
-			.distinct()
-			.where(predicate)
-			.orderBy(priorityOrder.asc())
-			.limit(6)
-			.fetch();
 	}
 }
