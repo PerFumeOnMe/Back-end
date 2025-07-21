@@ -194,12 +194,12 @@ public class FragranceServiceImpl implements FragranceService {
 
 		List<Fragrance> userMdChoice = fragranceRepository
 			.findByUserMdChoice((fragranceGender == null ? null : fragranceGender.name()), noteList);
-		return getFragranceMdChoiceFinalResult(user.getId(), userMdChoice);
+		return getFragranceMdChoiceFinalResult(user.getId(), userMdChoice, user.getName(), user.getNickname());
 	}
 
 	// Md's Choice 목록에 즐겨찾기 정보 포함해서 최종 DTO 반환
 	private FragranceResponseDTO.FragranceMdChoiceResult getFragranceMdChoiceFinalResult(
-		Long userId, List<Fragrance> fragranceList) {
+		Long userId, List<Fragrance> fragranceList, String name, String nickname) {
 
 		List<FragranceResponseDTO.FragranceSearchResult> content = fragranceList.stream()
 			.map(fragrance -> {
@@ -207,6 +207,6 @@ public class FragranceServiceImpl implements FragranceService {
 				return FragranceConverter.toSearchResultDto(fragrance, liked);
 			}).toList();
 
-		return FragranceConverter.toMdChoiceResult(content);
+		return FragranceConverter.toMdChoiceResult(content, name, nickname);
 	}
 }

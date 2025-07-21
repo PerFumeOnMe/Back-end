@@ -146,9 +146,11 @@ public class FragranceConverter {
 
 	// 마이페이지 향수 추천(Md's Choice) 목록 반환
 	public static FragranceResponseDTO.FragranceMdChoiceResult toMdChoiceResult(
-		List<FragranceResponseDTO.FragranceSearchResult> content) {
+		List<FragranceResponseDTO.FragranceSearchResult> content, String name, String nickname) {
 		return FragranceResponseDTO.FragranceMdChoiceResult.builder()
 			.content(content)
+			.name(name)
+			.nickname(nickname)
 			.build();
 	}
 

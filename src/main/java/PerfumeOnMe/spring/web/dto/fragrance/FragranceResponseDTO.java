@@ -119,6 +119,8 @@ public class FragranceResponseDTO {
 	@NoArgsConstructor
 	public static class FragranceMdChoiceResult {
 		private List<FragranceSearchResult> content;
+		private String name;
+		private String nickname;
 	}
 
 }
