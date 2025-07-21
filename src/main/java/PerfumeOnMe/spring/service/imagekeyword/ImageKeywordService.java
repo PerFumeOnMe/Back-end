@@ -8,4 +8,6 @@ public interface ImageKeywordService {
 	List<ImageKeywordResponseDTO.ImageKeywordListResponseDTO> getImageKeywordList(Long userId);
 
 	ImageKeywordResponseDTO.ImageKeywordDetailResponseDTO getImageKeywordDetail(Long userId, Long imageKeywordId);
+
+	ImageKeywordResponseDTO.ImageKeywordSaveResponseDTO saveImageKeyword(Long userId, String savedName);
 }
