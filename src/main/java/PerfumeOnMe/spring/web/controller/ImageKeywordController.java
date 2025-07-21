@@ -102,4 +102,32 @@ public class ImageKeywordController {
 		ImageKeywordResponseDTO.ImageKeywordPreviewResponseDTO result = previewService.generatePreview(userId, request);
 		return ResponseEntity.ok(ApiResponse.onSuccess(result));
 	}
+
+	@PostMapping("/save")
+	@Operation(
+		summary = "이미지 키워드 결과 저장",
+		description = """
+			프리뷰 확인 후 이름을 지정해 최종 저장합니다. 
+			Redis에 임시 저장된 키워드를 기반으로 저장되며, 완료 후 해당 Redis 키는 삭제됩니다.
+			""",
+		responses = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(
+				responseCode = "COMMON200",
+				description = "성공입니다.",
+				content = @Content(schema = @Schema(implementation = ImageKeywordResponseDTO.ImageKeywordSaveResponseDTO.class))
+			),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "IK4002", description = "생성한 이미지 키워드 결과가 만료되었습니다."),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "IK4003", description = "이미 동일한 이름으로 저장된 결과가 존재합니다.")
+		}
+	)
+	public ResponseEntity<ApiResponse<ImageKeywordResponseDTO.ImageKeywordSaveResponseDTO>> saveImageKeywordResult(
+		@Parameter(hidden = true)
+		@AuthenticationPrincipal CustomUserDetails userDetails,
+		@Validated @RequestBody ImageKeywordRequestDTO.ImageKeywordSaveRequestDTO request
+	) {
+		ImageKeywordResponseDTO.ImageKeywordSaveResponseDTO result =
+			imageKeywordService.saveImageKeyword(userDetails.getUserId(), request.getSavedName());
+		return ResponseEntity.ok(ApiResponse.onSuccess(result));
+	}
+
 }

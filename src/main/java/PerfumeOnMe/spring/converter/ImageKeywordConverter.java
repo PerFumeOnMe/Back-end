@@ -74,6 +74,14 @@ public class ImageKeywordConverter {
 		}
 	}
 
+	public static ImageKeywordResponseDTO.ImageKeywordSaveResponseDTO toSaveResponseDTO(ImageKeyword entity) {
+		return ImageKeywordResponseDTO.ImageKeywordSaveResponseDTO.builder()
+			.imageKeywordId(entity.getId())
+			.savedName(entity.getSavedName())
+			.createdAt(entity.getCreatedAt())
+			.build();
+	}
+
 	private record EnumWithCategory(String keyword, KeywordCategory category) {
 	}
 }
