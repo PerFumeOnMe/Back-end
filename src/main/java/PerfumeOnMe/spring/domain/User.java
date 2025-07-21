@@ -118,4 +118,9 @@ public class User extends BaseEntity {
 		this.userNoteList.add(userNote);
 		userNote.setUser(this);
 	}
+
+	// 프로필 사진 변경 메서드
+	public void updateImageURL(String imageURL) {
+		this.imageURL = imageURL;
+	}
 }
