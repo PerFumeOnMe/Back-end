@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -119,7 +118,7 @@ public class UserController {
 		return ResponseEntity.ok().body(ApiResponse.onSuccess(null));
 	}
 
-	@PatchMapping("/notes")
+	@PatchMapping("/me/notes")
 	@Operation(
 		summary = "선호 향 수정 API",
 		description = "사용자의 선호하는 향 리스트를 입력받아 수정하는 API입니다.",
@@ -168,7 +167,7 @@ public class UserController {
 		return ResponseEntity.ok(ApiResponse.onSuccess(favorites));
 	}
 
-	@PutMapping("/profile/image")
+	@PatchMapping("/me/image")
 	@Operation(
 		summary = "프로필 사진 변경 API",
 		description = "마이페이지에서 프로필 사진을 변경하는 API입니다.",
