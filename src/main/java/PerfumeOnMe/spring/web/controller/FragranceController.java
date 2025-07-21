@@ -191,7 +191,7 @@ public class FragranceController {
 	@GetMapping("/md-choice")
 	@Operation(
 		summary = "메인페이지 추천 향수(MD's Choice) 목록 조회 API",
-		description = "메인페이지에서 추천 향수(MD's CHoice) 목록을 조회하는 API입니다.",
+		description = "메인페이지에서 추천 향수(MD's Choice) 목록을 조회하는 API입니다.",
 		responses = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "성공입니다", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FragranceResponseDTO.FragranceMdChoiceResult.class))),
 		}

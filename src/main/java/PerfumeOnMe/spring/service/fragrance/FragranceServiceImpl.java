@@ -18,6 +18,7 @@ import PerfumeOnMe.spring.domain.Fragrance;
 import PerfumeOnMe.spring.domain.User;
 import PerfumeOnMe.spring.domain.enums.FragranceGender;
 import PerfumeOnMe.spring.domain.enums.FragranceType;
+import PerfumeOnMe.spring.domain.enums.UserGender;
 import PerfumeOnMe.spring.domain.mapping.UserFragrance;
 import PerfumeOnMe.spring.repository.fragrance.FragranceRepository;
 import PerfumeOnMe.spring.repository.location.LocationRepository;
@@ -175,25 +176,25 @@ public class FragranceServiceImpl implements FragranceService {
 		return FragranceConverter.toSearchFinalResult(content, fragrancePage.hasNext());
 	}
 
-	// 메인페이지 향수 추천(Md's Choice) 목록 조회 API
+	// 메인페이지 향수 추천(MD's Choice) 목록 조회 API
 	@Override
 	public FragranceResponseDTO.FragranceMdChoiceResult getFragranceMdChoice(CustomUserDetails userDetails) {
 
+		// 사용자 조회
 		User user = userRepository.findUserByLoginId(userDetails.getUsername())
 			.orElseThrow(() -> new GeneralException(ErrorStatus.LOGIN_ID_NOT_FOUND));
 
-		FragranceGender fragranceGender = switch (user.getGender()) {
-			case MALE -> FragranceGender.MALE;
-			case FEMALE -> FragranceGender.FEMALE;
-			case NONE -> null;
-		};
-
+		// 사용자 선호 향 조회
 		List<Long> noteList = user.getUserNoteList().stream()
 			.map(userNote -> userNote.getNote().getId())
 			.toList();
 
+		// 사용자 맞춤 향수 반환
+		// 성별이 NONE인 경우, null 적용 (필터링 적용 X)
 		List<Fragrance> userMdChoice = fragranceRepository
-			.findByUserMdChoice((fragranceGender == null ? null : fragranceGender.name()), noteList);
+			.findByUserMdChoice((user.getGender() == UserGender.NONE ? null : user.getGender().name()), noteList);
+
+		// 즐겨찾기 적용해서 응답 DTO로 반환
 		return getFragranceMdChoiceFinalResult(user.getId(), userMdChoice, user.getName(), user.getNickname());
 	}
 

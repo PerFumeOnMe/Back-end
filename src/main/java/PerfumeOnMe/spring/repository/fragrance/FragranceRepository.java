@@ -14,6 +14,17 @@ public interface FragranceRepository extends JpaRepository<Fragrance, Long>, Fra
 
 	Optional<Fragrance> findById(Long id);
 
+	/**
+	 * 메인페이지 향수 추천(MD's Choice) - 사용자 성별과 선호 향으로 추천
+	 * 1. 향수 탑, 미들, 베이스 노트 아이디 합집합
+	 * 2. DISTINCT로 노트 아이디 중복 제거
+	 * 3. 사용자 선호 향과 일치하는 개수 카운트
+	 * 4. 개수 기반 우선순위 설정 후 정렬
+	 * 5. 6개 반환
+	 * @param gender = 사용자 성별; null로 들어온 경우 WHERE 절에서 무시
+	 * @param userNoteIdList = 사용자 선호 향
+	 * @return = 향수 6개
+	 */
 	@Query(value = """
 		SELECT f.*
 		FROM fragrances f
