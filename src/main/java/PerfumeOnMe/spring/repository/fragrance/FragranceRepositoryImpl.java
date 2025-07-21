@@ -14,6 +14,8 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.core.types.dsl.StringPath;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import PerfumeOnMe.spring.domain.Fragrance;
@@ -159,28 +161,32 @@ public class FragranceRepositoryImpl implements FragranceRepositoryCustom {
 	@Override
 	public List<Fragrance> findByUserMdChoice(FragranceGender gender, List<Long> userNoteIdList) {
 
+		QFragranceTopNote ftnSub = new QFragranceTopNote("ftnSub");
+		QFragranceMiddleNote fmnSub = new QFragranceMiddleNote("fmnSub");
+		QFragranceBaseNote fbnSub = new QFragranceBaseNote("fbnSub");
+
 		BooleanBuilder predicate = new BooleanBuilder();
 		predicate.and(f.gender.eq(gender));
 
-		NumberExpression<Integer> topCount = ftn.note.id.in(userNoteIdList).count().castToNum(Integer.class);
-		NumberExpression<Integer> middleCount = fmn.note.id.in(userNoteIdList).count().castToNum(Integer.class);
-		NumberExpression<Integer> baseCount = fbn.note.id.in(userNoteIdList).count().castToNum(Integer.class);
+		JPQLQuery<Long> topCount = JPAExpressions.select(ftnSub.countDistinct())
+			.from(ftnSub).where(ftnSub.fragrance.id.eq(f.id).and(ftnSub.note.id.in(userNoteIdList)));
+		JPQLQuery<Long> middleCount = JPAExpressions.select(fmnSub.countDistinct())
+			.from(fmnSub).where(fmnSub.fragrance.id.eq(f.id).and(fmnSub.note.id.in(userNoteIdList)));
+		JPQLQuery<Long> baseCount = JPAExpressions.select(ftnSub.countDistinct())
+			.from(fbnSub).where(fbnSub.fragrance.id.eq(f.id).and(fbnSub.note.id.in(userNoteIdList)));
 
-		NumberExpression<Integer> totalCount = topCount.add(middleCount).add(baseCount);
+		NumberExpression<Long> totalCount = Expressions.numberTemplate(Long.class, "({0} + {1} + {2}",
+			topCount, middleCount, baseCount);
 
 		NumberExpression<Integer> priorityOrder = Expressions.cases()
-			.when(totalCount.eq(3)).then(1)
-			.when(totalCount.eq(2)).then(2)
-			.when(totalCount.eq(1)).then(3)
+			.when(totalCount.eq(3L)).then(1)
+			.when(totalCount.eq(2L)).then(2)
+			.when(totalCount.eq(1L)).then(3)
 			.otherwise(4);
 
 		return queryFactory.selectFrom(f)
 			.distinct()
-			.leftJoin(f.fragranceTopNoteList, ftn).leftJoin(ftn.note, topNote)
-			.leftJoin(f.fragranceMiddleNoteList, fmn).leftJoin(fmn.note, middleNote)
-			.leftJoin(f.fragranceBaseNoteList, fbn).leftJoin(fbn.note, baseNote)
 			.where(predicate)
-			.groupBy(f.id)
 			.orderBy(priorityOrder.asc())
 			.limit(6)
 			.fetch();
