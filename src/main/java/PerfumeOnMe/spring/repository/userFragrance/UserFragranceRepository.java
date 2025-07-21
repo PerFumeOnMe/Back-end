@@ -2,6 +2,8 @@ package PerfumeOnMe.spring.repository.userFragrance;
 
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import PerfumeOnMe.spring.domain.Fragrance;
@@ -14,5 +16,7 @@ public interface UserFragranceRepository extends JpaRepository<UserFragrance, Lo
 	Optional<UserFragrance> findByUserAndFragrance(User user, Fragrance fragrance);
 
 	boolean existsByUserIdAndFragranceId(Long userId, Long fragranceId);
+
+	Page<UserFragrance> findAllByUserId(Long userId, Pageable pageable);
 
 }

@@ -133,6 +133,17 @@ public class FragranceConverter {
 			.build();
 	}
 
+	// 향수 목록 전체 반환 dto
+	public static FragranceResponseDTO.FragranceSearchFinalResult toSearchFinalResult(
+		List<FragranceResponseDTO.FragranceSearchResult> content,
+		boolean hasNext
+	) {
+		return FragranceResponseDTO.FragranceSearchFinalResult.builder()
+			.content(content)
+			.hasNext(hasNext)
+			.build();
+	}
+
 	// 향수 즐겨찾기 등록 API
 	public static FragranceResponseDTO.FavoriteResponseDTO toFavoriteResponseDTO(UserFragrance userFragrance) {
 		return FragranceResponseDTO.FavoriteResponseDTO.builder()

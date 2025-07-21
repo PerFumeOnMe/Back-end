@@ -4,8 +4,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +19,8 @@ import PerfumeOnMe.spring.apiPayload.code.status.SuccessStatus;
 import PerfumeOnMe.spring.config.security.auth.dto.AuthResponseDTO;
 import PerfumeOnMe.spring.config.security.auth.userDetails.CustomUserDetails;
 import PerfumeOnMe.spring.service.user.UserService;
+import PerfumeOnMe.spring.web.dto.fragrance.FragranceRequestDTO;
+import PerfumeOnMe.spring.web.dto.fragrance.FragranceResponseDTO;
 import PerfumeOnMe.spring.web.dto.user.UserRequestDTO;
 import PerfumeOnMe.spring.web.dto.user.UserResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -128,5 +133,55 @@ public class UserController {
 		@AuthenticationPrincipal CustomUserDetails userDetails) {
 		userService.updateUserNote(request, userDetails);
 		return ResponseEntity.ok().body(ApiResponse.onSuccess(null));
+	}
+
+	@GetMapping("/me")
+	@Operation(
+		summary = "프로필 조회 API",
+		description = "사용자의 프로필을 조회하는 API입니다.",
+		responses = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "성공입니다."),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4003", description = "해당 아이디를 가진 사용자가 존재하지 않습니다."),
+		}
+	)
+	public ResponseEntity<ApiResponse<UserResponseDTO.MyPageProfileResponse>> getUserProfile(
+		@AuthenticationPrincipal CustomUserDetails userDetails) {
+		Long userId = userDetails.getUserId();
+		UserResponseDTO.MyPageProfileResponse response = userService.getUserProfile(userId);
+		return ResponseEntity.ok(ApiResponse.onSuccess(response));
+	}
+
+	@GetMapping("/favorites")
+	@Operation(
+		summary = "즐겨찾기 목록 조회 API",
+		description = "사용자의 즐겨찾기 목록을 조회하는 API입니다.",
+		responses = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "성공입니다."),
+		}
+	)
+	public ResponseEntity<ApiResponse<FragranceResponseDTO.FragranceSearchFinalResult>> getFavoriteFragrances(
+		@Valid @ModelAttribute FragranceRequestDTO.FragranceAllRequest request,
+		@AuthenticationPrincipal CustomUserDetails userDetails) {
+		Long userId = userDetails.getUserId();
+		FragranceResponseDTO.FragranceSearchFinalResult favorites = userService.getFavoriteFragrances(request,
+			userId);
+		return ResponseEntity.ok(ApiResponse.onSuccess(favorites));
+	}
+
+	@PutMapping("/profile/image")
+	@Operation(
+		summary = "프로필 사진 변경 API",
+		description = "마이페이지에서 프로필 사진을 변경하는 API입니다.",
+		responses = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "성공입니다."),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4003", description = "해당 아이디를 가진 사용자가 존재하지 않습니다.")
+		}
+	)
+	public ResponseEntity<ApiResponse<Void>> updateProfileImage(
+		@AuthenticationPrincipal CustomUserDetails userDetails,
+		@RequestBody @Valid UserRequestDTO.ProfileImageUpdateRequest request) {
+
+		userService.updateProfileImage(userDetails.getUserId(), request.getImageUrl());
+		return ResponseEntity.ok(ApiResponse.onSuccess(null));
 	}
 }

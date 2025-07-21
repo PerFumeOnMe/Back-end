@@ -51,4 +51,10 @@ public class Diary extends BaseEntity {
 
 	@Column(columnDefinition = "TEXT", nullable = false)
 	private String content;
+
+	// 다이어리 수정하는 메서드
+	public void updateFragranceNameAndContent(String fragranceName, String content) {
+		this.fragranceName = fragranceName;
+		this.content = content;
+	}
 }

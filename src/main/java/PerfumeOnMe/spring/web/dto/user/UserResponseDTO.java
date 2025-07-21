@@ -1,5 +1,7 @@
 package PerfumeOnMe.spring.web.dto.user;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,5 +15,15 @@ public class UserResponseDTO {
 	@NoArgsConstructor
 	public static class SignupResult {
 		private Long userId;
+	}
+
+	@Getter
+	@Builder
+	@AllArgsConstructor
+	@NoArgsConstructor
+	public static class MyPageProfileResponse {
+		private String nickName;
+		private String imageUrl;
+		private List<String> preferredNotes;
 	}
 }

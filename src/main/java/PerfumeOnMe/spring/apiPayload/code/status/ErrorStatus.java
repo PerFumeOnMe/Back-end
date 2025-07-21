@@ -20,7 +20,7 @@ public enum ErrorStatus implements BaseErrorCode {
 	// 사용자 에러
 	LOGIN_ID_DUPLICATE(HttpStatus.BAD_REQUEST, "MEMBER4001", "이미 사용된 아이디입니다."),
 	PASSWORD_NOT_MATCH(HttpStatus.BAD_REQUEST, "MEMBER4002", "비밀번호가 일치하지 않습니다."),
-	LOGIN_ID_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4003", "해당 아이디를 가진 사용자가 존재하지 않습니다."),
+	LOGIN_ID_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4003", "해당 로그인 아이디를 가진 사용자가 존재하지 않습니다."),
 	LOGIN_PARSING_FAIL(HttpStatus.BAD_REQUEST, "MEMBER4004", "로그인 DTO 변환을 실패했습니다."),
 	LOGIN_UNKNOWN_ERROR(HttpStatus.BAD_REQUEST, "MEMBER4005", "로그인 중 알 수 없는 오류가 발생했습니다."),
 	NICKNAME_DUPLICATE(HttpStatus.BAD_REQUEST, "MEMBER4006", "이미 사용된 닉네임입니다."),
@@ -79,6 +79,17 @@ public enum ErrorStatus implements BaseErrorCode {
 	JSON_PARSE_ERROR(HttpStatus.BAD_REQUEST, "JSON4001", "JSON 파싱에 실패했습니다."),
 
 	//
+
+	// 다이어리 에러
+	DIARY_NOT_FOUND(HttpStatus.BAD_REQUEST, "DIARY4001", "해당 다이어리를 찾을 수 없습니다."),
+	USER_DIARY_FORBIDDEN(HttpStatus.BAD_REQUEST, "DIARY4002", "다이어리 소유자의 요청이 아닙니다."),
+	USER_DIARY_NOT_FOUND(HttpStatus.BAD_REQUEST, "DIARY4003", "해당 날짜에 해당하는 다이어리를 찾을 수 없습니다."),
+	MONTH_DIARY_NOT_FOUND(HttpStatus.BAD_REQUEST, "DIARY4004", "해당 월에 작성된 다이어리가 없습니다."),
+
+	// S3 에러
+	INVALID_IMAGE_EXTENSION(HttpStatus.BAD_REQUEST, "S3IMAGE4001", "지원하지 않은 파일 확장자입니다."),
+	
+
 	// 예시,,,
 	ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다.");
 
