@@ -75,9 +75,9 @@ public class PbtiResponseDTO {
 	@AllArgsConstructor
 	@NoArgsConstructor
 	public static class PbtiResult {
-		private String keyword1; // J/P 기준
-		private String keyword2; // S/N 기준
-		private String keyword3; // T/F 기준
-		private String keyword4; // E/I 기준
+		private String keyword1;
+		private String keyword2;
+		private String keyword3;
+		private String keyword4;
 	}
 }
