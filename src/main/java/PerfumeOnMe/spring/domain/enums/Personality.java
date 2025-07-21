@@ -20,4 +20,13 @@ public enum Personality {
 	Personality(String displayName) {
 		this.displayName = displayName;
 	}
+
+	public static Personality fromDisplayName(String displayName) {
+		for (Personality p : Personality.values()) {
+			if (p.getDisplayName().equals(displayName)) {
+				return p;
+			}
+		}
+		throw new IllegalArgumentException("Invalid displayName for Personality: " + displayName);
+	}
 }
