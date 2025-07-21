@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -152,5 +154,35 @@ public class FragranceRepositoryImpl implements FragranceRepositoryCustom {
 			.fetchOne();
 
 		return new PageImpl<>(result, pageable, total != null ? total : 0);
+	}
+
+	@Override
+	public List<Fragrance> findByUserMdChoice(FragranceGender gender, List<Long> userNoteIdList) {
+
+		BooleanBuilder predicate = new BooleanBuilder();
+		predicate.and(f.gender.eq(gender));
+
+		NumberExpression<Integer> topCount = ftn.note.id.in(userNoteIdList).count().castToNum(Integer.class);
+		NumberExpression<Integer> middleCount = fmn.note.id.in(userNoteIdList).count().castToNum(Integer.class);
+		NumberExpression<Integer> baseCount = fbn.note.id.in(userNoteIdList).count().castToNum(Integer.class);
+
+		NumberExpression<Integer> totalCount = topCount.add(middleCount).add(baseCount);
+
+		NumberExpression<Integer> priorityOrder = Expressions.cases()
+			.when(totalCount.eq(3)).then(1)
+			.when(totalCount.eq(2)).then(2)
+			.when(totalCount.eq(1)).then(3)
+			.otherwise(4);
+
+		return queryFactory.selectFrom(f)
+			.distinct()
+			.leftJoin(f.fragranceTopNoteList, ftn).leftJoin(ftn.note, topNote)
+			.leftJoin(f.fragranceMiddleNoteList, fmn).leftJoin(fmn.note, middleNote)
+			.leftJoin(f.fragranceBaseNoteList, fbn).leftJoin(fbn.note, baseNote)
+			.where(predicate)
+			.groupBy(f.id)
+			.orderBy(priorityOrder.asc())
+			.limit(6)
+			.fetch();
 	}
 }

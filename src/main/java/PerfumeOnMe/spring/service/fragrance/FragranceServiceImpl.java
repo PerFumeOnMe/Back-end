@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import PerfumeOnMe.spring.apiPayload.code.status.ErrorStatus;
 import PerfumeOnMe.spring.apiPayload.exception.GeneralException;
+import PerfumeOnMe.spring.config.security.auth.userDetails.CustomUserDetails;
 import PerfumeOnMe.spring.converter.FragranceConverter;
 import PerfumeOnMe.spring.domain.Fragrance;
 import PerfumeOnMe.spring.domain.User;
@@ -174,4 +175,37 @@ public class FragranceServiceImpl implements FragranceService {
 		return FragranceConverter.toSearchFinalResult(content, fragrancePage.hasNext());
 	}
 
+	// 메인페이지 향수 추천(Md's Choice) 목록 조회 API
+	@Override
+	public FragranceResponseDTO.FragranceMdChoiceResult getFragranceMdChoice(CustomUserDetails userDetails) {
+
+		User user = userRepository.findUserByLoginId(userDetails.getUsername())
+			.orElseThrow(() -> new GeneralException(ErrorStatus.LOGIN_ID_NOT_FOUND));
+
+		FragranceGender fragranceGender = switch (user.getGender()) {
+			case MALE -> FragranceGender.MALE;
+			case FEMALE -> FragranceGender.FEMALE;
+			case NONE -> null;
+		};
+
+		List<Long> noteList = user.getUserNoteList().stream()
+			.map(userNote -> userNote.getNote().getId())
+			.toList();
+
+		List<Fragrance> userMdChoice = fragranceRepository.findByUserMdChoice(fragranceGender, noteList);
+		return getFragranceMdChoiceFinalResult(user.getId(), userMdChoice);
+	}
+
+	// Md's Choice 목록에 즐겨찾기 정보 포함해서 최종 DTO 반환
+	private FragranceResponseDTO.FragranceMdChoiceResult getFragranceMdChoiceFinalResult(
+		Long userId, List<Fragrance> fragranceList) {
+
+		List<FragranceResponseDTO.FragranceSearchResult> content = fragranceList.stream()
+			.map(fragrance -> {
+				boolean liked = (userId != null) && Like(userId, fragrance.getId());
+				return FragranceConverter.toSearchResultDto(fragrance, liked);
+			}).toList();
+
+		return FragranceConverter.toMdChoiceResult(content);
+	}
 }

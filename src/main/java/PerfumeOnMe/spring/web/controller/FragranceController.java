@@ -187,4 +187,18 @@ public class FragranceController {
 			userId);
 		return ResponseEntity.ok(ApiResponse.onSuccess(result));
 	}
+
+	@GetMapping("/md-choice")
+	@Operation(
+		summary = "메인페이지 추천 향수(MD's Choice) 목록 조회 API",
+		description = "메인페이지에서 추천 향수(MD's CHoice) 목록을 조회하는 API입니다.",
+		responses = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "성공입니다", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FragranceResponseDTO.FragranceMdChoiceResult.class))),
+		}
+	)
+	public ResponseEntity<ApiResponse<FragranceResponseDTO.FragranceMdChoiceResult>> getFragrancesMdChoice(
+		@AuthenticationPrincipal CustomUserDetails userDetails) {
+		FragranceResponseDTO.FragranceMdChoiceResult result = fragranceService.getFragranceMdChoice(userDetails);
+		return ResponseEntity.ok(ApiResponse.onSuccess(result));
+	}
 }

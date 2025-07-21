@@ -112,6 +112,15 @@ public class FragranceResponseDTO {
 		private boolean hasNext;
 	}
 
+	// 메인페이지 향수 추천(MD's Choice) 목록
+	@Getter
+	@Builder
+	@AllArgsConstructor
+	@NoArgsConstructor
+	public static class FragranceMdChoiceResult {
+		private List<FragranceSearchResult> content;
+	}
+
 }
 
 
