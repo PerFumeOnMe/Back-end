@@ -72,8 +72,13 @@ public enum ErrorStatus implements BaseErrorCode {
 	ALREADY_KEYWORD_NAME(HttpStatus.BAD_REQUEST, "IMAGEKEYWORD4003", "동일한 이름으로 저장된 결과가 존재합니다."),
 	INVALID_IMAGEKEYWORD_ID(HttpStatus.BAD_REQUEST, "IMAGEKEYWORD4004", "해당 ID의 이미지 결과가 존재하지 않습니다."),
 
+	// FastAPI 연동 에러
+	FASTAPI_COMMUNICATION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "FASTAPI5001", "FastAPI 서버 통신 중 오류가 발생했습니다."),
+
 	//JSON 파싱 에러
 	JSON_PARSE_ERROR(HttpStatus.BAD_REQUEST, "JSON4001", "JSON 파싱에 실패했습니다."),
+
+	//
 	// 예시,,,
 	ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다.");
 
