@@ -204,6 +204,15 @@ public class UserServiceImpl implements UserService {
 		return UserConverter.toMyPageProfileResponse(user);
 	}
 
+	// 마이페이지 프로필 사진 변경
+	@Override
+	public void updateProfileImage(Long userId, String imageUrl) {
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> new GeneralException(ErrorStatus.LOGIN_ID_NOT_FOUND));
+		user.updateImageURL(imageUrl);
+		userRepository.save(user);
+	}
+
 	// 마이페이지 즐겨찾기 목록 조회
 	@Override
 	public FragranceResponseDTO.FragranceSearchFinalResult getFavoriteFragrances(
