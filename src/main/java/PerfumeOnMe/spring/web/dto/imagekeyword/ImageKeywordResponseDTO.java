@@ -77,4 +77,14 @@ public class ImageKeywordResponseDTO {
 		}
 	}
 
+	@Getter
+	@Builder
+	@AllArgsConstructor
+	@NoArgsConstructor
+	public static class ImageKeywordSaveResponseDTO {
+		private Long imageKeywordId;
+		private String savedName;
+		private LocalDateTime createdAt;
+	}
+
 }

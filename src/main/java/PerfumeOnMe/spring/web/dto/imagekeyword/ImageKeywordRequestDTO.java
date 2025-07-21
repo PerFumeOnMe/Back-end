@@ -32,4 +32,10 @@ public class ImageKeywordRequestDTO {
 		@ValidEnumKeyword(enumClass = Personality.class)
 		private String personality;
 	}
+
+	@Getter
+	@Setter
+	public static class ImageKeywordSaveRequestDTO {
+		private String savedName;
+	}
 }
