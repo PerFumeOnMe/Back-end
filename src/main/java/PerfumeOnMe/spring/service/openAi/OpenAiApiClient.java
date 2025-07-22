@@ -8,6 +8,8 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import PerfumeOnMe.spring.apiPayload.code.status.ErrorStatus;
+import PerfumeOnMe.spring.apiPayload.exception.GeneralException;
 import PerfumeOnMe.spring.web.dto.Pbti.ChatGptRequest;
 import PerfumeOnMe.spring.web.dto.Pbti.ChatGptResponse;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +35,7 @@ public class OpenAiApiClient {
 			.bodyValue(request)
 			.retrieve()
 			.bodyToMono(ChatGptResponse.class)
-			.onErrorResume(e -> Mono.error(new RuntimeException("OpenAI 요청 실패: " + e.getMessage())))
+			.onErrorResume(e -> Mono.error(new GeneralException(ErrorStatus.CALL_WEBCLIENT_ERROR)))
 			.block();
 	}
 

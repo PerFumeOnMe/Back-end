@@ -39,7 +39,7 @@ public class PbtiServiceImpl implements PbtiService {
 			return objectMapper.readValue(gptResponse, PbtiResponseDTO.PbtiQuestionResponse.class);
 		} catch (JsonProcessingException e) {
 			log.error("GPT 응답 JSON 파싱 실패. 응답: {}", gptResponse, e);
-			throw new GeneralException(ErrorStatus._INTERNAL_SERVER_ERROR);
+			throw new GeneralException(ErrorStatus.JSON_PARSING_ERROR);
 		}
 	}
 
