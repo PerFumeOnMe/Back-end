@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import PerfumeOnMe.spring.apiPayload.ApiResponse;
 import PerfumeOnMe.spring.apiPayload.code.status.SuccessStatus;
 import PerfumeOnMe.spring.config.security.auth.userDetails.CustomUserDetails;
-import PerfumeOnMe.spring.service.Diary.DiaryService;
+import PerfumeOnMe.spring.service.diary.DiaryService;
 import PerfumeOnMe.spring.web.dto.diary.DiaryRequestDTO;
 import PerfumeOnMe.spring.web.dto.diary.DiaryResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;

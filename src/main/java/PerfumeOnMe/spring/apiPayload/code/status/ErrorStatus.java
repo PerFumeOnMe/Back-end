@@ -86,9 +86,12 @@ public enum ErrorStatus implements BaseErrorCode {
 	USER_DIARY_NOT_FOUND(HttpStatus.BAD_REQUEST, "DIARY4003", "해당 날짜에 해당하는 다이어리를 찾을 수 없습니다."),
 	MONTH_DIARY_NOT_FOUND(HttpStatus.BAD_REQUEST, "DIARY4004", "해당 월에 작성된 다이어리가 없습니다."),
 
+	// PBTI 에러
+	CALL_WEBCLIENT_ERROR(HttpStatus.BAD_REQUEST, "PBTI4001", "WebClient 호출 과정에서 에러가 발생했습니다."),
+	JSON_PARSING_ERROR(HttpStatus.BAD_REQUEST, "PBTI4002", "GPT 응답 Json 파싱 과정에서 에러가 발생했습니다."),
+  
 	// S3 에러
 	INVALID_IMAGE_EXTENSION(HttpStatus.BAD_REQUEST, "S3IMAGE4001", "지원하지 않은 파일 확장자입니다."),
-	
 
 	// 예시,,,
 	ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다.");
