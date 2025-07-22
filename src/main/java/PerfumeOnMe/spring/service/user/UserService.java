@@ -27,4 +27,6 @@ public interface UserService {
 
 	FragranceResponseDTO.FragranceSearchFinalResult getFavoriteFragrances(
 		FragranceRequestDTO.FragranceAllRequest request, Long userId);
+
+	void updateProfileImage(Long userId, String imageUrl);
 }

@@ -14,4 +14,13 @@ public enum Season {
 	Season(String displayName) {
 		this.displayName = displayName;
 	}
+
+	public static Season fromDisplayName(String displayName) {
+		for (Season season : Season.values()) {
+			if (season.getDisplayName().equals(displayName)) {
+				return season;
+			}
+		}
+		throw new IllegalArgumentException("Invalid displayName for Season: " + displayName);
+	}
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -165,5 +166,22 @@ public class UserController {
 		FragranceResponseDTO.FragranceSearchFinalResult favorites = userService.getFavoriteFragrances(request,
 			userId);
 		return ResponseEntity.ok(ApiResponse.onSuccess(favorites));
+	}
+
+	@PutMapping("/profile/image")
+	@Operation(
+		summary = "프로필 사진 변경 API",
+		description = "마이페이지에서 프로필 사진을 변경하는 API입니다.",
+		responses = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "성공입니다."),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4003", description = "해당 아이디를 가진 사용자가 존재하지 않습니다.")
+		}
+	)
+	public ResponseEntity<ApiResponse<Void>> updateProfileImage(
+		@AuthenticationPrincipal CustomUserDetails userDetails,
+		@RequestBody @Valid UserRequestDTO.ProfileImageUpdateRequest request) {
+
+		userService.updateProfileImage(userDetails.getUserId(), request.getImageUrl());
+		return ResponseEntity.ok(ApiResponse.onSuccess(null));
 	}
 }
