@@ -1,6 +1,9 @@
 package PerfumeOnMe.spring.web.dto.Pbti;
 
+import java.time.LocalDateTime;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -79,5 +82,55 @@ public class PbtiResponseDTO {
 		private String keyword2;
 		private String keyword3;
 		private String keyword4;
+	}
+
+	// Pbti 결과 저장 응답 DTO
+	@Getter
+	@Builder
+	@AllArgsConstructor
+	@NoArgsConstructor
+	public static class PbtiSaveResponse {
+		private Long id;
+		private String savedName;
+		private LocalDateTime createdAt;
+	}
+
+	// Redis 저장용 DTO
+	@Getter
+	@Builder
+	@AllArgsConstructor
+	@NoArgsConstructor
+	public static class PbtiRedisDTO {
+		@JsonProperty("qOne")
+		private String qOne;
+
+		@JsonProperty("qTwo")
+		private String qTwo;
+
+		@JsonProperty("qThree")
+		private String qThree;
+
+		@JsonProperty("qFour")
+		private String qFour;
+
+		@JsonProperty("qFive")
+		private String qFive;
+
+		@JsonProperty("qSix")
+		private String qSix;
+
+		@JsonProperty("qSeven")
+		private String qSeven;
+
+		@JsonProperty("qEight")
+		private String qEight;
+
+		private String recommendation;
+		private String summary;
+
+		private List<PbtiQuestionResponse.Keyword> keywords;
+		private PbtiQuestionResponse.PerfumeStyle perfumeStyle;
+		private List<PbtiQuestionResponse.ScentPoint> scentPoint;
+		private List<PbtiQuestionResponse.PerfumeRecommend> perfumeRecommend;
 	}
 }

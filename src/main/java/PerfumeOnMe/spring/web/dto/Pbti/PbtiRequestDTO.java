@@ -41,4 +41,11 @@ public class PbtiRequestDTO {
 		@JsonProperty("qEight")
 		private String qEight;
 	}
+
+	// PBTI 결과 저장 요청 DTO
+	@Getter
+	@Setter
+	public static class PbtiSaveRequest {
+		private String savedName;
+	}
 }
