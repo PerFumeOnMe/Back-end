@@ -35,6 +35,7 @@ public class PromptBuilder {
 				추가로 각 질문에 대한 사용자의 답변을 아래 JSON 포맷에 맞게 분석하여 출력하세요. JSON 이외의 설명은 절대 하지 말고, JSON 데이터만 정확하게 출력해주세요.:
 				
 				- "recommendation"은 '당신은' 으로 시작되도록 하세요.
+				- "perfumeStyle" 내 "notes" 배열의 "category"를 "scentPoint" 내의 "category"에서 사용해주세요.
 				- "scentPoint" 배열 내의 "category"와 "perfumeStyle" 내 "notes" 배열 내의 "category"는 한국어로 응답해주세요.
 				- "scentPoint" 배열 내의 "point"는 숫자가 큰 순서대로 출력해주세요.
 				- "summary"는 사용자의 성격이 반영되는 단어가 들어가도록 간단하게 요약해주세요. ex) “사람들과의 에너지 흐름을 잘 이끌어내는 ~한 사람”

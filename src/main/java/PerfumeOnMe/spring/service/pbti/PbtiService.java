@@ -7,4 +7,7 @@ public interface PbtiService {
 
 	// PBTI 결과 조회 API
 	PbtiResponseDTO.PbtiQuestionResponse searchPbti(Long userId, PbtiRequestDTO.PbtiQuestionRequest request);
+
+	// PBTI 결과 저장 API
+	PbtiResponseDTO.PbtiSaveResponse savePbti(Long userId, PbtiRequestDTO.PbtiSaveRequest request);
 }

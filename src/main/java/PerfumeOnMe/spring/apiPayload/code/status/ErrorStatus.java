@@ -89,7 +89,9 @@ public enum ErrorStatus implements BaseErrorCode {
 	// PBTI 에러
 	CALL_WEBCLIENT_ERROR(HttpStatus.BAD_REQUEST, "PBTI4001", "WebClient 호출 과정에서 에러가 발생했습니다."),
 	JSON_PARSING_ERROR(HttpStatus.BAD_REQUEST, "PBTI4002", "GPT 응답 Json 파싱 과정에서 에러가 발생했습니다."),
-  
+	SAVE_REDIS_ERROR(HttpStatus.BAD_REQUEST, "PBTI4003", "Redis 저장 중 직렬화 오류가 발생했습니다."),
+	PBTI_REDIS_KEY_EXPIRED(HttpStatus.BAD_REQUEST, "PBTI4004", "사용자의 PBTI 분석 결과가 Redis에서 만료되었거나 저장되어 있지 않습니다."),
+
 	// S3 에러
 	INVALID_IMAGE_EXTENSION(HttpStatus.BAD_REQUEST, "S3IMAGE4001", "지원하지 않은 파일 확장자입니다."),
 

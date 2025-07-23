@@ -32,7 +32,8 @@ public class PbtiController {
 		summary = "PBTI 결과 조회",
 		description = "8개의 질문 선택지를 기반으로 PBTI 분석 결과를 조회합니다.",
 		responses = {
-			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "PBTI 결과가 조회되었습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PbtiResponseDTO.PbtiQuestionResponse.class)))
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "PBTI 결과가 조회되었습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PbtiResponseDTO.PbtiQuestionResponse.class))),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "PBTI4002", description = "GPT 응답 Json 파싱 과정에서 에러가 발생했습니다.")
 		}
 	)
 	public ResponseEntity<ApiResponse<PbtiResponseDTO.PbtiQuestionResponse>> searchPbti(
@@ -40,6 +41,24 @@ public class PbtiController {
 		@AuthenticationPrincipal CustomUserDetails userDetails) {
 
 		PbtiResponseDTO.PbtiQuestionResponse result = pbtiService.searchPbti(userDetails.getUserId(), request);
+		return ResponseEntity.ok(ApiResponse.onSuccess(result));
+	}
+
+	// PBTI 결과 저장 API
+	@PostMapping("/save")
+	@Operation(
+		summary = "PBTI 결과 저장",
+		description = "PBTI 분석 결과를 DB에 저장합니다.",
+		responses = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "PBTI 결과가 저장되었습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PbtiResponseDTO.PbtiSaveResponse.class))),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "PBTI4004", description = "사용자의 PBTI 분석 결과가 Redis에서 만료되었거나 저장되어 있지 않습니다.")
+		}
+	)
+	public ResponseEntity<ApiResponse<PbtiResponseDTO.PbtiSaveResponse>> savePbti(
+		@RequestBody PbtiRequestDTO.PbtiSaveRequest request,
+		@AuthenticationPrincipal CustomUserDetails userDetails) {
+
+		PbtiResponseDTO.PbtiSaveResponse result = pbtiService.savePbti(userDetails.getUserId(), request);
 		return ResponseEntity.ok(ApiResponse.onSuccess(result));
 	}
 }
