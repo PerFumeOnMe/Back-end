@@ -13,4 +13,8 @@ public interface PbtiService {
 
 	// 마이페이지 PBTI 목록 조회 API
 	PbtiResponseDTO.SearchPbtiListResponse searchPbtiList(Long userId);
+
+	// 마이페이지 PBTI 결과 상세 조회 API
+	PbtiResponseDTO.PbtiResultDetailResponse searchPbtiResult(Long userId,
+		PbtiRequestDTO.PbtiResultDetailRequest request);
 }

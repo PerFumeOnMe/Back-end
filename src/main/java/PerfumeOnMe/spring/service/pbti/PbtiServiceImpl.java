@@ -149,4 +149,18 @@ public class PbtiServiceImpl implements PbtiService {
 			.build();
 	}
 
+	// 마이페이지 PBTI 결과 상세 조회 API
+	@Override
+	public PbtiResponseDTO.PbtiResultDetailResponse searchPbtiResult(Long userId,
+		PbtiRequestDTO.PbtiResultDetailRequest request) {
+		PBTI pbti = pbtiRepository.findById(request.getPbtiId())
+			.orElseThrow(() -> new GeneralException(ErrorStatus.PBTI_NOT_EXIST_ERROR));
+
+		if (!pbti.getUser().getId().equals(userId)) {
+			throw new GeneralException(ErrorStatus.PBTI_USER_NOT_MATCH);
+		}
+
+		return PbtiConverter.toPbtiResultDetailResponse(pbti);
+	}
+
 }
