@@ -61,7 +61,7 @@ openai:
 cloud:
   aws:
     s3:
-      bucket: umc-perfume-bucket
+      bucket: ${AWS_S3_BUCKET_NAME}
       path:
         profile: user_profiles
     region:
