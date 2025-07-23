@@ -1,6 +1,8 @@
 package PerfumeOnMe.spring.service.pbti;
 
 import java.time.Duration;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -132,6 +134,19 @@ public class PbtiServiceImpl implements PbtiService {
 		stringRedisTemplate.delete(redisKey);
 
 		return PbtiConverter.toPbtiSaveResponse(saved);
+	}
+
+	// 마이페이지 PBTI 목록 조회 API
+	@Override
+	public PbtiResponseDTO.SearchPbtiListResponse searchPbtiList(Long userId) {
+		List<PBTI> pbtiList = pbtiRepository.findAllByUserId(userId);
+		List<PbtiResponseDTO.PbtiListResult> results = pbtiList.stream()
+			.map(PbtiConverter::toPbtiListResult)
+			.collect(Collectors.toList());
+
+		return PbtiResponseDTO.SearchPbtiListResponse.builder()
+			.result(results)
+			.build();
 	}
 
 }

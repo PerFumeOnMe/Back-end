@@ -15,4 +15,13 @@ public class PbtiConverter {
 			.createdAt(LocalDateTime.from(pbti.getCreatedAt()))
 			.build();
 	}
+
+	// 마이페이지 PBTI 목록 조회 API
+	public static PbtiResponseDTO.PbtiListResult toPbtiListResult(PBTI pbti) {
+		return PbtiResponseDTO.PbtiListResult.builder()
+			.id(pbti.getId())
+			.savedName(pbti.getSavedName())
+			.createdAt(pbti.getCreatedAt())
+			.build();
+	}
 }

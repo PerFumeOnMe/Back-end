@@ -2,6 +2,7 @@ package PerfumeOnMe.spring.web.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,6 +60,22 @@ public class PbtiController {
 		@AuthenticationPrincipal CustomUserDetails userDetails) {
 
 		PbtiResponseDTO.PbtiSaveResponse result = pbtiService.savePbti(userDetails.getUserId(), request);
+		return ResponseEntity.ok(ApiResponse.onSuccess(result));
+	}
+
+	// 마이페이지 PBTI 목록 조회 API
+	@GetMapping("/result/list")
+	@Operation(
+		summary = "마이페이지 PBTI 목록 조회",
+		description = "마이페이지에서 PBTI 목록을 조회합니다.",
+		responses = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "PBTI 목록이 조회되었습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PbtiResponseDTO.PbtiListResult.class)))
+		}
+	)
+	public ResponseEntity<ApiResponse<PbtiResponseDTO.SearchPbtiListResponse>> searchPbtiList(
+		@AuthenticationPrincipal CustomUserDetails userDetails) {
+
+		PbtiResponseDTO.SearchPbtiListResponse result = pbtiService.searchPbtiList(userDetails.getUserId());
 		return ResponseEntity.ok(ApiResponse.onSuccess(result));
 	}
 }
