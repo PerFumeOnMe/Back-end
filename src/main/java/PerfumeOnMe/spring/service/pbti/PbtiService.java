@@ -10,4 +10,7 @@ public interface PbtiService {
 
 	// PBTI 결과 저장 API
 	PbtiResponseDTO.PbtiSaveResponse savePbti(Long userId, PbtiRequestDTO.PbtiSaveRequest request);
+
+	// 마이페이지 PBTI 목록 조회 API
+	PbtiResponseDTO.SearchPbtiListResponse searchPbtiList(Long userId);
 }

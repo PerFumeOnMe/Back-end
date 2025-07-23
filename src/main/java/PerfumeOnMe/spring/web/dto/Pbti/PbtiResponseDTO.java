@@ -133,4 +133,23 @@ public class PbtiResponseDTO {
 		private List<PbtiQuestionResponse.ScentPoint> scentPoint;
 		private List<PbtiQuestionResponse.PerfumeRecommend> perfumeRecommend;
 	}
+
+	// 마이페이지 PBTI 목록 조회 응답 DTO
+	@Getter
+	@Builder
+	@AllArgsConstructor
+	@NoArgsConstructor
+	public static class PbtiListResult {
+		private Long id;
+		private String savedName;
+		private LocalDateTime createdAt;
+	}
+
+	@Getter
+	@Builder
+	@AllArgsConstructor
+	@NoArgsConstructor
+	public static class SearchPbtiListResponse {
+		private List<PbtiListResult> result;
+	}
 }
