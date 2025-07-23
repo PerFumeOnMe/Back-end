@@ -48,4 +48,11 @@ public class PbtiRequestDTO {
 	public static class PbtiSaveRequest {
 		private String savedName;
 	}
+
+	// PBTI 결과 상세 조회 요청 DTO
+	@Getter
+	@Setter
+	public static class PbtiResultDetailRequest {
+		private Long pbtiId;
+	}
 }

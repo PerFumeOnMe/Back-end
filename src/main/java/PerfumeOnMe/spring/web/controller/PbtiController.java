@@ -78,4 +78,23 @@ public class PbtiController {
 		PbtiResponseDTO.SearchPbtiListResponse result = pbtiService.searchPbtiList(userDetails.getUserId());
 		return ResponseEntity.ok(ApiResponse.onSuccess(result));
 	}
+
+	// 마이페이지 PBTI 결과 상세 조회 API
+	@PostMapping("/detailResult")
+	@Operation(
+		summary = "마이페이지 PBTI 결과 상세 조회",
+		description = "마이페이지에서 PBTI 결과를 상세 조회합니다.",
+		responses = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "PBTI 결과가 상세 조회되었습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PbtiResponseDTO.PbtiResultDetailResponse.class))),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "PBTI4005", description = "존재하지 않는 PBTI 입니다.")
+		}
+	)
+	public ResponseEntity<ApiResponse<PbtiResponseDTO.PbtiResultDetailResponse>> searchPbtiResult(
+		@RequestBody PbtiRequestDTO.PbtiResultDetailRequest request,
+		@AuthenticationPrincipal CustomUserDetails userDetails) {
+
+		PbtiResponseDTO.PbtiResultDetailResponse result = pbtiService.searchPbtiResult(userDetails.getUserId(),
+			request);
+		return ResponseEntity.ok(ApiResponse.onSuccess(result));
+	}
 }

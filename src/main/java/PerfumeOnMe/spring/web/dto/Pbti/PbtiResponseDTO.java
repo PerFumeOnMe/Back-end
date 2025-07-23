@@ -152,4 +152,66 @@ public class PbtiResponseDTO {
 	public static class SearchPbtiListResponse {
 		private List<PbtiListResult> result;
 	}
+
+	// PBTI 결과 상세 조회 응답 DTO
+	@Getter
+	@Builder
+	@AllArgsConstructor
+	@NoArgsConstructor
+	public static class PbtiResultDetailResponse {
+		private String savedName;
+		private String recommendation;
+		private List<Keyword> keywords;
+		private PerfumeStyle perfumeStyle;
+		private List<ScentPoint> scentPoint;
+		private String summary;
+		private List<PerfumeRecommend> perfumeRecommend;
+
+		@Getter
+		@Builder
+		@AllArgsConstructor
+		@NoArgsConstructor
+		public static class Keyword {
+			private String keyword;
+			private String keywordDescription;
+		}
+
+		@Getter
+		@Builder
+		@AllArgsConstructor
+		@NoArgsConstructor
+		public static class PerfumeStyle {
+			private String description;
+			private List<Note> notes;
+
+			@Getter
+			@Builder
+			@AllArgsConstructor
+			@NoArgsConstructor
+			public static class Note {
+				private String category;
+				private String categoryDescription;
+			}
+		}
+
+		@Getter
+		@Builder
+		@AllArgsConstructor
+		@NoArgsConstructor
+		public static class ScentPoint {
+			private String category;
+			private int point;
+		}
+
+		@Getter
+		@Builder
+		@AllArgsConstructor
+		@NoArgsConstructor
+		public static class PerfumeRecommend {
+			private String name;
+			private String brand;
+			private String description;
+		}
+	}
+
 }
