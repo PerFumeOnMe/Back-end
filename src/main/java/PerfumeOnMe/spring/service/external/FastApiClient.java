@@ -9,8 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import PerfumeOnMe.spring.apiPayload.code.status.ErrorStatus;
-import PerfumeOnMe.spring.apiPayload.exception.GeneralException;
 import PerfumeOnMe.spring.web.dto.external.FastApiRecommendRequest;
 import PerfumeOnMe.spring.web.dto.external.FastApiRecommendResponse;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +35,8 @@ public class FastApiClient {
 			return response.getBody();
 
 		} catch (Exception e) {
-			throw new GeneralException(ErrorStatus.FASTAPI_COMMUNICATION_ERROR);
+			// throw new GeneralException(ErrorStatus.FASTAPI_COMMUNICATION_ERROR);
+			return new FastApiRecommendResponse(); //임시조치 : FAST API 서버 없을 때 기본응답반환으로 서버 유지
 		}
 	}
 }
