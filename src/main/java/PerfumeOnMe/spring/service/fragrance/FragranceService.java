@@ -1,5 +1,6 @@
 package PerfumeOnMe.spring.service.fragrance;
 
+import PerfumeOnMe.spring.config.security.auth.userDetails.CustomUserDetails;
 import PerfumeOnMe.spring.web.dto.fragrance.FragranceRequestDTO;
 import PerfumeOnMe.spring.web.dto.fragrance.FragranceResponseDTO;
 
@@ -24,5 +25,7 @@ public interface FragranceService {
 	// 향수 전체 리스트 조회 API
 	FragranceResponseDTO.FragranceSearchFinalResult getFragranceListAll(FragranceRequestDTO.FragranceAllRequest request,
 		Long userId);
+
+	FragranceResponseDTO.FragranceMdChoiceResult getFragranceMdChoice(CustomUserDetails userDetails);
 }
 
