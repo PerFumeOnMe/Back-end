@@ -61,7 +61,7 @@ openai:
 cloud:
   aws:
     s3:
-      bucket: umc-perfume-bucket
+      bucket: ${AWS_S3_BUCKET_NAME}
       path:
         profile: user_profiles
     region:
@@ -71,3 +71,7 @@ cloud:
     credentials:
       accessKey: ${AWS_S3_ACCESS_KEY_ID}
       secretKey: ${AWS_S3_SECRET_ACCESS_KEY}
+
+external:
+  fastapi:
+    recommend-url: ${EXTERNAL_FASTAPI_RECOMMEND_URL:http://dummy-url.com} # 환경변수 없으면 기본값 사용(dummy-url.com)

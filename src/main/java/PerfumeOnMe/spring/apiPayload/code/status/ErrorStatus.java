@@ -66,15 +66,37 @@ public enum ErrorStatus implements BaseErrorCode {
 	PROMPT_LOADING_FAIL(HttpStatus.BAD_REQUEST, "CHATBOT4002", "프롬프트 로딩에 실패하였습니다."),
 	REQUIRED_MESSAGES(HttpStatus.BAD_REQUEST, "CHATBOT4003", "메세지를 입력하세요."),
 
+	// 이미지 키워드 에러
+	INVALID_IMAGEKEYWORD_VALUE(HttpStatus.BAD_REQUEST, "IMAGEKEYWORD4001", "잘못된 키워드값입니다. 키워드 값을 확인해주세요."),
+	EXPIRED_IMAGEKEYWORD_RESULT(HttpStatus.REQUEST_TIMEOUT, "IMAGEKEYWORD4002", "생성할 이미지 키워드 결과가 만료되었습니다."),
+	ALREADY_KEYWORD_NAME(HttpStatus.BAD_REQUEST, "IMAGEKEYWORD4003", "동일한 이름으로 저장된 결과가 존재합니다."),
+	INVALID_IMAGEKEYWORD_ID(HttpStatus.BAD_REQUEST, "IMAGEKEYWORD4004", "해당 ID의 이미지 결과가 존재하지 않습니다."),
+
+	// FastAPI 연동 에러
+	FASTAPI_COMMUNICATION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "FASTAPI5001", "FastAPI 서버 통신 중 오류가 발생했습니다."),
+
+	//JSON 파싱 에러
+	JSON_PARSE_ERROR(HttpStatus.BAD_REQUEST, "JSON4001", "JSON 파싱에 실패했습니다."),
+
+	//
+
 	// 다이어리 에러
 	DIARY_NOT_FOUND(HttpStatus.BAD_REQUEST, "DIARY4001", "해당 다이어리를 찾을 수 없습니다."),
 	USER_DIARY_FORBIDDEN(HttpStatus.BAD_REQUEST, "DIARY4002", "다이어리 소유자의 요청이 아닙니다."),
 	USER_DIARY_NOT_FOUND(HttpStatus.BAD_REQUEST, "DIARY4003", "해당 날짜에 해당하는 다이어리를 찾을 수 없습니다."),
 	MONTH_DIARY_NOT_FOUND(HttpStatus.BAD_REQUEST, "DIARY4004", "해당 월에 작성된 다이어리가 없습니다."),
 
+	// PBTI 에러
+	CALL_WEBCLIENT_ERROR(HttpStatus.BAD_REQUEST, "PBTI4001", "WebClient 호출 과정에서 에러가 발생했습니다."),
+	JSON_PARSING_ERROR(HttpStatus.BAD_REQUEST, "PBTI4002", "GPT 응답 Json 파싱 과정에서 에러가 발생했습니다."),
+	SAVE_REDIS_ERROR(HttpStatus.BAD_REQUEST, "PBTI4003", "Redis 저장 중 직렬화 오류가 발생했습니다."),
+	PBTI_REDIS_KEY_EXPIRED(HttpStatus.BAD_REQUEST, "PBTI4004", "사용자의 PBTI 분석 결과가 Redis에서 만료되었거나 저장되어 있지 않습니다."),
+	PBTI_NOT_EXIST_ERROR(HttpStatus.BAD_REQUEST, "PBTI4005", "존재하지 않는 PBTI 입니다."),
+	PBTI_USER_NOT_MATCH(HttpStatus.BAD_REQUEST, "PBTI4006", "본인의 PBTI 결과만 조회할 수 있습니다."),
+
 	// S3 에러
 	INVALID_IMAGE_EXTENSION(HttpStatus.BAD_REQUEST, "S3IMAGE4001", "지원하지 않은 파일 확장자입니다."),
-	
+
 	// 예시,,,
 	ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다.");
 

@@ -20,4 +20,13 @@ public enum Style {
 	Style(String displayName) {
 		this.displayName = displayName;
 	}
+
+	public static Style fromDisplayName(String displayName) {
+		for (Style style : Style.values()) {
+			if (style.getDisplayName().equals(displayName)) {
+				return style;
+			}
+		}
+		throw new IllegalArgumentException("Invalid displayName for Style: " + displayName);
+	}
 }

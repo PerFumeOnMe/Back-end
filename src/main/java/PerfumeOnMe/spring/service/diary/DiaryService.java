@@ -1,4 +1,4 @@
-package PerfumeOnMe.spring.service.Diary;
+package PerfumeOnMe.spring.service.diary;
 
 import java.time.LocalDate;
 import java.util.List;
