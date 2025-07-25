@@ -48,7 +48,7 @@ public interface FragranceRepository extends JpaRepository<Fragrance, Long>, Fra
 				WHEN COALESCE(match_note.match_cnt, 0) = 1 THEN 3
 				ELSE 4
 			END ASC
-		LIMIT 6
+		LIMIT 9
 		""", nativeQuery = true)
 	List<Fragrance> findByUserMdChoice(@Param("gender") String gender,
 		@Param("noteIdList") List<Long> userNoteIdList);
