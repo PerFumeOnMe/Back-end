@@ -51,8 +51,8 @@ public class SecurityConfig {
 			.exceptionHandling(exception -> exception
 				.authenticationEntryPoint(JwtAuthenticationEntryPoint)
 				.accessDeniedHandler(JwtAccessDeniedHandler))
-			// filter 추가 및 수정
-			.addFilterAt(jwtLoginFilter, UsernamePasswordAuthenticationFilter.class)
+			// filter 추가
+			// .addFilterAt(jwtLoginFilter, UsernamePasswordAuthenticationFilter.class) // 로그인 필터 제거
 			.addFilterBefore(JwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 			.addFilterBefore(JwtExceptionHandlerFilter, JwtAuthenticationFilter.class)
 			// Session 관련 설정 - 소셜 로그인 과정에서 필요할까봐 IF_REQUIRED로 설정
@@ -72,7 +72,7 @@ public class SecurityConfig {
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration config = new CorsConfiguration();
-		config.setAllowedOrigins(List.of("*")); // spring: [localhost:8080, localhost:5000], localhost:8081
+		config.setAllowedOrigins(List.of("*")); // spring: [localhost:8080, localhost:5000], localhost:3000
 		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		config.setAllowedHeaders(List.of("Authorization", "Refresh-Token", "Content-Type"));
 		config.setAllowCredentials(false); // origin 바꾸면 true로 설정

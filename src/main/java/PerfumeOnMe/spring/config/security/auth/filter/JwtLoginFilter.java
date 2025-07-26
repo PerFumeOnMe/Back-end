@@ -53,7 +53,7 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
 	@Autowired
 	public void setAuthenticationManager(AuthenticationManager authenticationManager) {
 		super.setAuthenticationManager(authenticationManager);
-		setFilterProcessesUrl("/auth/login");
+		setFilterProcessesUrl("/auth/login/filter"); // 접근하지 못하게 경로 수정
 	}
 
 	// 인증 시도
