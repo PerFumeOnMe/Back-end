@@ -39,11 +39,9 @@ public class PromptBuilder {
 				- "scentPoint" 배열 내의 "category"와 "perfumeStyle" 내 "notes" 배열 내의 "category"는 한국어로 응답해주세요.
 				- "scentPoint" 배열 내의 "point"는 숫자가 큰 순서대로 출력해주세요.
 				- "summary"는 사용자의 성격이 반영되는 단어가 들어가도록 간단하게 요약해주세요. ex) “사람들과의 에너지 흐름을 잘 이끌어내는 ~한 사람”
-				- "perfumeRecommend" 배열 내의 "description"은 '이 향수는' 으로 시작되도록 하고 "name"과 "brand"는 실제 존재하는 향수와 브랜드이름으로하고 영어로 응답해줘.
 				- "keywords" 배열에는 4개 항목을 포함하세요.
 				- "perfumeStyle" 내 "notes" 배열에는 5개 항목을 포함하세요.
 				- "scentPoint" 배열에는 5개 항목을 포함하세요.
-				- "perfumeRecommend" 배열에는 3개 항목을 포함하세요.
 				{
 				  "recommendation": "...",
 				  "keywords": [
@@ -70,15 +68,7 @@ public class PromptBuilder {
 				    }
 				    // 5개 항목
 				  ],
-				  "summary": "...",
-				  "perfumeRecommend": [
-				    {
-				      "name": "...",
-				      "brand": "...",
-				      "description": "..."
-				    }
-				    // 3개 항목
-				  ]
+				  "summary": "..."x`
 				}
 				""", request.getQOne(), request.getQTwo(), request.getQThree(), request.getQFour(),
 			request.getQFive(), request.getQSix(), request.getQSeven(), request.getQEight(), keywordString);

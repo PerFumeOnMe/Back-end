@@ -18,11 +18,14 @@ import PerfumeOnMe.spring.domain.PBTI;
 import PerfumeOnMe.spring.domain.User;
 import PerfumeOnMe.spring.repository.pbti.PbtiRepository;
 import PerfumeOnMe.spring.repository.user.UserRepository;
+import PerfumeOnMe.spring.service.external.FastApiClient;
 import PerfumeOnMe.spring.service.openAi.OpenAiService;
 import PerfumeOnMe.spring.service.openAi.PromptBuilder;
 import PerfumeOnMe.spring.util.JsonUtils;
 import PerfumeOnMe.spring.web.dto.Pbti.PbtiRequestDTO;
 import PerfumeOnMe.spring.web.dto.Pbti.PbtiResponseDTO;
+import PerfumeOnMe.spring.web.dto.external.FastApiPbtiRecommendResponse;
+import PerfumeOnMe.spring.web.dto.external.FastApiRecommendRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,6 +40,7 @@ public class PbtiServiceImpl implements PbtiService {
 	private final PbtiRepository pbtiRepository;
 	private final UserRepository userRepository;
 	private final StringRedisTemplate stringRedisTemplate;
+	private final FastApiClient fastApiClient;
 
 	// PBTI 결과 조회 API
 	@Override
@@ -57,6 +61,34 @@ public class PbtiServiceImpl implements PbtiService {
 			log.error("GPT 응답 JSON 파싱 실패. 응답: {}", gptResponse, e);
 			throw new GeneralException(ErrorStatus.JSON_PARSING_ERROR);
 		}
+
+		// FastAPI 호출로 perfumeRecommend 대체
+		FastApiRecommendRequest.PbtiRequest fastApiRequest = new FastApiRecommendRequest.PbtiRequest(
+			request.getQOne(),
+			request.getQTwo(),
+			request.getQThree(),
+			request.getQFour(),
+			request.getQFive(),
+			request.getQSix(),
+			request.getQSeven(),
+			request.getQEight()
+		);
+
+		FastApiPbtiRecommendResponse fastApiResponse = fastApiClient.getPbtiRecommendation(fastApiRequest);
+
+		// ⬇ FastAPI 향수 추천 결과 매핑
+		List<PbtiResponseDTO.PbtiQuestionResponse.PerfumeRecommend> mappedPerfumes = fastApiResponse.getPerfumeRecommend()
+			.stream()
+			.map(r -> PbtiResponseDTO.PbtiQuestionResponse.PerfumeRecommend.builder()
+				.name(r.getName())
+				.brand(r.getBrand())
+				.description(r.getDescription())
+				.perfumeImageUrl(r.getPerfumeImageUrl())
+				.build())
+			.collect(Collectors.toList());
+
+		// 결과 세팅
+		response.setPerfumeRecommend(mappedPerfumes);
 
 		// Redis에 저장할 DTO 생성
 		PbtiResponseDTO.PbtiRedisDTO redisDTO = PbtiResponseDTO.PbtiRedisDTO.builder()
