@@ -17,4 +17,11 @@ public interface PbtiService {
 	// 마이페이지 PBTI 결과 상세 조회 API
 	PbtiResponseDTO.PbtiResultDetailResponse searchPbtiResult(Long userId,
 		PbtiRequestDTO.PbtiResultDetailRequest request);
+
+	// PBTI 결과 이름 수정 API
+	PbtiResponseDTO.UpdatePbtiNameResponse updatePbtiName(Long userId, Long pbtiId,
+		PbtiRequestDTO.UpdatePbtiNameRequest request);
+
+	// PBTI 결과 삭제 API
+	Void deletePbtiResult(Long userId, Long pbtiId);
 }

@@ -55,4 +55,11 @@ public class PbtiRequestDTO {
 	public static class PbtiResultDetailRequest {
 		private Long pbtiId;
 	}
+
+	// PBTI 결과 이름 수정 요청 DTO
+	@Getter
+	@Setter
+	public static class UpdatePbtiNameRequest {
+		private String savedName;
+	}
 }

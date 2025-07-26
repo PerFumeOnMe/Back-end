@@ -90,4 +90,8 @@ public class PBTI extends BaseEntity {
 	@OneToMany(mappedBy = "pbti", cascade = CascadeType.ALL)
 	@Builder.Default
 	private List<RecommendedFragrance> RecommendedFragranceList = new ArrayList<>();
+
+	public void updateSavedName(String savedName) {
+		this.savedName = savedName;
+	}
 }
