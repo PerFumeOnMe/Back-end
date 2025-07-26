@@ -50,7 +50,7 @@ public class KakaoService implements OAuthService {
 		// 이미 가입한 사용자라면 꺼내고, 아니라면 회원가입 진행
 		User user = userRepository.findUserByLoginId(email).orElseGet(() -> {
 			User newUser = OAuthConverter.toSignupUser(
-				Social.KAKAO, "kakao" + email, name, "password", imageUrl, nickname);
+				Social.KAKAO, email, name, "password", imageUrl, nickname);
 			return userRepository.save(newUser);
 		});
 
