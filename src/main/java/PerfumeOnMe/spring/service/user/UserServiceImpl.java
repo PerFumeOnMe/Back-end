@@ -19,7 +19,6 @@ import PerfumeOnMe.spring.config.security.auth.manager.LogoutAccessTokenManager;
 import PerfumeOnMe.spring.config.security.auth.manager.RefreshTokenManager;
 import PerfumeOnMe.spring.config.security.auth.provider.JwtTokenProvider;
 import PerfumeOnMe.spring.config.security.auth.service.LoginService;
-import PerfumeOnMe.spring.config.security.auth.service.LoginServiceImpl;
 import PerfumeOnMe.spring.config.security.auth.token.JwtAuthenticationToken;
 import PerfumeOnMe.spring.config.security.auth.userDetails.CustomUserDetails;
 import PerfumeOnMe.spring.converter.FragranceConverter;
@@ -101,8 +100,7 @@ public class UserServiceImpl implements UserService {
 		Social social = ((CustomUserDetails)userDetails).getSocial();
 		JwtAuthenticationToken request = new JwtAuthenticationToken(
 			userDetails, null, userDetails.getAuthorities(), social);
-		return ((LoginServiceImpl)loginService)
-			.generateAuthResponse(loginId, request, social, response);
+		return loginService.generateAuthResponse(loginId, request, social, response);
 	}
 
 	// 사용자 로그아웃 - 액세스 토큰과 리프레시 토큰 블랙리스트화
