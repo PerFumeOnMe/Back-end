@@ -69,4 +69,12 @@ public class PbtiConverter {
 			throw new GeneralException(ErrorStatus.JSON_PARSE_ERROR);
 		}
 	}
+
+	// PBTI 결과 이름 수정 API
+	public static PbtiResponseDTO.UpdatePbtiNameResponse toUpdatePbtiNameResponse(PBTI pbti) {
+		return PbtiResponseDTO.UpdatePbtiNameResponse.builder()
+			.id(pbti.getId())
+			.savedName(pbti.getSavedName())
+			.build();
+	}
 }

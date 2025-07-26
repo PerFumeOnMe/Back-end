@@ -219,4 +219,14 @@ public class PbtiResponseDTO {
 		}
 	}
 
+	// PBTI 결과 이름 수정 응답 DTO
+	@Getter
+	@Builder
+	@AllArgsConstructor
+	@NoArgsConstructor
+	public static class UpdatePbtiNameResponse {
+		private Long id;
+		private String savedName;
+	}
+
 }

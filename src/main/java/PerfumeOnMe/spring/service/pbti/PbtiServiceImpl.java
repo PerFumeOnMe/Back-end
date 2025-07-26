@@ -195,4 +195,37 @@ public class PbtiServiceImpl implements PbtiService {
 		return PbtiConverter.toPbtiResultDetailResponse(pbti);
 	}
 
+	// PBTI 결과 이름 수정 API
+	@Override
+	public PbtiResponseDTO.UpdatePbtiNameResponse updatePbtiName(Long userId, Long pbtiId,
+		PbtiRequestDTO.UpdatePbtiNameRequest request) {
+
+		PBTI pbti = pbtiRepository.findById(pbtiId)
+			.orElseThrow(() -> new GeneralException(ErrorStatus.PBTI_NOT_EXIST_ERROR));
+
+		if (!pbti.getUser().getId().equals(userId)) {
+			throw new GeneralException(ErrorStatus.PBTI_USER_NOT_MATCH);
+		}
+
+		pbti.updateSavedName(request.getSavedName());
+
+		return PbtiConverter.toUpdatePbtiNameResponse(pbti);
+	}
+
+	// PBTI 결과 삭제 API
+	@Override
+	public Void deletePbtiResult(Long userId, Long pbtiId) {
+
+		PBTI pbti = pbtiRepository.findById(pbtiId)
+			.orElseThrow(() -> new GeneralException(ErrorStatus.PBTI_NOT_EXIST_ERROR));
+
+		if (!pbti.getUser().getId().equals(userId)) {
+			throw new GeneralException(ErrorStatus.PBTI_USER_NOT_MATCH);
+		}
+
+		pbtiRepository.delete(pbti);
+
+		return null;
+	}
+
 }
