@@ -9,11 +9,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 public class PbtiResponseDTO {
 
 	// PBTI 결과 조회 응답 DTO
 	@Getter
+	@Setter
 	@Builder
 	@AllArgsConstructor
 	@NoArgsConstructor
@@ -35,6 +37,7 @@ public class PbtiResponseDTO {
 		}
 
 		@Getter
+		@Setter
 		@Builder
 		@AllArgsConstructor
 		@NoArgsConstructor
@@ -69,6 +72,7 @@ public class PbtiResponseDTO {
 			private String name;
 			private String brand;
 			private String description;
+			private String perfumeImageUrl;
 		}
 	}
 
@@ -211,6 +215,7 @@ public class PbtiResponseDTO {
 			private String name;
 			private String brand;
 			private String description;
+			private String perfumeImageUrl;
 		}
 	}
 
