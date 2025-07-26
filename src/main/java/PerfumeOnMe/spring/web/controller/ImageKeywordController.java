@@ -37,8 +37,7 @@ public class ImageKeywordController {
 	@GetMapping("/result/list")
 	@Operation(
 		summary = "이미지 키워드 목록 조회 (마이페이지)",
-		description = "해당 유저가 저장한 이미지 키워드 결과 목록을 조회합니다.\n\n" +
-			"마이페이지 내 '추천 결과' 영역에 출력되는 카드들의 리스트 데이터입니다.",
+		description = "해당 유저가 저장한 이미지 키워드 결과 목록을 조회합니다.",
 		responses = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(
 				responseCode = "COMMON200",
