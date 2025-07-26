@@ -44,4 +44,30 @@ public class WorkshopService {
 		return WorkshopConverter.toWorkshopListResponse(workshops);
 	}
 
+	@Transactional(readOnly = true)
+	public WorkshopResponseDTO.WorkshopDetailResponseDTO findWorkshopById(
+		Long workshopId, CustomUserDetails userDetails) {
+		Long userId = userDetails.getUserId();
+
+		// 유저 ID NULL 검증
+		if (userId == null) {
+			throw new GeneralException(ErrorStatus.USER_ID_NULL);
+		}
+
+		// 유저 존재 여부 검증
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> new GeneralException(ErrorStatus.LOGIN_ID_NOT_FOUND));
+
+		// 향수 공방 존재 여부 검증
+		if (!workshopRepository.existsById(workshopId)) {
+			throw new GeneralException(ErrorStatus.WORKSHOP_ID_NULL);
+		}
+		// 사용자의 향수공방 여부 검증
+		Workshop workshop = workshopRepository.findByIdAndUser(workshopId, user)
+			.orElseThrow(() -> new GeneralException(ErrorStatus.WORKSHOP_USER_NOT_MATCH));
+
+		// 응답 생성
+		return WorkshopConverter.toWorkshopDetailResponse(workshop);
+	}
+
 }

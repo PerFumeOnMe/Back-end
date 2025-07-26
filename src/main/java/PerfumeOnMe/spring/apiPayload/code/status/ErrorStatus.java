@@ -71,7 +71,7 @@ public enum ErrorStatus implements BaseErrorCode {
 	INVALID_IMAGEKEYWORD_VALUE(HttpStatus.BAD_REQUEST, "IMAGEKEYWORD4001", "잘못된 키워드값입니다. 키워드 값을 확인해주세요."),
 	EXPIRED_IMAGEKEYWORD_RESULT(HttpStatus.REQUEST_TIMEOUT, "IMAGEKEYWORD4002", "생성할 이미지 키워드 결과가 만료되었습니다."),
 	ALREADY_KEYWORD_NAME(HttpStatus.BAD_REQUEST, "IMAGEKEYWORD4003", "동일한 이름으로 저장된 결과가 존재합니다."),
-	INVALID_IMAGEKEYWORD_ID(HttpStatus.BAD_REQUEST, "IMAGEKEYWORD4004", "해당 ID의 이미지 결과가 존재하지 않습니다."),
+	INVALID_IMAGEKEYWORD_ID(HttpStatus.BAD_REQUEST, "IMAGEKEYWORD4004", "해당 ID의 이미지 결과를 조회할 수 없습니다."),
 
 	// FastAPI 연동 에러
 	FASTAPI_COMMUNICATION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "FASTAPI5001", "FastAPI 서버 통신 중 오류가 발생했습니다."),
@@ -97,6 +97,10 @@ public enum ErrorStatus implements BaseErrorCode {
 
 	// S3 에러
 	INVALID_IMAGE_EXTENSION(HttpStatus.BAD_REQUEST, "S3IMAGE4001", "지원하지 않은 파일 확장자입니다."),
+
+	// 향수공방 에러
+	WORKSHOP_USER_NOT_MATCH(HttpStatus.BAD_REQUEST, "WORKSHOP4004", "사용자 본인의 향수공방 결과만 조회할 수 있습니다."),
+	WORKSHOP_ID_NULL(HttpStatus.UNAUTHORIZED, "WORKSHOP4005", "향수공방 결과 정보가 존재하지 않습니다"),
 
 	// 예시,,,
 	ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다.");
