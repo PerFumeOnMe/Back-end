@@ -99,8 +99,8 @@ public enum ErrorStatus implements BaseErrorCode {
 	INVALID_IMAGE_EXTENSION(HttpStatus.BAD_REQUEST, "S3IMAGE4001", "지원하지 않은 파일 확장자입니다."),
 
 	// 향수공방 에러
-	WORKSHOP_USER_NOT_MATCH(HttpStatus.BAD_REQUEST, "WORKSHOP4004", "사용자 본인의 향수공방 결과만 조회할 수 있습니다."),
-	WORKSHOP_ID_NULL(HttpStatus.UNAUTHORIZED, "WORKSHOP4005", "향수공방 결과 정보가 존재하지 않습니다"),
+	WORKSHOP_USER_NOT_MATCH(HttpStatus.BAD_REQUEST, "WORKSHOP4004", "해당 향수공방 결과에 접근할 수 없습니다."),
+	WORKSHOP_ID_NULL(HttpStatus.UNAUTHORIZED, "WORKSHOP4005", "해당 향수공방 결과 정보가 존재하지 않습니다."),
 
 	// 예시,,,
 	ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다.");

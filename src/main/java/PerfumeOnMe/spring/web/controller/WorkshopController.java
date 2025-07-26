@@ -72,12 +72,12 @@ public class WorkshopController {
 				description = "인증이 필요합니다. 액세스 토큰을 입력해주세요."
 			),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(
-				responseCode = "WORKSHOP4001",
-				description = "해당 ID의 향수공방 결과를 찾을 수 없습니다."
+				responseCode = "WORKSHOP4004",
+				description = "해당 향수공방 결과에 접근할 수 없습니다."
 			),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(
-				responseCode = "WORKSHOP4002",
-				description = "해당 향수공방 결과에 접근할 권한이 없습니다."
+				responseCode = "WORKSHOP4005",
+				description = "해당 향수공방 결과 정보가 존재하지 않습니다."
 			)
 		}
 	)
