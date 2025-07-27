@@ -66,11 +66,20 @@ public class WorkshopResponseDTO {
 		@Schema(description = "탑 노트", example = "베르가못")
 		private String topNote;
 
+		@Schema(description = "탑 노트 용량", example = "3")
+		private Long topNoteVolume;
+
 		@Schema(description = "미들 노트", example = "장미")
 		private String middleNote;
 
+		@Schema(description = "미들 노트 용량", example = "4")
+		private Long middleNoteVolume;
+
 		@Schema(description = "베이스 노트", example = "바닐라")
 		private String baseNote;
+
+		@Schema(description = "베이스 노트 용량", example = "3")
+		private Long baseNoteVolume;
 
 		@Schema(description = "시각적 키워드 (해시태그 형태)", example = "#상큼한첫인상 #감성적중심 #우디잔향\n#깊이있는사람 #신뢰감있는향기")
 		private String keywordSummary;
@@ -113,6 +122,22 @@ public class WorkshopResponseDTO {
 
 		@Schema(description = "이미지 URL", example = "www.s3.com")
 		private String imageUrl;
+	}
+
+	@Builder
+	@Getter
+	@NoArgsConstructor
+	@AllArgsConstructor
+	@Schema(description = "향수공방 저장 결과")
+	public static class WorkshopSaveResponseDTO {
+		@Schema(description = "향수공방 아이디", example = "34")
+		private Long workshopId;
+
+		@Schema(description = "향수공방 이름", example = "나만의 시나몬 겨울항기")
+		private String savedName;
+
+		@Schema(description = "생성 날짜")
+		private LocalDateTime createdAt;
 	}
 
 }
