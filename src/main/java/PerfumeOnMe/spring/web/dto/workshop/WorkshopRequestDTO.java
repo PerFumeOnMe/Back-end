@@ -65,4 +65,14 @@ public class WorkshopRequestDTO {
 		@Schema(description = "베이스 노트 맵 (노트명: 용량)")
 		private Map<String, Integer> baseNoteList;
 	}
+
+	/**향수공방 결과 저장을 위한 요청 DTO*/
+	@Builder
+	@Getter
+	@Schema(description = "향수공방 결과 저장을 위한 DTO")
+	public static class WorkshopSaveRequestDTO {
+		@Schema(description = "결과를 저장할 이름", example = "나만의 겨울향기")
+		@NotNull(message = "저장할 이름은 필수입니다")
+		private String savedName;
+	}
 }
