@@ -75,3 +75,4 @@ cloud:
 external:
   fastapi:
     recommend-url: ${EXTERNAL_FASTAPI_RECOMMEND_URL:http://dummy-url.com} # 환경변수 없으면 기본값 사용(dummy-url.com)
+    pbti-recommend-url: ${EXTERNAL_FASTAPI_RECOMMEND_URL:http://dummy-url.com} # 환경변수 없으면 기본값 사용(dummy-url.com)
