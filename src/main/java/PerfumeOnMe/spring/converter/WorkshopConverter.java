@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import PerfumeOnMe.spring.domain.User;
 import PerfumeOnMe.spring.domain.Workshop;
 import PerfumeOnMe.spring.domain.WorkshopFragrance;
 import PerfumeOnMe.spring.service.workshop.WorkshopResult;
@@ -54,8 +55,11 @@ public class WorkshopConverter {
 
 		return WorkshopResponseDTO.WorkshopPreviewResponseDTO.builder()
 			.topNote(request.getTopNote())
+			.topNoteVolume(request.getTopNoteVolume())
 			.middleNote(request.getMiddleNote())
+			.middleNoteVolume(request.getMiddleNoteVolume())
 			.baseNote(request.getBaseNote())
+			.baseNoteVolume(request.getBaseNoteVolume())
 			.keywordSummary(workshopResult.getKeywordSummary())
 			.firstImpression(workshopResult.getFirstImpression())
 			.centerImpression(workshopResult.getCenterImpression())
@@ -85,8 +89,11 @@ public class WorkshopConverter {
 
 		return WorkshopResponseDTO.WorkshopPreviewResponseDTO.builder()
 			.topNote(request.getTopNote())
+			.topNoteVolume(request.getTopNoteVolume())
 			.middleNote(request.getMiddleNote())
+			.middleNoteVolume(request.getMiddleNoteVolume())
 			.baseNote(request.getBaseNote())
+			.baseNoteVolume(request.getBaseNoteVolume())
 			.keywordSummary(workshopResult.getKeywordSummary())
 			.firstImpression(workshopResult.getFirstImpression())
 			.centerImpression(workshopResult.getCenterImpression())
@@ -94,6 +101,50 @@ public class WorkshopConverter {
 			.tendency(workshopResult.getTendency())
 			.recommendedFragranceJson(recommendedFragranceDTOList)
 			.build();
+	}
+
+	/** 향수공방 저장 응답 DTO 생성 */
+	public static WorkshopResponseDTO.WorkshopSaveResponseDTO toWorkshopSaveResponse(Workshop workshop) {
+		return WorkshopResponseDTO.WorkshopSaveResponseDTO.builder()
+			.workshopId(workshop.getId())
+			.savedName(workshop.getSavedName())
+			.createdAt(workshop.getCreatedAt())
+			.build();
+	}
+
+	/** Redis 미리보기 데이터를 Workshop 엔티티로 변환 */
+	public static Workshop toWorkshopEntity(
+		User user,
+		String savedName,
+		WorkshopResponseDTO.WorkshopPreviewResponseDTO previewData,
+		String recommendedFragranceJson
+	) {
+		return Workshop.builder()
+			.user(user)
+			.savedName(savedName)
+			.topNote(previewData.getTopNote())
+			.topNoteVolume(previewData.getTopNoteVolume())
+			.middleNote(previewData.getMiddleNote())
+			.middleNoteVolume(previewData.getMiddleNoteVolume())
+			.baseNote(previewData.getBaseNote())
+			.baseNoteVolume(previewData.getBaseNoteVolume())
+			.keywordSummary(previewData.getKeywordSummary())
+			.firstImpression(previewData.getFirstImpression())
+			.centerImpression(previewData.getCenterImpression())
+			.lastImpression(previewData.getLastImpression())
+			.tendency(previewData.getTendency())
+			.recommendedFragranceJson(recommendedFragranceJson)
+			.build();
+	}
+
+	/** 추천 향수 리스트를 JSON 문자열로 변환 */
+	public static String toRecommendedFragranceJson(List<WorkshopResponseDTO.RecommendedFragranceDTO> fragrances) {
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			return objectMapper.writeValueAsString(fragrances);
+		} catch (JsonProcessingException e) {
+			return "[]"; // 빈 배열 반환
+		}
 	}
 
 	/** JSON 문자열을 추천 향수 DTO 리스트로 변환 */
@@ -111,4 +162,5 @@ public class WorkshopConverter {
 			return new ArrayList<>();
 		}
 	}
+
 }

@@ -55,6 +55,56 @@ public class WorkshopService {
 		return WorkshopConverter.toWorkshopListResponse(workshops);
 	}
 
+	@Transactional
+	public WorkshopResponseDTO.WorkshopSaveResponseDTO saveWorkshop(
+		WorkshopRequestDTO.WorkshopSaveRequestDTO request, CustomUserDetails userDetails
+	) {
+		Long userId = userDetails.getUserId();
+
+		// 유저 ID 검증
+		if (userId == null) {
+			throw new GeneralException(ErrorStatus.USER_ID_NULL);
+		}
+
+		// 유저 존재 여부 검증
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> new GeneralException(ErrorStatus.LOGIN_ID_NOT_FOUND));
+
+		// savedName 중복 검증
+		if (workshopRepository.existsByUserAndSavedName(user, request.getSavedName())) {
+			throw new GeneralException(ErrorStatus.WORKSHOP_NAME_DUPLICATE);
+		}
+
+		log.info("향수공방 결과 저장 시작 - 사용자 ID: {}, 저장 이름: {}", userId, request.getSavedName());
+
+		// Redis에서 미리보기 결과 조회
+		WorkshopResponseDTO.WorkshopPreviewResponseDTO previewData = 
+			workshopRedisService.getPreview(userId);
+
+		// 추천 향수 리스트 JSON 직렬화
+		String recommendedFragranceJson = WorkshopConverter.toRecommendedFragranceJson(
+			previewData.getRecommendedFragranceJson()
+		);
+
+		// Workshop 엔티티 생성 및 저장
+		Workshop workshop = WorkshopConverter.toWorkshopEntity(
+			user, 
+			request.getSavedName(), 
+			previewData, 
+			recommendedFragranceJson
+		);
+		
+		Workshop savedWorkshop = workshopRepository.save(workshop);
+
+		// Redis 임시 데이터 삭제
+		workshopRedisService.deletePreview(userId);
+
+		log.info("향수공방 결과 저장 완료 - 사용자 ID: {}, 워크샵 ID: {}", userId, savedWorkshop.getId());
+
+		// 응답 DTO 생성
+		return WorkshopConverter.toWorkshopSaveResponse(savedWorkshop);
+	}
+
 	@Transactional(readOnly = true)
 	public WorkshopResponseDTO.WorkshopDetailResponseDTO findWorkshopById(
 		Long workshopId, CustomUserDetails userDetails) {
