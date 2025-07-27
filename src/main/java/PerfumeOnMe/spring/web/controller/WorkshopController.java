@@ -6,18 +6,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import PerfumeOnMe.spring.apiPayload.ApiResponse;
 import PerfumeOnMe.spring.config.security.auth.userDetails.CustomUserDetails;
 import PerfumeOnMe.spring.service.workshop.WorkshopService;
+import PerfumeOnMe.spring.web.dto.workshop.WorkshopRequestDTO;
 import PerfumeOnMe.spring.web.dto.workshop.WorkshopResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -27,6 +31,41 @@ import lombok.RequiredArgsConstructor;
 public class WorkshopController {
 
 	private final WorkshopService workshopService;
+
+	/** 향수공방 결과 미리보기(결과 생성)*/
+	@PostMapping("/preview")
+	@Operation(
+		summary = "향수공방 결과 확인(미리보기)",
+		description = "사용자가 선택한 향(Top, Middle, Base 노트)과 용량을 바탕으로 향기 해석 결과를 미리 확인합니다. " +
+			"결과는 Redis에 15분간 임시 저장되며, 향수공방 저장 API 호출 시 활용됩니다.",
+		responses = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(
+				responseCode = "COMMON200",
+				description = "요청에 성공하였습니다.",
+				content = @Content(
+					mediaType = "application/json",
+					schema = @Schema(implementation = WorkshopResponseDTO.WorkshopPreviewResponseDTO.class)
+				)
+			),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(
+				responseCode = "COMMON401",
+				description = "인증이 필요합니다. 액세스 토큰을 입력해주세요."
+			),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(
+				responseCode = "WORKSHOP4002",
+				description = "선택한 노트들의 총 용량은 10을 초과할 수 없습니다."
+			)
+		}
+	)
+	public ResponseEntity<ApiResponse<WorkshopResponseDTO.WorkshopPreviewResponseDTO>> getWorkshopPreview(
+		@Parameter(description = "향수공방 미리보기 생성 요청", required = true)
+		@RequestBody @Valid WorkshopRequestDTO.WorkshopPreviewRequestDTO request,
+		@Parameter(hidden = true)
+		@AuthenticationPrincipal CustomUserDetails userDetails
+	) {
+		return ResponseEntity.ok(ApiResponse.onSuccess(workshopService.
+			createWorkshopPreview(request, userDetails)));
+	}
 
 	/** 향수공방 목록 조회*/
 	@GetMapping("/result/list")
