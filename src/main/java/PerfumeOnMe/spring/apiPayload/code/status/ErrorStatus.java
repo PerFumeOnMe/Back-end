@@ -103,6 +103,7 @@ public enum ErrorStatus implements BaseErrorCode {
 	EXPIRED_WORKSHOP_RESULT(HttpStatus.BAD_REQUEST, "WORKSHOP4003", "향수공방 미리보기 결과가 만료되었습니다. 다시 시도해주세요."),
 	WORKSHOP_USER_NOT_MATCH(HttpStatus.BAD_REQUEST, "WORKSHOP4004", "해당 향수공방 결과에 접근할 수 없습니다."),
 	WORKSHOP_ID_NULL(HttpStatus.UNAUTHORIZED, "WORKSHOP4005", "해당 향수공방 결과 정보가 존재하지 않습니다."),
+	WORKSHOP_NAME_DUPLICATE(HttpStatus.BAD_REQUEST, "WORKSHOP4006", "이미 같은 이름으로 저장된 향수공방 결과가 있습니다."),
 
 	// 예시,,,
 	ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다.");
