@@ -67,6 +67,45 @@ public class WorkshopController {
 			createWorkshopPreview(request, userDetails)));
 	}
 
+	/** 향수공방 결과 저장 */
+	@PostMapping("/save")
+	@Operation(
+		summary = "향수공방 결과 저장",
+		description = "사용자가 미리보기에서 확인한 향수공방 결과를 지정한 이름으로 데이터베이스에 영구 저장합니다. " +
+			"Redis에 임시 저장된 미리보기 데이터를 사용하므로, 미리보기 생성 후 15분 이내에 호출해야 합니다.",
+		responses = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(
+				responseCode = "COMMON200",
+				description = "요청에 성공하였습니다.",
+				content = @Content(
+					mediaType = "application/json",
+					schema = @Schema(implementation = WorkshopResponseDTO.WorkshopSaveResponseDTO.class)
+				)
+			),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(
+				responseCode = "COMMON401",
+				description = "인증이 필요합니다. 액세스 토큰을 입력해주세요."
+			),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(
+				responseCode = "WORKSHOP4003",
+				description = "향수공방 미리보기 결과가 만료되었습니다. 다시 시도해주세요."
+			),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(
+				responseCode = "WORKSHOP4006",
+				description = "이미 같은 이름으로 저장된 향수공방 결과가 있습니다."
+			)
+		}
+	)
+	public ResponseEntity<ApiResponse<WorkshopResponseDTO.WorkshopSaveResponseDTO>> saveWorkshopResult(
+		@Parameter(description = "향수공방 저장 요청", required = true)
+		@RequestBody @Valid WorkshopRequestDTO.WorkshopSaveRequestDTO request,
+		@Parameter(hidden = true)
+		@AuthenticationPrincipal CustomUserDetails userDetails
+	) {
+		return ResponseEntity.ok(ApiResponse.onSuccess(workshopService.
+			saveWorkshop(request, userDetails)));
+	}
+
 	/** 향수공방 목록 조회*/
 	@GetMapping("/result/list")
 	@Operation(
