@@ -78,6 +78,7 @@ jobs:
             echo "🚀 Starting new container with the following environment variables:"
             
             sudo docker run -d -p 8080:8080 --name perfumeonme \
+              --add-host=host.docker.internal:host-gateway \
               -e SPRING_PROFILES_ACTIVE=dev \
               -e DB_URL=${{ secrets.ENV_DB_URL }} \
               -e DB_USERNAME=${{ secrets.ENV_DB_USERNAME }} \
