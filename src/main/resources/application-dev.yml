@@ -22,7 +22,7 @@ spring:
     show-sql: true
   data:
     redis:
-      host: ${REDIS_HOST}
+      host: ${REDIS_HOST} #수정테스트
       port: ${REDIS_PORT:6379}
   cache:
     type: redis
