@@ -50,8 +50,8 @@ public class JwtTokenProvider {
 			.claim("userId", userId)
 			.claim("name", name)
 			.setIssuedAt(new Date())
-			// .setExpiration(new Date(
-			// 	System.currentTimeMillis() + jwtProperties.getExpiration().getAccess()))
+			.setExpiration(new Date(
+				System.currentTimeMillis() + jwtProperties.getExpiration().getAccess()))
 			.signWith(signingKey)
 			.compact();
 	}
@@ -66,8 +66,8 @@ public class JwtTokenProvider {
 			.setSubject(loginId)
 			.claim("userId", userId)
 			.setIssuedAt(new Date())
-			// .setExpiration(new Date(
-			// 	System.currentTimeMillis() + jwtProperties.getExpiration().getRefresh()))
+			.setExpiration(new Date(
+				System.currentTimeMillis() + jwtProperties.getExpiration().getRefresh()))
 			.signWith(signingKey)
 			.compact();
 	}
