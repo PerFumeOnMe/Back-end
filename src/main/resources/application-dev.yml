@@ -22,8 +22,14 @@ spring:
     show-sql: true
   data:
     redis:
-      host: ${REDIS_HOST:172.17.0.1}
-      port: ${REDIS_PORT:6379}
+      host: ${SPRING_DATA_REDIS_HOST:host.docker.internal}
+      port: ${SPRING_DATA_REDIS_PORT:6379}
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
   cache:
     type: redis
   security:
