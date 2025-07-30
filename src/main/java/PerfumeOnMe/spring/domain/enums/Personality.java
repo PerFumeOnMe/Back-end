@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum Personality {
 	QUIET("조용한"),
 	LOGICAL("논리적인"),
-	STRONG("개성 강한"),
+	STRONG("개성강한"),
 	CHARISMATIC("카리스마 있는"),
 	CAUTIOUS("신중한"),
 	LIVELY("활발한"),
