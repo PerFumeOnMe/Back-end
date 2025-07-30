@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import PerfumeOnMe.spring.service.external.FastApiClient;
 import PerfumeOnMe.spring.service.redis.ImageKeywordRedisService;
+import PerfumeOnMe.spring.util.CharacterImageMapper;
 import PerfumeOnMe.spring.web.dto.external.FastApiRecommendRequest;
 import PerfumeOnMe.spring.web.dto.external.FastApiRecommendResponse;
 import PerfumeOnMe.spring.web.dto.imagekeyword.ImageKeywordRequestDTO.ImageKeywordPreviewRequestDTO;
@@ -20,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class ImageKeywordPreviewService {
 
-	private static final String TEMP_CHARACTER_IMAGE_URL = "https://s3.amazonaws.com/your-bucket/image-keyword/temp-character.png";
 	private final ImageKeywordDescriptionService descriptionService;
 	private final FastApiClient fastApiClient;
 	private final ImageKeywordRedisService redisService;
@@ -70,16 +70,19 @@ public class ImageKeywordPreviewService {
 				.build()
 			).collect(Collectors.toList());
 
-		// ✅ 5. 최종 Preview 응답 구성
+		// ✅ 5. 분위기에 따른 감성 캐릭터 이미지 URL 선택
+		String characterImageUrl = CharacterImageMapper.getCharacterImageUrl(request.getAmbience());
+
+		// ✅ 6. 최종 Preview 응답 구성
 		ImageKeywordPreviewResponseDTO previewDTO = ImageKeywordPreviewResponseDTO.builder()
 			.keywords(keywords)
 			.descriptions(descriptions)
 			.scenario(fastApiResponse.getScenario())
-			.characterImageUrl(TEMP_CHARACTER_IMAGE_URL) // 추후 S3 동적 처리 예정
+			.characterImageUrl(characterImageUrl)
 			.recommendations(recommendations)
 			.build();
 
-		// ✅ 6. Redis 저장 (TTL 15분)
+		// ✅ 7. Redis 저장 (TTL 15분)
 		redisService.savePreview(userId, previewDTO);
 
 		return previewDTO;
