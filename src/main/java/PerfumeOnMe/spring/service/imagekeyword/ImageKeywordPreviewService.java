@@ -66,6 +66,7 @@ public class ImageKeywordPreviewService {
 				.baseNote(f.getBaseNote())
 				.description(f.getDescription())
 				.relatedKeywords(f.getRelatedKeywords())
+				.imageUrl(f.getImageUrl())
 				.build()
 			).collect(Collectors.toList());
 
