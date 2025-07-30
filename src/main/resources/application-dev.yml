@@ -12,7 +12,7 @@ spring:
       mode: never
   jpa:
     hibernate:
-      ddl-auto: create # create X
+      ddl-auto: update # create X
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
@@ -82,3 +82,13 @@ external:
   fastapi:
     recommend-url: ${EXTERNAL_FASTAPI_RECOMMEND_URL:http://dummy-url.com} # 환경변수 없으면 기본값 사용(dummy-url.com)
     pbti-recommend-url: ${EXTERNAL_FASTAPI_RECOMMEND_URL:http://dummy-url.com} # 환경변수 없으면 기본값 사용(dummy-url.com)
+
+app:
+  image-keyword:
+    character-image-base-path: ${IMAGE_KEYWORD_CHARACTER_BASE_PATH}
+    cache-timeout-minutes: 15
+    fast-api:
+      connect-timeout: 5000
+      read-timeout: 10000
+      max-retries: 3
+      retry-delay: 1000
