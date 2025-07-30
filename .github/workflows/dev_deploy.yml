@@ -93,6 +93,7 @@ jobs:
               -e AWS_S3_SECRET_ACCESS_KEY=${{ secrets.AWS_S3_SECRET_ACCESS_KEY }} \
               -e AWS_S3_BUCKET_NAME=${{ secrets.AWS_S3_BUCKET_NAME }} \
               -e EXTERNAL_FASTAPI_RECOMMEND_URL=http://dummy-url.com \
+              -e IMAGE_KEYWORD_CHARACTER_BASE_PATH=${{ secrets.IMAGE_KEYWORD_CHARACTER_BASE_PATH }} \
               chanee29/perfumeonme
 
       - name: Remove GitHub IP FROM security group
