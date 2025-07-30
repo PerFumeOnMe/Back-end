@@ -12,6 +12,11 @@ public class GeneralException extends RuntimeException {
 
 	private BaseErrorCode code;
 
+	public GeneralException(BaseErrorCode code, String message) {
+		super(message); // 로그에 메시지가 나오게 됨
+		this.code = code;
+	}
+
 	public ErrorStatus getErrorStatus() {
 		if (this.code instanceof ErrorStatus) {
 			return (ErrorStatus)this.code;
