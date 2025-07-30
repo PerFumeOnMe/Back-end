@@ -28,17 +28,30 @@ public class ImageKeywordController implements ImageKeywordControllerDocs {
 	private final ImageKeywordService imageKeywordService;
 	private final ImageKeywordPreviewService previewService;
 
-	// 이미지키워드 목록 조회 API
-	@GetMapping("/result/list")
-	public ResponseEntity<ApiResponse<List<ImageKeywordResponseDTO.ImageKeywordListResponseDTO>>> getImageKeywordList(
-		@AuthenticationPrincipal CustomUserDetails userDetails
+	/**(1) 이미지 키워드 결과 미리보기 (preview)*/
+	@PostMapping("/preview")
+	public ResponseEntity<ApiResponse<ImageKeywordResponseDTO.ImageKeywordPreviewResponseDTO>> getImageKeywordPreview(
+		@AuthenticationPrincipal CustomUserDetails userDetails,
+		@Validated @RequestBody ImageKeywordRequestDTO.ImageKeywordPreviewRequestDTO request
 	) {
-		List<ImageKeywordResponseDTO.ImageKeywordListResponseDTO> result = imageKeywordService.getImageKeywordList(
-			userDetails.getUserId());
+		Long userId = userDetails.getUserId();
+		ImageKeywordResponseDTO.ImageKeywordPreviewResponseDTO result =
+			previewService.generatePreview(userId, request);
 		return ResponseEntity.ok(ApiResponse.onSuccess(result));
 	}
 
-	// 이미지 키워드 결과 상세조회
+	/**(2) 이미지 키워드 결과 저장 (save)*/
+	@PostMapping("/save")
+	public ResponseEntity<ApiResponse<ImageKeywordResponseDTO.ImageKeywordSaveResponseDTO>> saveImageKeywordResult(
+		@AuthenticationPrincipal CustomUserDetails userDetails,
+		@Validated @RequestBody ImageKeywordRequestDTO.ImageKeywordSaveRequestDTO request
+	) {
+		ImageKeywordResponseDTO.ImageKeywordSaveResponseDTO result =
+			imageKeywordService.saveImageKeyword(userDetails.getUserId(), request.getSavedName());
+		return ResponseEntity.ok(ApiResponse.onSuccess(result));
+	}
+
+	/**(3) 이미지 키워드 결과 상세조회*/
 	@GetMapping("/{imageKeywordId}")
 	public ResponseEntity<ApiResponse<ImageKeywordResponseDTO.ImageKeywordDetailResponseDTO>> getImageKeywordDetail(
 		@PathVariable Long imageKeywordId,
@@ -49,24 +62,14 @@ public class ImageKeywordController implements ImageKeywordControllerDocs {
 		return ResponseEntity.ok(ApiResponse.onSuccess(result));
 	}
 
-	// 이미지 키워드 결과 미리보기 (preview)
-	@PostMapping("/preview")
-	public ResponseEntity<ApiResponse<ImageKeywordResponseDTO.ImageKeywordPreviewResponseDTO>> getImageKeywordPreview(
-		@AuthenticationPrincipal CustomUserDetails userDetails,
-		@Validated @RequestBody ImageKeywordRequestDTO.ImageKeywordPreviewRequestDTO request
+	/**(4) 이미지 키워드 목록 조회 API*/
+	@GetMapping("/result/list")
+	public ResponseEntity<ApiResponse<List<ImageKeywordResponseDTO.ImageKeywordListResponseDTO>>> getImageKeywordList(
+		@AuthenticationPrincipal CustomUserDetails userDetails
 	) {
-		Long userId = userDetails.getUserId();
-		ImageKeywordResponseDTO.ImageKeywordPreviewResponseDTO result = previewService.generatePreview(userId, request);
-		return ResponseEntity.ok(ApiResponse.onSuccess(result));
-	}
-
-	@PostMapping("/save")
-	public ResponseEntity<ApiResponse<ImageKeywordResponseDTO.ImageKeywordSaveResponseDTO>> saveImageKeywordResult(
-		@AuthenticationPrincipal CustomUserDetails userDetails,
-		@Validated @RequestBody ImageKeywordRequestDTO.ImageKeywordSaveRequestDTO request
-	) {
-		ImageKeywordResponseDTO.ImageKeywordSaveResponseDTO result =
-			imageKeywordService.saveImageKeyword(userDetails.getUserId(), request.getSavedName());
+		List<ImageKeywordResponseDTO.ImageKeywordListResponseDTO> result =
+			imageKeywordService.getImageKeywordList(
+				userDetails.getUserId());
 		return ResponseEntity.ok(ApiResponse.onSuccess(result));
 	}
 
