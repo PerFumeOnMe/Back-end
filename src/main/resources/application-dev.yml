@@ -80,8 +80,8 @@ cloud:
 
 external:
   fastapi:
-    recommend-url: ${EXTERNAL_FASTAPI_RECOMMEND_URL:http://dummy-url.com} # 환경변수 없으면 기본값 사용(dummy-url.com)
-    pbti-recommend-url: ${EXTERNAL_FASTAPI_RECOMMEND_URL:http://dummy-url.com} # 환경변수 없으면 기본값 사용(dummy-url.com)
+    recommend-url: ${EXTERNAL_FASTAPI_RECOMMEND_URL:http://perfume-recommender-container:8000} # Docker 컨테이너 간 통신
+    pbti-recommend-url: ${EXTERNAL_FASTAPI_PBTI_URL:http://perfume-recommender-container:8000} # Docker 컨테이너 간 통신
 
 app:
   image-keyword:
