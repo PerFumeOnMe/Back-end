@@ -79,6 +79,7 @@ jobs:
             
             sudo docker run -d -p 8080:8080 --name perfumeonme \
               --add-host=host.docker.internal:host-gateway \
+              --network bridge \
               -e SPRING_PROFILES_ACTIVE=dev \
               -e DB_URL=${{ secrets.ENV_DB_URL }} \
               -e DB_USERNAME=${{ secrets.ENV_DB_USERNAME }} \
@@ -92,7 +93,8 @@ jobs:
               -e AWS_S3_ACCESS_KEY_ID=${{ secrets.AWS_S3_ACCESS_KEY_ID }} \
               -e AWS_S3_SECRET_ACCESS_KEY=${{ secrets.AWS_S3_SECRET_ACCESS_KEY }} \
               -e AWS_S3_BUCKET_NAME=${{ secrets.AWS_S3_BUCKET_NAME }} \
-              -e EXTERNAL_FASTAPI_RECOMMEND_URL=http://dummy-url.com \
+              -e EXTERNAL_FASTAPI_RECOMMEND_URL=http://perfume-recommender-container:8000 \
+              -e EXTERNAL_FASTAPI_PBTI_URL=http://perfume-recommender-container:8000 \
               -e IMAGE_KEYWORD_CHARACTER_BASE_PATH=${{ secrets.IMAGE_KEYWORD_CHARACTER_BASE_PATH }} \
               chanee29/perfumeonme
 
