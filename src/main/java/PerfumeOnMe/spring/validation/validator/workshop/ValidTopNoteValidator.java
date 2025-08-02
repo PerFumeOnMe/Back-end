@@ -1,8 +1,8 @@
-package PerfumeOnMe.spring.validation.validator;
+package PerfumeOnMe.spring.validation.validator.workshop;
 
 import java.util.Set;
 
-import PerfumeOnMe.spring.validation.annotation.ValidTopNote;
+import PerfumeOnMe.spring.validation.annotation.workshop.ValidTopNote;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
