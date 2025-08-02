@@ -67,12 +67,6 @@ public enum ErrorStatus implements BaseErrorCode {
 	PROMPT_LOADING_FAIL(HttpStatus.BAD_REQUEST, "CHATBOT4002", "프롬프트 로딩에 실패하였습니다."),
 	REQUIRED_MESSAGES(HttpStatus.BAD_REQUEST, "CHATBOT4003", "메세지를 입력하세요."),
 
-	// 이미지 키워드 에러
-	INVALID_IMAGEKEYWORD_VALUE(HttpStatus.BAD_REQUEST, "IMAGEKEYWORD4001", "잘못된 키워드값입니다. 키워드 값을 확인해주세요."),
-	EXPIRED_IMAGEKEYWORD_RESULT(HttpStatus.REQUEST_TIMEOUT, "IMAGEKEYWORD4002", "생성할 이미지 키워드 결과가 만료되었습니다."),
-	ALREADY_KEYWORD_NAME(HttpStatus.BAD_REQUEST, "IMAGEKEYWORD4003", "동일한 이름으로 저장된 결과가 존재합니다."),
-	INVALID_IMAGEKEYWORD_ID(HttpStatus.BAD_REQUEST, "IMAGEKEYWORD4004", "해당 ID의 이미지 결과를 조회할 수 없습니다."),
-
 	// FastAPI 연동 에러
 	FASTAPI_COMMUNICATION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "FASTAPI5001", "FastAPI 서버 통신 중 오류가 발생했습니다."),
 
@@ -97,6 +91,12 @@ public enum ErrorStatus implements BaseErrorCode {
 
 	// S3 에러
 	INVALID_IMAGE_EXTENSION(HttpStatus.BAD_REQUEST, "S3IMAGE4001", "지원하지 않은 파일 확장자입니다."),
+
+	// 이미지 키워드 에러
+	EXPIRED_IMAGEKEYWORD_RESULT(HttpStatus.REQUEST_TIMEOUT, "IMAGEKEYWORD4001", "이미지 키워드 미리보기 결과가 만료되었습니다. 다시 시도해주세요."),
+	ALREADY_KEYWORD_NAME(HttpStatus.BAD_REQUEST, "IMAGEKEYWORD4002", "이미 같은 이름으로 저장된 이미지 키워드 결과가 있습니다."),
+	IMAGEKEYWORD_ID_NULL(HttpStatus.BAD_REQUEST, "IMAGEKEYWORD4003", "해당 이미지 키워드 결과 정보가 존재하지 않습니다."),
+	INVALID_IMAGEKEYWORD_ID(HttpStatus.BAD_REQUEST, "IMAGEKEYWORD4004", "해당 이미지 키워드 결과에 접근할 수 없습니다."),
 
 	// 향수공방 에러
 	WORKSHOP_TOTAL_VOLUME_OVERFLOW(HttpStatus.BAD_REQUEST, "WORKSHOP4001", "선택한 노트들의 총 용량은 10 초과할 수 없습니다."),
