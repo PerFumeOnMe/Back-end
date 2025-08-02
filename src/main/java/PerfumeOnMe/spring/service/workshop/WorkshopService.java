@@ -107,6 +107,7 @@ public class WorkshopService {
 		return WorkshopConverter.toWorkshopSaveResponse(savedWorkshop);
 	}
 
+	/**향수공방 결과 상세조회 서비스*/
 	@Transactional(readOnly = true)
 	public WorkshopResponseDTO.WorkshopDetailResponseDTO findWorkshopById(
 		Long workshopId, CustomUserDetails userDetails) {

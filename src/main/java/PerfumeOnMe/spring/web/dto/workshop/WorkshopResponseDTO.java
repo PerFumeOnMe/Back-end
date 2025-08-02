@@ -36,6 +36,27 @@ public class WorkshopResponseDTO {
 	@Schema(description = "향수공방 결과 상세조회")
 	public static class WorkshopDetailResponseDTO {
 
+		@Schema(description = "저장된 향수공방 이름", example = "향수공방 해봤는데 좋은거1")
+		private String savedName;
+
+		@Schema(description = "탑 노트", example = "베르가못")
+		private String topNote;
+
+		@Schema(description = "탑 노트 용량", example = "3")
+		private Long topNoteVolume;
+
+		@Schema(description = "미들 노트", example = "장미")
+		private String middleNote;
+
+		@Schema(description = "미들 노트 용량", example = "4")
+		private Long middleNoteVolume;
+
+		@Schema(description = "베이스 노트", example = "바닐라")
+		private String baseNote;
+
+		@Schema(description = "베이스 노트 용량", example = "3")
+		private Long baseNoteVolume;
+
 		@Schema(description = "시각적 키워드 (해시태그 형태)", example = "#상큼한첫인상 #감성적중심 #우디잔향\n#깊이있는사람 #신뢰감있는향기")
 		private String keywordSummary;
 
