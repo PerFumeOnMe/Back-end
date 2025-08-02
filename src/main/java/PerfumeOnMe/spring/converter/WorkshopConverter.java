@@ -41,6 +41,7 @@ public class WorkshopConverter {
 			.centerImpression(workshop.getCenterImpression())
 			.lastImpression(workshop.getLastImpression())
 			.tendency(workshop.getTendency())
+			.remembered(workshop.getRemembered())
 			.recommendedFragranceJson(recommendedFragranceDTOList)
 			.build();
 	}
@@ -65,6 +66,7 @@ public class WorkshopConverter {
 			.centerImpression(workshopResult.getCenterImpression())
 			.lastImpression(workshopResult.getLastImpression())
 			.tendency(workshopResult.getTendency())
+			.remembered(workshopResult.getRemembered())
 			.recommendedFragranceJson(emptyRecommendations)
 			.build();
 	}
@@ -99,6 +101,7 @@ public class WorkshopConverter {
 			.centerImpression(workshopResult.getCenterImpression())
 			.lastImpression(workshopResult.getLastImpression())
 			.tendency(workshopResult.getTendency())
+			.remembered(workshopResult.getRemembered())
 			.recommendedFragranceJson(recommendedFragranceDTOList)
 			.build();
 	}
@@ -133,6 +136,7 @@ public class WorkshopConverter {
 			.centerImpression(previewData.getCenterImpression())
 			.lastImpression(previewData.getLastImpression())
 			.tendency(previewData.getTendency())
+			.remembered(previewData.getRemembered())
 			.recommendedFragranceJson(recommendedFragranceJson)
 			.build();
 	}
