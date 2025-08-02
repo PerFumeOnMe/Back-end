@@ -36,11 +36,31 @@ public interface WorkshopControllerDocs {
 			),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(
 				responseCode = "COMMON401",
-				description = "인증이 필요합니다. 액세스 토큰을 입력해주세요."
+				description = "인증이 필요합니다. 액세스 토큰을 입력해주세요.",
+				content = @Content(
+					mediaType = "application/json",
+					schema = @Schema(example = """
+						{
+						  "isSuccess": false,
+						  "code": "COMMON401",
+						  "message": "인증이 필요합니다."
+						}
+						""")
+				)
 			),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(
 				responseCode = "WORKSHOP4002",
-				description = "선택한 노트들의 총 용량은 10을 초과할 수 없습니다."
+				description = "선택한 노트들의 총 용량은 10을 초과할 수 없습니다.",
+				content = @Content(
+					mediaType = "application/json",
+					schema = @Schema(example = """
+						{
+						  "isSuccess": false,
+						  "code": "WORKSHOP4001",
+						  "message": "선택한 노트들의 총 용량은 10 초과할 수 없습니다."
+						}
+						""")
+				)
 			)
 		}
 	)
@@ -66,15 +86,45 @@ public interface WorkshopControllerDocs {
 			),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(
 				responseCode = "COMMON401",
-				description = "인증이 필요합니다. 액세스 토큰을 입력해주세요."
+				description = "인증이 필요합니다. 액세스 토큰을 입력해주세요.",
+				content = @Content(
+					mediaType = "application/json",
+					schema = @Schema(example = """
+						{
+						  "isSuccess": false,
+						  "code": "COMMON401",
+						  "message": "인증이 필요합니다."
+						}
+						""")
+				)
 			),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(
 				responseCode = "WORKSHOP4003",
-				description = "향수공방 미리보기 결과가 만료되었습니다. 다시 시도해주세요."
+				description = "향수공방 미리보기 결과가 만료되었습니다. 다시 시도해주세요.",
+				content = @Content(
+					mediaType = "application/json",
+					schema = @Schema(example = """
+						{
+						  "isSuccess": false,
+						  "code": "WORKSHOP4002",
+						  "message": "향수공방 미리보기 결과가 만료되었습니다. 다시 시도해주세요."
+						}
+						""")
+				)
 			),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(
 				responseCode = "WORKSHOP4006",
-				description = "이미 같은 이름으로 저장된 향수공방 결과가 있습니다."
+				description = "이미 같은 이름으로 저장된 향수공방 결과가 있습니다.",
+				content = @Content(
+					mediaType = "application/json",
+					schema = @Schema(example = """
+						{
+						  "isSuccess": false,
+						  "code": "WORKSHOP4003",
+						  "message": "이미 같은 이름으로 저장된 향수공방 결과가 있습니다."
+						}
+						""")
+				)
 			)
 		}
 	)
@@ -118,15 +168,45 @@ public interface WorkshopControllerDocs {
 			),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(
 				responseCode = "COMMON401",
-				description = "인증이 필요합니다. 액세스 토큰을 입력해주세요."
+				description = "인증이 필요합니다. 액세스 토큰을 입력해주세요.",
+				content = @Content(
+					mediaType = "application/json",
+					schema = @Schema(example = """
+						{
+						  "isSuccess": false,
+						  "code": "COMMON401",
+						  "message": "인증이 필요합니다."
+						}
+						""")
+				)
 			),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(
 				responseCode = "WORKSHOP4004",
-				description = "해당 향수공방 결과에 접근할 수 없습니다."
+				description = "해당 향수공방 결과에 접근할 수 없습니다.",
+				content = @Content(
+					mediaType = "application/json",
+					schema = @Schema(example = """
+						{
+						  "isSuccess": false,
+						  "code": "WORKSHOP4004",
+						  "message": "해당 향수공방 결과에 접근할 수 없습니다."
+						}
+						""")
+				)
 			),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(
 				responseCode = "WORKSHOP4005",
-				description = "해당 향수공방 결과 정보가 존재하지 않습니다."
+				description = "해당 향수공방 결과 정보가 존재하지 않습니다.",
+				content = @Content(
+					mediaType = "application/json",
+					schema = @Schema(example = """
+						{
+						  "isSuccess": false,
+						  "code": "WORKSHOP4005",
+						  "message": "해당 향수공방 결과 정보가 존재하지 않습니다."
+						}
+						""")
+				)
 			)
 		}
 	)
