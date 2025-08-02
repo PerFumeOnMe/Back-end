@@ -36,6 +36,27 @@ public class WorkshopResponseDTO {
 	@Schema(description = "향수공방 결과 상세조회")
 	public static class WorkshopDetailResponseDTO {
 
+		@Schema(description = "저장된 향수공방 이름", example = "향수공방 해봤는데 좋은거1")
+		private String savedName;
+
+		@Schema(description = "탑 노트", example = "베르가못")
+		private String topNote;
+
+		@Schema(description = "탑 노트 용량", example = "3")
+		private Long topNoteVolume;
+
+		@Schema(description = "미들 노트", example = "장미")
+		private String middleNote;
+
+		@Schema(description = "미들 노트 용량", example = "4")
+		private Long middleNoteVolume;
+
+		@Schema(description = "베이스 노트", example = "바닐라")
+		private String baseNote;
+
+		@Schema(description = "베이스 노트 용량", example = "3")
+		private Long baseNoteVolume;
+
 		@Schema(description = "시각적 키워드 (해시태그 형태)", example = "#상큼한첫인상 #감성적중심 #우디잔향\n#깊이있는사람 #신뢰감있는향기")
 		private String keywordSummary;
 
@@ -48,8 +69,11 @@ public class WorkshopResponseDTO {
 		@Schema(description = "마지막에 남는 잔향 (베이스 노트 설명 + 사용자 성향)", example = "샌달우드의 깊고 따뜻한 잔향이 오래도록 머물며 안정감을 줍니다. 이런 향을 선택하는 당신은 차분하고 신뢰할 수 있는 성격의 소유자입니다.")
 		private String lastImpression;
 
-		@Schema(description = "향기로 해석한 당신의 성향 (전체 분석 + 기억되는 모습)", example = "복합적이고 다층적인 매력을 가진 당신은 첫인상은 밝고 활기차지만, 깊이 알수록 더욱 매력적인 면을 발견하게 됩니다. 당신은 사람들에게 '기분 좋은 여운이 오래 남는 사람'으로 기억됩니다.")
+		@Schema(description = "향기로 해석한 당신의 성향 (전체 분석)", example = "복합적이고 다층적인 매력을 가진 당신은 첫인상은 밝고 활기차지만, 깊이 알수록 더욱 매력적인 면을 발견하게 됩니다. 당신은 사람들에게 '기분 좋은 여운이 오래 남는 사람'으로 기억됩니다.")
 		private String tendency;
+
+		@Schema(description = "향기로 해석한 당신의 성향 (기억되는 모습)", example = "당신은 사람들에게 '기분 좋은 여운이 오래 남는 사람'으로 기억됩니다.")
+		private String remembered;
 
 		@Schema(description = "추천 향수 목록")
 		@JsonProperty("recommendedFragranceJson")
@@ -93,8 +117,11 @@ public class WorkshopResponseDTO {
 		@Schema(description = "마지막에 남는 잔향 (베이스 노트 설명 + 사용자 성향)", example = "샌달우드의 깊고 따뜻한 잔향이 오래도록 머물며 안정감을 줍니다. 이런 향을 선택하는 당신은 차분하고 신뢰할 수 있는 성격의 소유자입니다.")
 		private String lastImpression;
 
-		@Schema(description = "향기로 해석한 당신의 성향 (전체 분석 + 기억되는 모습)", example = "복합적이고 다층적인 매력을 가진 당신은 첫인상은 밝고 활기차지만, 깊이 알수록 더욱 매력적인 면을 발견하게 됩니다. 당신은 사람들에게 '기분 좋은 여운이 오래 남는 사람'으로 기억됩니다.")
+		@Schema(description = "향기로 해석한 당신의 성향 (전체 분석)", example = "복합적이고 다층적인 매력을 가진 당신은 첫인상은 밝고 활기차지만, 깊이 알수록 더욱 매력적인 면을 발견하게 됩니다. 당신은 사람들에게 '기분 좋은 여운이 오래 남는 사람'으로 기억됩니다.")
 		private String tendency;
+
+		@Schema(description = "향기로 해석한 당신의 성향 (기억되는 모습)", example = "당신은 사람들에게 '기분 좋은 여운이 오래 남는 사람'으로 기억됩니다.")
+		private String remembered;
 
 		@Schema(description = "추천 향수 목록")
 		@JsonProperty("recommendedFragranceJson")

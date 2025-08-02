@@ -2,6 +2,9 @@ package PerfumeOnMe.spring.web.dto.workshop;
 
 import java.util.Map;
 
+import PerfumeOnMe.spring.validation.annotation.workshop.ValidBaseNote;
+import PerfumeOnMe.spring.validation.annotation.workshop.ValidMiddleNote;
+import PerfumeOnMe.spring.validation.annotation.workshop.ValidTopNote;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -21,6 +24,7 @@ public class WorkshopRequestDTO {
 
 		@Schema(description = "탑 노트", example = "베르가못")
 		@NotNull(message = "탑 노트 값은 필수 입니다")
+		@ValidTopNote
 		private String topNote;
 
 		@Schema(description = "탑 노트 용량", example = "3")
@@ -30,7 +34,8 @@ public class WorkshopRequestDTO {
 		private Long topNoteVolume;
 
 		@Schema(description = "미들 노트", example = "장미")
-		@NotNull(message = "미들노트 값은 필수 입니다")
+		@NotNull(message = "미들 노트 값은 필수 입니다")
+		@ValidMiddleNote
 		private String middleNote;
 
 		@Schema(description = "미들 노트 용량", example = "3")
@@ -41,6 +46,7 @@ public class WorkshopRequestDTO {
 
 		@Schema(description = "베이스 노트", example = "바닐라")
 		@NotNull(message = "베이스 노트 값은 필수 입니다")
+		@ValidBaseNote
 		private String baseNote;
 
 		@Schema(description = "베이스 노트 용량", example = "4")

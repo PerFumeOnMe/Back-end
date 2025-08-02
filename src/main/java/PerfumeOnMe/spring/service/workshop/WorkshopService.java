@@ -35,6 +35,7 @@ public class WorkshopService {
 	private final WorkshopRedisService workshopRedisService;
 	private final WorkshopRecommendationService workshopRecommendationService;
 
+	/** (마이페이지) 향수공방 목록 조회*/
 	@Transactional(readOnly = true)
 	public List<WorkshopResponseDTO.WorkshopListResponseDTO> findAllWorkshopsByUser(CustomUserDetails userDetails) {
 
@@ -55,6 +56,7 @@ public class WorkshopService {
 		return WorkshopConverter.toWorkshopListResponse(workshops);
 	}
 
+	/** 향수공방 결과 저장*/
 	@Transactional
 	public WorkshopResponseDTO.WorkshopSaveResponseDTO saveWorkshop(
 		WorkshopRequestDTO.WorkshopSaveRequestDTO request, CustomUserDetails userDetails
@@ -78,7 +80,7 @@ public class WorkshopService {
 		log.info("향수공방 결과 저장 시작 - 사용자 ID: {}, 저장 이름: {}", userId, request.getSavedName());
 
 		// Redis에서 미리보기 결과 조회
-		WorkshopResponseDTO.WorkshopPreviewResponseDTO previewData = 
+		WorkshopResponseDTO.WorkshopPreviewResponseDTO previewData =
 			workshopRedisService.getPreview(userId);
 
 		// 추천 향수 리스트 JSON 직렬화
@@ -88,12 +90,12 @@ public class WorkshopService {
 
 		// Workshop 엔티티 생성 및 저장
 		Workshop workshop = WorkshopConverter.toWorkshopEntity(
-			user, 
-			request.getSavedName(), 
-			previewData, 
+			user,
+			request.getSavedName(),
+			previewData,
 			recommendedFragranceJson
 		);
-		
+
 		Workshop savedWorkshop = workshopRepository.save(workshop);
 
 		// Redis 임시 데이터 삭제
@@ -105,6 +107,7 @@ public class WorkshopService {
 		return WorkshopConverter.toWorkshopSaveResponse(savedWorkshop);
 	}
 
+	/**향수공방 결과 상세조회 서비스*/
 	@Transactional(readOnly = true)
 	public WorkshopResponseDTO.WorkshopDetailResponseDTO findWorkshopById(
 		Long workshopId, CustomUserDetails userDetails) {
@@ -131,9 +134,11 @@ public class WorkshopService {
 		return WorkshopConverter.toWorkshopDetailResponse(workshop);
 	}
 
+	/**향수공방 결과 미리보기 서비스*/
 	@Transactional
 	public WorkshopResponseDTO.WorkshopPreviewResponseDTO createWorkshopPreview(
-		WorkshopRequestDTO.WorkshopPreviewRequestDTO request, CustomUserDetails userDetails
+		WorkshopRequestDTO.WorkshopPreviewRequestDTO request,
+		CustomUserDetails userDetails
 	) {
 		Long userId = userDetails.getUserId();
 

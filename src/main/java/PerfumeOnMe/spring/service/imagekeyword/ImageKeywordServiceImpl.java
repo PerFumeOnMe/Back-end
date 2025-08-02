@@ -46,8 +46,15 @@ public class ImageKeywordServiceImpl implements ImageKeywordService {
 		User user = userRepository.findById(userId)
 			.orElseThrow(() -> new GeneralException(ErrorStatus.LOGIN_ID_NOT_FOUND));
 
+		// 이미지 키워드 결과 존재 여부 검증
+		if (!imageKeywordRepository.existsById(imageKeywordId)) {
+			throw new GeneralException(ErrorStatus.IMAGEKEYWORD_ID_NULL);
+		}
+		
+		// 사용자의 이미지 키워드 결과 여부 검증
 		ImageKeyword keyword = imageKeywordRepository.findByIdAndUser(imageKeywordId, user)
 			.orElseThrow(() -> new GeneralException(ErrorStatus.INVALID_IMAGEKEYWORD_ID));
+		
 		return ImageKeywordConverter.toImageKeywordDetailResponse(keyword, imageKeywordDescriptionRepository);
 	}
 

@@ -30,42 +30,27 @@ public class WorkshopConverter {
 			.toList();
 	}
 
+	/** 향수공방 상세조회 converter*/
 	public static WorkshopResponseDTO.WorkshopDetailResponseDTO toWorkshopDetailResponse(Workshop workshop) {
 		// 추천 향수 리스트 JSON 파싱
 		List<WorkshopResponseDTO.RecommendedFragranceDTO> recommendedFragranceDTOList =
 			parseFragranceJson(workshop.getRecommendedFragranceJson());
 
 		return WorkshopResponseDTO.WorkshopDetailResponseDTO.builder()
+			.savedName(workshop.getSavedName())
+			.topNote(workshop.getTopNote())
+			.topNoteVolume(workshop.getTopNoteVolume())
+			.middleNote(workshop.getMiddleNote())
+			.middleNoteVolume(workshop.getMiddleNoteVolume())
+			.baseNote(workshop.getBaseNote())
+			.baseNoteVolume(workshop.getBaseNoteVolume())
 			.keywordSummary(workshop.getKeywordSummary())
 			.firstImpression(workshop.getFirstImpression())
 			.centerImpression(workshop.getCenterImpression())
 			.lastImpression(workshop.getLastImpression())
 			.tendency(workshop.getTendency())
+			.remembered(workshop.getRemembered())
 			.recommendedFragranceJson(recommendedFragranceDTOList)
-			.build();
-	}
-
-	/** 향수공방 미리보기 응답 DTO 생성 */
-	public static WorkshopResponseDTO.WorkshopPreviewResponseDTO toWorkshopPreviewResponse(
-		WorkshopRequestDTO.WorkshopPreviewRequestDTO request,
-		WorkshopResult workshopResult
-	) {
-		// TODO: 향수 추천 로직은 FastAPI 연동 후 구현 예정
-		List<WorkshopResponseDTO.RecommendedFragranceDTO> emptyRecommendations = new ArrayList<>();
-
-		return WorkshopResponseDTO.WorkshopPreviewResponseDTO.builder()
-			.topNote(request.getTopNote())
-			.topNoteVolume(request.getTopNoteVolume())
-			.middleNote(request.getMiddleNote())
-			.middleNoteVolume(request.getMiddleNoteVolume())
-			.baseNote(request.getBaseNote())
-			.baseNoteVolume(request.getBaseNoteVolume())
-			.keywordSummary(workshopResult.getKeywordSummary())
-			.firstImpression(workshopResult.getFirstImpression())
-			.centerImpression(workshopResult.getCenterImpression())
-			.lastImpression(workshopResult.getLastImpression())
-			.tendency(workshopResult.getTendency())
-			.recommendedFragranceJson(emptyRecommendations)
 			.build();
 	}
 
@@ -76,7 +61,7 @@ public class WorkshopConverter {
 		List<WorkshopFragrance> recommendedFragrances
 	) {
 		// WorkshopFragrance를 RecommendedFragranceDTO로 변환
-		List<WorkshopResponseDTO.RecommendedFragranceDTO> recommendedFragranceDTOList = 
+		List<WorkshopResponseDTO.RecommendedFragranceDTO> recommendedFragranceDTOList =
 			recommendedFragrances.stream()
 				.map(fragrance -> WorkshopResponseDTO.RecommendedFragranceDTO.builder()
 					.brand(fragrance.getBrand())
@@ -99,6 +84,7 @@ public class WorkshopConverter {
 			.centerImpression(workshopResult.getCenterImpression())
 			.lastImpression(workshopResult.getLastImpression())
 			.tendency(workshopResult.getTendency())
+			.remembered(workshopResult.getRemembered())
 			.recommendedFragranceJson(recommendedFragranceDTOList)
 			.build();
 	}
@@ -133,6 +119,7 @@ public class WorkshopConverter {
 			.centerImpression(previewData.getCenterImpression())
 			.lastImpression(previewData.getLastImpression())
 			.tendency(previewData.getTendency())
+			.remembered(previewData.getRemembered())
 			.recommendedFragranceJson(recommendedFragranceJson)
 			.build();
 	}
