@@ -27,5 +27,8 @@ public interface FragranceService {
 		Long userId);
 
 	FragranceResponseDTO.FragranceMdChoiceResult getFragranceMdChoice(CustomUserDetails userDetails);
+
+	// 향수 메인페이지 나만의 향수 조회 API
+	FragranceResponseDTO.FragranceMyPerfumeResult getFragranceMyPerfume(CustomUserDetails userDetails);
 }
 

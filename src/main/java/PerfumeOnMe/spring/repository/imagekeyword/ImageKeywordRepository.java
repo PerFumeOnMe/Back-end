@@ -15,4 +15,6 @@ public interface ImageKeywordRepository extends JpaRepository<ImageKeyword, Long
 
 	// 동일한 사용자와 저장 이름이 존재하는지 확인
 	boolean existsByUserAndSavedName(User user, String savedName);
+
+	Optional<ImageKeyword> findFirstByUserOrderByCreatedAtDesc(User user);
 }
