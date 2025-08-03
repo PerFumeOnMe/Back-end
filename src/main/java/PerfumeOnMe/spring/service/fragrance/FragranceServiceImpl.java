@@ -79,8 +79,7 @@ public class FragranceServiceImpl implements FragranceService {
 	@Override
 	@Transactional(readOnly = false)
 	public FragranceResponseDTO.FavoriteResponseDTO addFavorite(Long userId, Long fragranceId) {
-		User user = userRepository.findById(userId)
-			.orElseThrow(() -> new GeneralException(ErrorStatus.LOGIN_ID_NOT_FOUND));
+		User user = findUserById(userId);
 		Fragrance fragrance = fragranceRepository.findById(fragranceId)
 			.orElseThrow(() -> new GeneralException(ErrorStatus.FRAGRANCE_NOT_FOUND));
 
@@ -101,8 +100,7 @@ public class FragranceServiceImpl implements FragranceService {
 	@Override
 	@Transactional(readOnly = false)
 	public FragranceResponseDTO.FavoriteCancelResponseDTO deleteFavorite(Long userId, Long fragranceId) {
-		User user = userRepository.findById(userId)
-			.orElseThrow(() -> new GeneralException(ErrorStatus.LOGIN_ID_NOT_FOUND));
+		User user = findUserById(userId);
 		Fragrance fragrance = fragranceRepository.findById(fragranceId)
 			.orElseThrow(() -> new GeneralException(ErrorStatus.FRAGRANCE_NOT_FOUND));
 
@@ -192,8 +190,7 @@ public class FragranceServiceImpl implements FragranceService {
 	public FragranceResponseDTO.FragranceMdChoiceResult getFragranceMdChoice(CustomUserDetails userDetails) {
 
 		// 사용자 조회
-		User user = userRepository.findUserByLoginId(userDetails.getUsername())
-			.orElseThrow(() -> new GeneralException(ErrorStatus.LOGIN_ID_NOT_FOUND));
+		User user = findUserById(userDetails.getUserId());
 
 		// 사용자 선호 향 조회
 		List<Long> noteList = user.getUserNoteList().stream()
@@ -226,8 +223,7 @@ public class FragranceServiceImpl implements FragranceService {
 	@Override
 	public FragranceResponseDTO.FragranceMyPerfumeResult getFragranceMyPerfume(CustomUserDetails userDetails) {
 		// 사용자 조회
-		User user = userRepository.findUserByLoginId(userDetails.getUsername())
-			.orElseThrow(() -> new GeneralException(ErrorStatus.LOGIN_ID_NOT_FOUND));
+		User user = findUserById(userDetails.getUserId());
 
 		Optional<Workshop> workshop = workshopRepository.findFirstByUserOrderByCreatedAtDesc(user);
 		Optional<ImageKeyword> imageKeyword = imageKeywordRepository.findFirstByUserOrderByCreatedAtDesc(user);
@@ -286,5 +282,13 @@ public class FragranceServiceImpl implements FragranceService {
 			// JSON 파싱 실패 시 빈 리스트 반환
 			return List.of();
 		}
+	}
+
+	/**
+	 * 사용자 ID로 사용자 조회 (공통 메서드)
+	 */
+	private User findUserById(Long userId) {
+		return userRepository.findById(userId)
+			.orElseThrow(() -> new GeneralException(ErrorStatus.LOGIN_ID_NOT_FOUND));
 	}
 }
