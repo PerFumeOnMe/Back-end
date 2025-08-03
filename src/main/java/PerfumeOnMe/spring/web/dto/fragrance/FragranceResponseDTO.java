@@ -123,6 +123,26 @@ public class FragranceResponseDTO {
 		private String nickname;
 	}
 
+	// 메인페이지 나만의 향수 DTO
+	@Getter
+	@Builder
+	@AllArgsConstructor
+	@NoArgsConstructor
+	public static class FragranceMyPerfumeResult {
+		private boolean exists;
+		private List<MyPerfume> myPerfumeList;
+	}
+
+	// 나만의 향수
+	@Getter
+	@Builder
+	@AllArgsConstructor
+	@NoArgsConstructor
+	public static class MyPerfume {
+		private String brand;
+		private String name;
+		private String imageUrl;
+	}
 }
 
 
