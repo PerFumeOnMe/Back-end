@@ -81,8 +81,7 @@ cloud:
 external:
   fastapi:
     recommend-url: ${EXTERNAL_FASTAPI_RECOMMEND_URL:http://perfume-recommender-container:8000/recommend/full} # Docker 컨테이너 간 통신
-    pbti-recommend-url: ${EXTERNAL_FASTAPI_PBTI_URL:http://perfume-recommender-container:8000/recommend/pbti} # Docker 컨테이너 간 통신
-
+    pbti-recommend-url: ${EXTERNAL_FASTAPI_PBTI_URL:http://perfume-recommender-container:8000/pbti} # Docker 컨테이너 간 통신
 app:
   image-keyword:
     character-image-base-path: ${IMAGE_KEYWORD_CHARACTER_BASE_PATH}
