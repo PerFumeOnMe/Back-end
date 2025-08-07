@@ -13,4 +13,8 @@ public interface WorkshopRepository extends JpaRepository<Workshop, Long> {
 	List<Workshop> findAllByUser(User user);
 
 	Optional<Workshop> findByIdAndUser(Long id, User user);
+
+	boolean existsByUserAndSavedName(User user, String savedName);
+
+	Optional<Workshop> findFirstByUserOrderByCreatedAtDesc(User user);
 }

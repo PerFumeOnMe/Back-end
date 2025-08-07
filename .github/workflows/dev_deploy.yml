@@ -76,14 +76,16 @@ jobs:
             sudo docker pull chanee29/perfumeonme
             
             echo "🚀 Starting new container with the following environment variables:"
+            sudo docker network create perfume-network || true
             
             sudo docker run -d -p 8080:8080 --name perfumeonme \
+              --network perfume-network \
               -e SPRING_PROFILES_ACTIVE=dev \
               -e DB_URL=${{ secrets.ENV_DB_URL }} \
               -e DB_USERNAME=${{ secrets.ENV_DB_USERNAME }} \
               -e DB_PASSWORD=${{ secrets.ENV_DB_PASSWORD }} \
-              -e REDIS_HOST=${{ secrets.ENV_REDIS_HOST }} \
-              -e REDIS_PORT=${{ secrets.ENV_REDIS_PORT }} \
+              -e SPRING_DATA_REDIS_HOST=${{ secrets.ENV_REDIS_HOST }} \
+              -e SPRING_DATA_REDIS_PORT=${{ secrets.ENV_REDIS_PORT }} \
               -e JWT_SECRET=${{ secrets.ENV_JWT_SECRET }} \
               -e OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} \
               -e KAKAO_REST_API_KEY=${{ secrets.KAKAO_REST_API_KEY }} \
@@ -91,7 +93,9 @@ jobs:
               -e AWS_S3_ACCESS_KEY_ID=${{ secrets.AWS_S3_ACCESS_KEY_ID }} \
               -e AWS_S3_SECRET_ACCESS_KEY=${{ secrets.AWS_S3_SECRET_ACCESS_KEY }} \
               -e AWS_S3_BUCKET_NAME=${{ secrets.AWS_S3_BUCKET_NAME }} \
-              -e EXTERNAL_FASTAPI_RECOMMEND_URL=http://dummy-url.com \
+              -e EXTERNAL_FASTAPI_RECOMMEND_URL=${{ secrets.FASTAPI_RECOMMEND_URL }} \
+              -e EXTERNAL_FASTAPI_PBTI_URL=${{ secrets.FASTAPI_PBTI_URL }} \
+              -e IMAGE_KEYWORD_CHARACTER_BASE_PATH=${{ secrets.IMAGE_KEYWORD_CHARACTER_BASE_PATH }} \
               chanee29/perfumeonme
 
       - name: Remove GitHub IP FROM security group

@@ -169,4 +169,13 @@ public class FragranceConverter {
 			.build();
 	}
 
+	// 메인페이지 나만의 향수 결과 변환
+	public static FragranceResponseDTO.FragranceMyPerfumeResult toMyPerfumeResult(
+		boolean exists, List<FragranceResponseDTO.MyPerfume> myPerfumeList) {
+		return FragranceResponseDTO.FragranceMyPerfumeResult.builder()
+			.exists(exists)
+			.myPerfumeList(myPerfumeList)
+			.build();
+	}
+
 }

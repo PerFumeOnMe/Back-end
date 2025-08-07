@@ -11,11 +11,12 @@ public class RedisConfig {
 
 	/*
 	RedisConnectionFactory의 구현체로 LettuceConnectionFactory 사용 및 빈 등록
+	Spring Boot 자동 설정을 사용하기 위해 주석 처리
 	 */
-	@Bean
-	public RedisConnectionFactory redisConnectionFactory() {
-		return new LettuceConnectionFactory();
-	}
+	// @Bean
+	// public RedisConnectionFactory redisConnectionFactory() {
+	// 	return new LettuceConnectionFactory();
+	// }
 
 	/*
 	Key-Value를 String-String으로 저장하는 StringRedisTemplate 빈 등록

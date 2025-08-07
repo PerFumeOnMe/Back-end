@@ -65,6 +65,7 @@ public class LoginServiceImpl implements LoginService {
 		return generateAuthResponse(loginId, authResult, Social.LOCAL, response);
 	}
 
+	@Override
 	public AuthResponseDTO.LoginResult generateAuthResponse(String loginId,
 		Authentication request, Social social, HttpServletResponse response) {
 

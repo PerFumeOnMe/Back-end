@@ -73,5 +73,8 @@ public class Workshop extends BaseEntity {
 	private String tendency;
 
 	@Column(columnDefinition = "TEXT", nullable = false)
+	private String remembered;
+
+	@Column(columnDefinition = "TEXT", nullable = false)
 	private String recommendedFragranceJson;
 }

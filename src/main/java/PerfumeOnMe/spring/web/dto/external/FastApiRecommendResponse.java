@@ -21,5 +21,6 @@ public class FastApiRecommendResponse {
 		private String baseNote;
 		private String description;
 		private List<String> relatedKeywords;
+		private String imageUrl;
 	}
 }

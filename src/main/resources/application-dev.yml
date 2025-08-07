@@ -22,8 +22,14 @@ spring:
     show-sql: true
   data:
     redis:
-      host: ${REDIS_HOST}
-      port: ${REDIS_PORT:6379}
+      host: ${SPRING_DATA_REDIS_HOST:host.docker.internal}
+      port: ${SPRING_DATA_REDIS_PORT:6379}
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
   cache:
     type: redis
   security:
@@ -46,8 +52,8 @@ jwt:
   token:
     secretKey: ${JWT_SECRET:default_dummy}
     expiration:
-      access: 7200000 # 2H
-      refresh: 1209600000 # 2Week
+      access: 1209600000 # 2H(7200000) -> 연동 끝나면 수정
+      refresh: 1209600000 # 2Week(1209600000)
 server:
   servlet:
     encoding:
@@ -74,4 +80,14 @@ cloud:
 
 external:
   fastapi:
-    recommend-url: ${EXTERNAL_FASTAPI_RECOMMEND_URL:http://dummy-url.com} # 환경변수 없으면 기본값 사용(dummy-url.com)
+    recommend-url: ${EXTERNAL_FASTAPI_RECOMMEND_URL:http://perfume-recommender-container:8000/recommend/full} # Docker 컨테이너 간 통신
+    pbti-recommend-url: ${EXTERNAL_FASTAPI_PBTI_URL:http://perfume-recommender-container:8000/pbti/full-result} # Docker 컨테이너 간 통신
+app:
+  image-keyword:
+    character-image-base-path: ${IMAGE_KEYWORD_CHARACTER_BASE_PATH}
+    cache-timeout-minutes: 15
+    fast-api:
+      connect-timeout: 5000
+      read-timeout: 10000
+      max-retries: 3
+      retry-delay: 1000
