@@ -19,8 +19,6 @@ import PerfumeOnMe.spring.domain.User;
 import PerfumeOnMe.spring.repository.pbti.PbtiRepository;
 import PerfumeOnMe.spring.repository.user.UserRepository;
 import PerfumeOnMe.spring.service.external.FastApiClient;
-import PerfumeOnMe.spring.service.openAi.OpenAiService;
-import PerfumeOnMe.spring.service.openAi.PromptBuilder;
 import PerfumeOnMe.spring.util.JsonUtils;
 import PerfumeOnMe.spring.web.dto.Pbti.PbtiRequestDTO;
 import PerfumeOnMe.spring.web.dto.Pbti.PbtiResponseDTO;
@@ -35,7 +33,6 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 public class PbtiServiceImpl implements PbtiService {
 
-	private final OpenAiService openAiService;
 	private final ObjectMapper objectMapper;
 	private final PbtiRepository pbtiRepository;
 	private final UserRepository userRepository;
@@ -45,22 +42,6 @@ public class PbtiServiceImpl implements PbtiService {
 	// PBTI 결과 조회 API
 	@Override
 	public PbtiResponseDTO.PbtiQuestionResponse searchPbti(Long userId, PbtiRequestDTO.PbtiQuestionRequest request) {
-
-		PbtiResponseDTO.PbtiResult result = PbtiScoringUtil.calculateMbtiType(request);
-
-		String prompt = PromptBuilder.buildPromptFromRequest(request, result);
-
-		// GPT로부터 응답 받기
-		String gptResponse = openAiService.getStructuredResponse(prompt);
-
-		// JSON → DTO 역직렬화
-		PbtiResponseDTO.PbtiQuestionResponse response;
-		try {
-			response = objectMapper.readValue(gptResponse, PbtiResponseDTO.PbtiQuestionResponse.class);
-		} catch (JsonProcessingException e) {
-			log.error("GPT 응답 JSON 파싱 실패. 응답: {}", gptResponse, e);
-			throw new GeneralException(ErrorStatus.JSON_PARSING_ERROR);
-		}
 
 		// FastAPI 호출로 perfumeRecommend 대체
 		FastApiRecommendRequest.PbtiRequest fastApiRequest = new FastApiRecommendRequest.PbtiRequest(
@@ -74,21 +55,52 @@ public class PbtiServiceImpl implements PbtiService {
 			request.getQEight()
 		);
 
-		FastApiPbtiRecommendResponse fastApiResponse = fastApiClient.getPbtiRecommendation(fastApiRequest);
+		FastApiPbtiRecommendResponse fastApiResponse = fastApiClient.getFullPbtiResult(fastApiRequest);
 
-		// ⬇ FastAPI 향수 추천 결과 매핑
-		List<PbtiResponseDTO.PbtiQuestionResponse.PerfumeRecommend> mappedPerfumes = fastApiResponse.getPerfumeRecommend()
-			.stream()
-			.map(r -> PbtiResponseDTO.PbtiQuestionResponse.PerfumeRecommend.builder()
-				.name(r.getName())
-				.brand(r.getBrand())
-				.description(r.getDescription())
-				.perfumeImageUrl(r.getPerfumeImageUrl())
-				.build())
-			.collect(Collectors.toList());
-
-		// 결과 세팅
-		response.setPerfumeRecommend(mappedPerfumes);
+		// ✅ 결과 매핑
+		PbtiResponseDTO.PbtiQuestionResponse response = PbtiResponseDTO.PbtiQuestionResponse.builder()
+			.recommendation(fastApiResponse.getRecommendation())
+			.summary(fastApiResponse.getSummary())
+			.keywords(
+				fastApiResponse.getKeywords().stream()
+					.map(k -> PbtiResponseDTO.PbtiQuestionResponse.Keyword.builder()
+						.keyword(k.getKeyword())
+						.keywordDescription(k.getKeywordDescription())
+						.build())
+					.collect(Collectors.toList())
+			)
+			.perfumeStyle(
+				PbtiResponseDTO.PbtiQuestionResponse.PerfumeStyle.builder()
+					.description(fastApiResponse.getPerfumeStyle().getDescription())
+					.notes(
+						fastApiResponse.getPerfumeStyle().getNotes().stream()
+							.map(n -> PbtiResponseDTO.PbtiQuestionResponse.PerfumeStyle.Note.builder()
+								.category(n.getCategory())
+								.categoryDescription(n.getCategoryDescription())
+								.build())
+							.collect(Collectors.toList())
+					)
+					.build()
+			)
+			.scentPoint(
+				fastApiResponse.getScentPoint().stream()
+					.map(s -> PbtiResponseDTO.PbtiQuestionResponse.ScentPoint.builder()
+						.category(s.getCategory())
+						.point(s.getPoint())
+						.build())
+					.collect(Collectors.toList())
+			)
+			.perfumeRecommend(
+				fastApiResponse.getPerfumeRecommend().stream()
+					.map(r -> PbtiResponseDTO.PbtiQuestionResponse.PerfumeRecommend.builder()
+						.name(r.getName())
+						.brand(r.getBrand())
+						.description(r.getDescription())
+						.perfumeImageUrl(r.getPerfumeImageUrl())
+						.build())
+					.collect(Collectors.toList())
+			)
+			.build();
 
 		// Redis에 저장할 DTO 생성
 		PbtiResponseDTO.PbtiRedisDTO redisDTO = PbtiResponseDTO.PbtiRedisDTO.builder()
