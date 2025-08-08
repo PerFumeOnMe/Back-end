@@ -47,7 +47,7 @@ public class ChatbotServiceImpl implements ChatbotService {
 	public void init() {
 		this.systemPrompt = promptLoader.loadDefaultPrompt(); // 프롬프트 파일 로딩
 	}
-	
+
 	/**
 	 * userId: 현재 로그인한 사용자 ID
 	 * request: 사용자 질문이 담긴 DTO
@@ -85,6 +85,13 @@ public class ChatbotServiceImpl implements ChatbotService {
 			.uri("/chat/completions") // OpenAI의 채팅 응답 API 엔드포인트
 			.bodyValue(openAiRequest)// 위에서 만든 요청 객체 전송
 			.retrieve()
+			.onStatus( // 429(Too Many Request) 에러 시 예외처리
+				status -> status.value() == 429,
+				clientResponse -> clientResponse.bodyToMono(String.class)
+					.flatMap(body -> Mono.error(
+						new GeneralException(ErrorStatus.OPENAI_RATE_LIMIT_EXCEEDED)
+					))
+			)
 			.bodyToMono(JsonNode.class) // 응답을 JSON 트리로 받음
 			.map(json -> json.get("choices").get(0).get("message").get("content").asText())
 			.map(response -> {
