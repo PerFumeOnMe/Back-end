@@ -20,6 +20,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /*
 요청에서 토큰을 추출해 유효성을 검증하고,
@@ -27,6 +28,7 @@ Authentication을 SecurityContextHolder에 설정하는 클래스
  */
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private final JwtTokenProvider jwtTokenProvider;
@@ -36,6 +38,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
 		FilterChain filterChain) throws ServletException, IOException {
+
+		log.debug("requestURI: {}, httpMethod: {}", request.getRequestURI(), request.getMethod());
 
 		String accessToken = jwtTokenProvider.resolveToken(request);
 
