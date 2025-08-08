@@ -17,5 +17,4 @@ public interface FragranceRepositoryCustom {
 
 	// 향수 필터링
 	Page<Fragrance> findByFilter(FragranceRequestDTO.FragranceFilterRequest request, Pageable pageable);
-
 }

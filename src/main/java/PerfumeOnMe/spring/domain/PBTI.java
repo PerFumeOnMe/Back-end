@@ -45,8 +45,29 @@ public class PBTI extends BaseEntity {
 	@Column(nullable = false, length = 50)
 	private String savedName;
 
-	@Column(columnDefinition = "json", nullable = false)
-	private String answers;
+	@Column(nullable = false, length = 150)
+	private String qOne;
+
+	@Column(nullable = false, length = 150)
+	private String qTwo;
+
+	@Column(nullable = false, length = 150)
+	private String qThree;
+
+	@Column(nullable = false, length = 150)
+	private String qFour;
+
+	@Column(nullable = false, length = 150)
+	private String qFive;
+
+	@Column(nullable = false, length = 150)
+	private String qSix;
+
+	@Column(nullable = false, length = 150)
+	private String qSeven;
+
+	@Column(nullable = false, length = 150)
+	private String qEight;
 
 	@Column(columnDefinition = "text", nullable = false)
 	private String recommendation;
@@ -55,18 +76,22 @@ public class PBTI extends BaseEntity {
 	private String keywords;
 
 	@Column(columnDefinition = "json", nullable = false)
-	private String style;
+	private String perfumeStyle;
 
 	@Column(columnDefinition = "json", nullable = false)
-	private String scentProfile;
+	private String scentPoint;
 
 	@Column(columnDefinition = "text", nullable = false)
 	private String summary;
 
 	@Column(columnDefinition = "json", nullable = false)
-	private String perfumes;
+	private String perfumeRecommend;
 
 	@OneToMany(mappedBy = "pbti", cascade = CascadeType.ALL)
 	@Builder.Default
 	private List<RecommendedFragrance> RecommendedFragranceList = new ArrayList<>();
+
+	public void updateSavedName(String savedName) {
+		this.savedName = savedName;
+	}
 }

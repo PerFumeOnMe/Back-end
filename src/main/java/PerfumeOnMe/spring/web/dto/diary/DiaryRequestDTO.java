@@ -16,4 +16,12 @@ public class DiaryRequestDTO {
 		private LocalDate date;
 	}
 
+	// 다이어리 수정 요청 DTO
+	@Getter
+	@Setter
+	public static class UpdateDiaryRequest {
+		private String fragranceName;
+		private String content;
+	}
+
 }

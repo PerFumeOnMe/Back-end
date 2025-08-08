@@ -1,5 +1,8 @@
 package PerfumeOnMe.spring.converter;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import PerfumeOnMe.spring.domain.User;
 import PerfumeOnMe.spring.web.dto.user.UserResponseDTO;
 
@@ -18,6 +21,19 @@ public class UserConverter {
 	public static UserResponseDTO.SignupResult toSignupResult(User user) {
 		return UserResponseDTO.SignupResult.builder()
 			.userId(user.getId())
+			.build();
+	}
+
+	// 사용자의 프로필 조회 DTO 반환
+	public static UserResponseDTO.MyPageProfileResponse toMyPageProfileResponse(User user) {
+		List<String> preferredNotes = user.getUserNoteList().stream()
+			.map(userNote -> userNote.getNote().getName())
+			.collect(Collectors.toList());
+
+		return UserResponseDTO.MyPageProfileResponse.builder()
+			.nickName(user.getNickname())
+			.imageUrl(user.getImageURL())
+			.preferredNotes(preferredNotes)
 			.build();
 	}
 }

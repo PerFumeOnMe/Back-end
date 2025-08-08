@@ -14,6 +14,7 @@ import PerfumeOnMe.spring.domain.mapping.Diary;
 import PerfumeOnMe.spring.domain.mapping.UserFragrance;
 import PerfumeOnMe.spring.domain.mapping.UserNote;
 import PerfumeOnMe.spring.domain.mapping.UserTerms;
+import PerfumeOnMe.spring.web.dto.user.UserRequestDTO;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -104,4 +105,22 @@ public class User extends BaseEntity {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	@Builder.Default
 	private List<Workshop> workshopList = new ArrayList<>();
+
+	public void onboarding(UserRequestDTO.Onboarding request) {
+		this.nickname = request.getNickname();
+		this.imageURL = request.getImageURL();
+		this.gender = UserGender.valueOf(request.getGender().toUpperCase());
+		this.age = Age.valueOf(request.getAge().toUpperCase());
+	}
+
+	// 연관관계 편의 메서드
+	public void addUserNote(UserNote userNote) {
+		this.userNoteList.add(userNote);
+		userNote.setUser(this);
+	}
+
+	// 프로필 사진 변경 메서드
+	public void updateImageURL(String imageURL) {
+		this.imageURL = imageURL;
+	}
 }

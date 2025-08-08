@@ -53,7 +53,7 @@ public class Fragrance extends BaseEntity {
 	private String name;
 
 	@Enumerated(EnumType.STRING)
-	@Column(columnDefinition = "VARCHAR(15)")
+	@Column(columnDefinition = "VARCHAR(50)")
 	private Brand brand;
 
 	@Column(nullable = false)
@@ -91,7 +91,7 @@ public class Fragrance extends BaseEntity {
 	@Column(nullable = false)
 	private String baseNoteKeyword;
 
-	@Column(nullable = false, unique = true, length = 30)
+	@Column(nullable = false, unique = true)
 	private String keyword;
 
 	//----- 매핑 관계 -----

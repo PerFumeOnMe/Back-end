@@ -109,7 +109,7 @@ public class FragranceImportService {
 				}
 			});
 		} catch (NumberFormatException e) {
-			throw new GeneralException(ErrorStatus.PRICE_PARSING_ERROR); // 파싱 실패 로그
+			throw new GeneralException(ErrorStatus.PRICE_PARSING_ERROR, "가격 파싱 실패: " + priceStr); // 파싱 실패 로그
 		}
 	}
 

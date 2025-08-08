@@ -210,7 +210,15 @@ public class FragranceRowProcessor {
 			case "LOIVIE" -> Brand.LOIVIE;
 			case "DIPTYQUE" -> Brand.DIPTYQUE;
 			case "JOMALONE" -> Brand.JOMALONE;
-			default -> throw new GeneralException(ErrorStatus.UNSUPPORTED_BRAND);
+			case "BYREDO" -> Brand.BYREDO;
+			case "TOM FORD" -> Brand.TOM_FORD;
+			case "AESOP" -> Brand.AESOP;
+			case "YVES SAINT LAURENT" -> Brand.YVES_SAINT_LAURENT;
+			case "LE LABO" -> Brand.LE_LABO;
+			case "VERSACE" -> Brand.VERSACE;
+			case "메종 프란시스 커정" -> Brand.MAISON_FRANCIS_KURKDJIAN;
+
+			default -> throw new GeneralException(ErrorStatus.UNSUPPORTED_BRAND, "지원하지 않는 브랜드: " + brandStr);
 		};
 	}
 

@@ -5,13 +5,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
-import PerfumeOnMe.spring.config.security.auth.converter.AuthConverter;
 import PerfumeOnMe.spring.config.security.auth.dto.AuthResponseDTO;
 import PerfumeOnMe.spring.config.security.auth.manager.LogoutAccessTokenManager;
 import PerfumeOnMe.spring.config.security.auth.manager.RefreshTokenManager;
 import PerfumeOnMe.spring.config.security.auth.provider.JwtTokenProvider;
+import PerfumeOnMe.spring.config.security.auth.service.LoginService;
 import PerfumeOnMe.spring.config.security.auth.token.JwtAuthenticationToken;
-import PerfumeOnMe.spring.config.security.auth.userDetails.CustomUserDetails;
 import PerfumeOnMe.spring.config.security.oauth.converter.OAuthConverter;
 import PerfumeOnMe.spring.config.security.oauth.dto.KakaoResponseDTO;
 import PerfumeOnMe.spring.config.security.oauth.util.KakaoClient;
@@ -33,6 +32,7 @@ public class KakaoService implements OAuthService {
 	private final UserDetailsService userDetailsService;
 	private final RefreshTokenManager refreshTokenManager;
 	private final LogoutAccessTokenManager logoutAccessTokenManager;
+	private final LoginService loginService;
 
 	@Override
 	public AuthResponseDTO.LoginResult oAuthLogin(String code, HttpServletResponse response) {
@@ -50,7 +50,7 @@ public class KakaoService implements OAuthService {
 		// 이미 가입한 사용자라면 꺼내고, 아니라면 회원가입 진행
 		User user = userRepository.findUserByLoginId(email).orElseGet(() -> {
 			User newUser = OAuthConverter.toSignupUser(
-				Social.KAKAO, "kakao" + email, name, "password", imageUrl, nickname);
+				Social.KAKAO, email, name, "password", imageUrl, nickname);
 			return userRepository.save(newUser);
 		});
 
@@ -61,26 +61,13 @@ public class KakaoService implements OAuthService {
 
 		// 사용자 JWT 인증 및 토큰 발급
 		UserDetails userDetails = userDetailsService.loadUserByUsername(user.getLoginId());
-		Long userId = ((CustomUserDetails)userDetails).getUserId();
 		JwtAuthenticationToken request = new JwtAuthenticationToken(
 			userDetails, null, userDetails.getAuthorities(), Social.KAKAO);
-		String accessToken = jwtTokenProvider.createAccessToken(request);
-		String refreshToken = jwtTokenProvider.createRefreshToken(request);
-		AuthResponseDTO.LoginResult loginResultDTO = AuthConverter.toLoginResult(refreshToken, userId, Social.KAKAO);
-
-		// 새로 발급한 리프레시 토큰을 Redis에 저장
-		refreshTokenManager.saveRefreshToken(email, refreshToken);
-
-		// 액세스 토큰 헤더 설정 및 응답 DTO 반환
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("application/json");
-		response.setStatus(HttpServletResponse.SC_OK);
-		response.setHeader("Authorization", "Bearer " + accessToken);
 
 		// SecurityContextHolder에 인증 설정
 		SecurityContextHolder.getContext().setAuthentication(request);
 
-		return loginResultDTO;
+		return loginService.generateAuthResponse(email, request, Social.KAKAO, response);
 	}
 
 	@Override

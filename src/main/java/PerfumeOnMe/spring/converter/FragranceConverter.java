@@ -133,6 +133,27 @@ public class FragranceConverter {
 			.build();
 	}
 
+	// 향수 목록 전체 반환 dto
+	public static FragranceResponseDTO.FragranceSearchFinalResult toSearchFinalResult(
+		List<FragranceResponseDTO.FragranceSearchResult> content,
+		boolean hasNext
+	) {
+		return FragranceResponseDTO.FragranceSearchFinalResult.builder()
+			.content(content)
+			.hasNext(hasNext)
+			.build();
+	}
+
+	// 마이페이지 향수 추천(Md's Choice) 목록 반환
+	public static FragranceResponseDTO.FragranceMdChoiceResult toMdChoiceResult(
+		List<FragranceResponseDTO.FragranceSearchResult> content, String name, String nickname) {
+		return FragranceResponseDTO.FragranceMdChoiceResult.builder()
+			.content(content)
+			.name(name)
+			.nickname(nickname)
+			.build();
+	}
+
 	// 향수 즐겨찾기 등록 API
 	public static FragranceResponseDTO.FavoriteResponseDTO toFavoriteResponseDTO(UserFragrance userFragrance) {
 		return FragranceResponseDTO.FavoriteResponseDTO.builder()
@@ -145,6 +166,15 @@ public class FragranceConverter {
 		UserFragrance userFragrance) {
 		return FragranceResponseDTO.FavoriteCancelResponseDTO.builder()
 			.fragranceId(userFragrance.getFragrance().getId())
+			.build();
+	}
+
+	// 메인페이지 나만의 향수 결과 변환
+	public static FragranceResponseDTO.FragranceMyPerfumeResult toMyPerfumeResult(
+		boolean exists, List<FragranceResponseDTO.MyPerfume> myPerfumeList) {
+		return FragranceResponseDTO.FragranceMyPerfumeResult.builder()
+			.exists(exists)
+			.myPerfumeList(myPerfumeList)
 			.build();
 	}
 

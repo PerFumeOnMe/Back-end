@@ -29,6 +29,8 @@ import PerfumeOnMe.spring.domain.mapping.QFragrancePrice;
 import PerfumeOnMe.spring.domain.mapping.QFragranceSeason;
 import PerfumeOnMe.spring.domain.mapping.QFragranceTopNote;
 import PerfumeOnMe.spring.web.dto.fragrance.FragranceRequestDTO;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 
 @Repository
@@ -36,7 +38,6 @@ import lombok.RequiredArgsConstructor;
 public class FragranceRepositoryImpl implements FragranceRepositoryCustom {
 
 	private final JPAQueryFactory queryFactory;
-
 	// Q 도메인 객체를 클래스 레벨에서 선언
 	private final QFragrance f = QFragrance.fragrance;
 	private final QFragrancePrice fp = QFragrancePrice.fragrancePrice;
@@ -51,6 +52,8 @@ public class FragranceRepositoryImpl implements FragranceRepositoryCustom {
 	private final QNote topNote = new QNote("topNote");
 	private final QNote middleNote = new QNote("middleNote");
 	private final QNote baseNote = new QNote("baseNote");
+	@PersistenceContext
+	private EntityManager em;
 
 	// 향수 상세
 	@Override

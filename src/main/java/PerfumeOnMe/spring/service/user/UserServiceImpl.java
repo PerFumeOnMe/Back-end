@@ -1,7 +1,11 @@
 package PerfumeOnMe.spring.service.user;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,17 +14,28 @@ import org.springframework.transaction.annotation.Transactional;
 
 import PerfumeOnMe.spring.apiPayload.code.status.ErrorStatus;
 import PerfumeOnMe.spring.apiPayload.exception.GeneralException;
-import PerfumeOnMe.spring.config.security.auth.converter.AuthConverter;
 import PerfumeOnMe.spring.config.security.auth.dto.AuthResponseDTO;
 import PerfumeOnMe.spring.config.security.auth.manager.LogoutAccessTokenManager;
 import PerfumeOnMe.spring.config.security.auth.manager.RefreshTokenManager;
 import PerfumeOnMe.spring.config.security.auth.provider.JwtTokenProvider;
+import PerfumeOnMe.spring.config.security.auth.service.LoginService;
 import PerfumeOnMe.spring.config.security.auth.token.JwtAuthenticationToken;
 import PerfumeOnMe.spring.config.security.auth.userDetails.CustomUserDetails;
+import PerfumeOnMe.spring.converter.FragranceConverter;
 import PerfumeOnMe.spring.converter.UserConverter;
+import PerfumeOnMe.spring.converter.UserNoteConverter;
+import PerfumeOnMe.spring.domain.Fragrance;
+import PerfumeOnMe.spring.domain.Note;
 import PerfumeOnMe.spring.domain.User;
 import PerfumeOnMe.spring.domain.enums.Social;
+import PerfumeOnMe.spring.domain.mapping.UserFragrance;
+import PerfumeOnMe.spring.domain.mapping.UserNote;
+import PerfumeOnMe.spring.repository.note.NoteRepository;
 import PerfumeOnMe.spring.repository.user.UserRepository;
+import PerfumeOnMe.spring.repository.userFragrance.UserFragranceRepository;
+import PerfumeOnMe.spring.repository.userNote.UserNoteRepository;
+import PerfumeOnMe.spring.web.dto.fragrance.FragranceRequestDTO;
+import PerfumeOnMe.spring.web.dto.fragrance.FragranceResponseDTO;
 import PerfumeOnMe.spring.web.dto.user.UserRequestDTO;
 import PerfumeOnMe.spring.web.dto.user.UserResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,6 +53,10 @@ public class UserServiceImpl implements UserService {
 	private final RefreshTokenManager refreshTokenManager;
 	private final LogoutAccessTokenManager logoutAccessTokenManager;
 	private final UserDetailsService userDetailsService;
+	private final UserNoteRepository userNoteRepository;
+	private final NoteRepository noteRepository;
+	private final UserFragranceRepository userFragranceRepository;
+	private final LoginService loginService;
 
 	// 사용자 회원가입
 	@Override
@@ -75,27 +94,13 @@ public class UserServiceImpl implements UserService {
 
 		// 리프레시 토큰에서 Subject 추출
 		String loginId = jwtTokenProvider.getSubject(reqRefreshToken);
+		UserDetails userDetails = userDetailsService.loadUserByUsername(loginId);
 
 		// 토큰 생성 및 DTO에 담기
-		UserDetails userDetails = userDetailsService.loadUserByUsername(loginId);
 		Social social = ((CustomUserDetails)userDetails).getSocial();
 		JwtAuthenticationToken request = new JwtAuthenticationToken(
 			userDetails, null, userDetails.getAuthorities(), social);
-		String accessToken = jwtTokenProvider.createAccessToken(request);
-		String refreshToken = jwtTokenProvider.createRefreshToken(request);
-		Long userId = ((CustomUserDetails)userDetails).getUserId();
-		AuthResponseDTO.LoginResult loginResultDTO = AuthConverter.toLoginResult(refreshToken, userId, social);
-
-		// 새로 발급한 리프레시 토큰을 Redis에 저장 - 덮어씌우기
-		refreshTokenManager.saveRefreshToken(loginId, refreshToken);
-
-		// 응답 헤더 작성
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("application/json");
-		response.setStatus(HttpServletResponse.SC_OK);
-		response.setHeader("Authorization", "Bearer " + accessToken);
-
-		return loginResultDTO;
+		return loginService.generateAuthResponse(loginId, request, social, response);
 	}
 
 	// 사용자 로그아웃 - 액세스 토큰과 리프레시 토큰 블랙리스트화
@@ -127,5 +132,95 @@ public class UserServiceImpl implements UserService {
 		String loginId = logout(request);
 		Optional<User> findUser = userRepository.findUserByLoginId(loginId);
 		findUser.ifPresent(userRepository::delete);
+	}
+
+	// 온보딩 요청 정보 설정 메서드
+	public void saveUserNote(User user, List<Long> noteCategoryIdList) {
+		noteCategoryIdList.forEach(noteCategoryId -> {
+			Note note = noteRepository.findById(noteCategoryId)
+				.orElseThrow(() -> new GeneralException(ErrorStatus.INVALID_NOTE_ID));
+			UserNote userNote = UserNoteConverter.toUserNote(note);
+			userNoteRepository.save(userNote);
+			user.addUserNote(userNote); // 양방향 연관관계만 설정
+		});
+	}
+
+	// 온보딩
+	@Override
+	public void onboarding(UserRequestDTO.Onboarding request, CustomUserDetails userDetails) {
+
+		// 닉네임 중복 검증
+		if (userRepository.findUserByNickname(request.getNickname()).isPresent()) {
+			throw new GeneralException(ErrorStatus.NICKNAME_DUPLICATE);
+		}
+
+		// 사용자 조회
+		User findUser = userRepository.findUserByLoginId(userDetails.getUsername())
+			.orElseThrow(() -> new GeneralException(ErrorStatus.LOGIN_ID_NOT_FOUND));
+
+		// 온보딩 요청 정보 설정 - nickname, imageURL, gender, age
+		findUser.onboarding(request);
+
+		// 온보딩 요청 정보 설정 - noteCategoryId
+		saveUserNote(findUser, request.getNoteCategoryId());
+	}
+
+	// 사용자 선호 향 수정
+	@Override
+	public void updateUserNote(UserRequestDTO.UserNoteUpdate request, CustomUserDetails userDetails) {
+
+		// 사용자 조회
+		User findUser = userRepository.findUserByLoginId(userDetails.getUsername())
+			.orElseThrow(() -> new GeneralException(ErrorStatus.LOGIN_ID_NOT_FOUND));
+
+		// 사용자 선호 노트 정보 삭제
+		userNoteRepository.deleteAllByUser(findUser);
+		findUser.getUserNoteList().clear();
+
+		// 온보딩 요청 정보 설정 - noteCategoryId
+		saveUserNote(findUser, request.getNoteCategoryId());
+	}
+
+	// 마이페이지 프로필 조회 - 닉네임, 선호하는 향 3가지, 프로필 사진
+	@Override
+	public UserResponseDTO.MyPageProfileResponse getUserProfile(Long userId) {
+		// 사용자 조회
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> new GeneralException(ErrorStatus.LOGIN_ID_NOT_FOUND));
+
+		return UserConverter.toMyPageProfileResponse(user);
+	}
+
+	// 마이페이지 프로필 사진 변경
+	@Override
+	public void updateProfileImage(Long userId, String imageUrl) {
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> new GeneralException(ErrorStatus.LOGIN_ID_NOT_FOUND));
+		user.updateImageURL(imageUrl);
+		userRepository.save(user);
+	}
+
+	// 마이페이지 즐겨찾기 목록 조회
+	@Override
+	public FragranceResponseDTO.FragranceSearchFinalResult getFavoriteFragrances(
+		FragranceRequestDTO.FragranceAllRequest request, Long userId) {
+
+		PageRequest pageable = PageRequest.of(request.getPage(), request.getSize());
+		Page<UserFragrance> userFragranceList = userFragranceRepository.findAllByUserId(userId, pageable);
+
+		List<FragranceResponseDTO.FragranceSearchResult> content = userFragranceList.getContent().stream()
+			.map(fragrance -> { // fragrance = UserFragrance
+				Fragrance f = fragrance.getFragrance();
+				boolean liked = (userId != null) && Like(userId, f.getId());
+				return FragranceConverter.toSearchResultDto(f, liked);
+			})
+			.collect(Collectors.toList());
+
+		return FragranceConverter.toSearchFinalResult(content, userFragranceList.hasNext());
+	}
+
+	// 사용자 id 와 향수 id 를 받아와 즐겨찾기 테이블에 해댱 향수가 있는지 없는지 확인하는 메서드
+	private boolean Like(Long userId, Long fragranceId) {
+		return userFragranceRepository.existsByUserIdAndFragranceId(userId, fragranceId);
 	}
 }

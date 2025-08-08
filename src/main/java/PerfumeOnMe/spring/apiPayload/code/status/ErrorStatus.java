@@ -20,9 +20,11 @@ public enum ErrorStatus implements BaseErrorCode {
 	// 사용자 에러
 	LOGIN_ID_DUPLICATE(HttpStatus.BAD_REQUEST, "MEMBER4001", "이미 사용된 아이디입니다."),
 	PASSWORD_NOT_MATCH(HttpStatus.BAD_REQUEST, "MEMBER4002", "비밀번호가 일치하지 않습니다."),
-	LOGIN_ID_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4003", "해당 아이디를 가진 사용자가 존재하지 않습니다."),
+	LOGIN_ID_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4003", "해당 로그인 아이디를 가진 사용자가 존재하지 않습니다."),
 	LOGIN_PARSING_FAIL(HttpStatus.BAD_REQUEST, "MEMBER4004", "로그인 DTO 변환을 실패했습니다."),
 	LOGIN_UNKNOWN_ERROR(HttpStatus.BAD_REQUEST, "MEMBER4005", "로그인 중 알 수 없는 오류가 발생했습니다."),
+	NICKNAME_DUPLICATE(HttpStatus.BAD_REQUEST, "MEMBER4006", "이미 사용된 닉네임입니다."),
+	USER_ID_NULL(HttpStatus.UNAUTHORIZED, "MEMBER4007", "유저 정보가 존재 하지 않습니다. "),
 
 	// 토큰 에러
 	INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN4001", "유효하지 않은 토큰입니다."),
@@ -65,6 +67,44 @@ public enum ErrorStatus implements BaseErrorCode {
 	PROMPT_LOADING_FAIL(HttpStatus.BAD_REQUEST, "CHATBOT4002", "프롬프트 로딩에 실패하였습니다."),
 	REQUIRED_MESSAGES(HttpStatus.BAD_REQUEST, "CHATBOT4003", "메세지를 입력하세요."),
 	OPENAI_RATE_LIMIT_EXCEEDED(HttpStatus.TOO_MANY_REQUESTS, "CHATBOT429", "OpenAI API 요청 한도를 초과했습니다. 잠시 후 다시 시도해주세요."),
+
+	// FastAPI 연동 에러
+	FASTAPI_COMMUNICATION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "FASTAPI5001", "FastAPI 서버 통신 중 오류가 발생했습니다."),
+
+	//JSON 파싱 에러
+	JSON_PARSE_ERROR(HttpStatus.BAD_REQUEST, "JSON4001", "JSON 파싱에 실패했습니다."),
+
+	//
+
+	// 다이어리 에러
+	DIARY_NOT_FOUND(HttpStatus.BAD_REQUEST, "DIARY4001", "해당 다이어리를 찾을 수 없습니다."),
+	USER_DIARY_FORBIDDEN(HttpStatus.BAD_REQUEST, "DIARY4002", "다이어리 소유자의 요청이 아닙니다."),
+	USER_DIARY_NOT_FOUND(HttpStatus.BAD_REQUEST, "DIARY4003", "해당 날짜에 해당하는 다이어리를 찾을 수 없습니다."),
+	MONTH_DIARY_NOT_FOUND(HttpStatus.BAD_REQUEST, "DIARY4004", "해당 월에 작성된 다이어리가 없습니다."),
+
+	// PBTI 에러
+	CALL_WEBCLIENT_ERROR(HttpStatus.BAD_REQUEST, "PBTI4001", "WebClient 호출 과정에서 에러가 발생했습니다."),
+	JSON_PARSING_ERROR(HttpStatus.BAD_REQUEST, "PBTI4002", "GPT 응답 Json 파싱 과정에서 에러가 발생했습니다."),
+	SAVE_REDIS_ERROR(HttpStatus.BAD_REQUEST, "PBTI4003", "Redis 저장 중 직렬화 오류가 발생했습니다."),
+	PBTI_REDIS_KEY_EXPIRED(HttpStatus.BAD_REQUEST, "PBTI4004", "사용자의 PBTI 분석 결과가 Redis에서 만료되었거나 저장되어 있지 않습니다."),
+	PBTI_NOT_EXIST_ERROR(HttpStatus.BAD_REQUEST, "PBTI4005", "존재하지 않는 PBTI 입니다."),
+	PBTI_USER_NOT_MATCH(HttpStatus.BAD_REQUEST, "PBTI4006", "본인의 PBTI 결과만 조회할 수 있습니다."),
+
+	// S3 에러
+	INVALID_IMAGE_EXTENSION(HttpStatus.BAD_REQUEST, "S3IMAGE4001", "지원하지 않은 파일 확장자입니다."),
+
+	// 이미지 키워드 에러
+	EXPIRED_IMAGEKEYWORD_RESULT(HttpStatus.REQUEST_TIMEOUT, "IMAGEKEYWORD4001", "이미지 키워드 미리보기 결과가 만료되었습니다. 다시 시도해주세요."),
+	ALREADY_KEYWORD_NAME(HttpStatus.BAD_REQUEST, "IMAGEKEYWORD4002", "이미 같은 이름으로 저장된 이미지 키워드 결과가 있습니다."),
+	IMAGEKEYWORD_ID_NULL(HttpStatus.BAD_REQUEST, "IMAGEKEYWORD4003", "해당 이미지 키워드 결과 정보가 존재하지 않습니다."),
+	INVALID_IMAGEKEYWORD_ID(HttpStatus.BAD_REQUEST, "IMAGEKEYWORD4004", "해당 이미지 키워드 결과에 접근할 수 없습니다."),
+
+	// 향수공방 에러
+	WORKSHOP_TOTAL_VOLUME_OVERFLOW(HttpStatus.BAD_REQUEST, "WORKSHOP4001", "선택한 노트들의 총 용량은 10 초과할 수 없습니다."),
+	EXPIRED_WORKSHOP_RESULT(HttpStatus.BAD_REQUEST, "WORKSHOP4002", "향수공방 미리보기 결과가 만료되었습니다. 다시 시도해주세요."),
+	WORKSHOP_NAME_DUPLICATE(HttpStatus.BAD_REQUEST, "WORKSHOP4003", "이미 같은 이름으로 저장된 향수공방 결과가 있습니다."),
+	WORKSHOP_USER_NOT_MATCH(HttpStatus.BAD_REQUEST, "WORKSHOP4004", "해당 향수공방 결과에 접근할 수 없습니다."),
+	WORKSHOP_ID_NULL(HttpStatus.UNAUTHORIZED, "WORKSHOP4005", "해당 향수공방 결과 정보가 존재하지 않습니다."),
 
 	// 예시,,,
 	ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다.");

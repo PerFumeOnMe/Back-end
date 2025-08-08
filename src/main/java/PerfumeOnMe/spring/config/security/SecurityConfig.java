@@ -30,7 +30,7 @@ public class SecurityConfig {
 	public static final String[] AUTH_WHITELIST = {
 		"/v3/api-docs/**", "/swagger-resources/**", "/swagger-ui.html", "/swagger-ui/**",
 		"/swagger/**", "/users/signup", "/auth/login", "/auth/social/**", "/users/reissue",
-		"/health", "/fragrances/allow/**", "/auth/social/**", "/favicon.ico", "/images/**",
+		"/health", "/fragrances/allow/**", "/favicon.ico", "/images/**",
 		"/css/**", "/js/**", "/webjars/**"
 	};
 	private final JwtAuthenticationFilter JwtAuthenticationFilter;
@@ -51,8 +51,8 @@ public class SecurityConfig {
 			.exceptionHandling(exception -> exception
 				.authenticationEntryPoint(JwtAuthenticationEntryPoint)
 				.accessDeniedHandler(JwtAccessDeniedHandler))
-			// filter 추가 및 수정
-			.addFilterAt(jwtLoginFilter, UsernamePasswordAuthenticationFilter.class)
+			// filter 추가
+			// .addFilterAt(jwtLoginFilter, UsernamePasswordAuthenticationFilter.class) // 로그인 필터 제거
 			.addFilterBefore(JwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 			.addFilterBefore(JwtExceptionHandlerFilter, JwtAuthenticationFilter.class)
 			// Session 관련 설정 - 소셜 로그인 과정에서 필요할까봐 IF_REQUIRED로 설정
@@ -72,14 +72,14 @@ public class SecurityConfig {
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration config = new CorsConfiguration();
-		config.setAllowedOrigins(List.of("*")); // spring: [localhost:8080, localhost:5000], localhost:8081
-		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+		config.setAllowedOrigins(List.of("http://localhost:8080", "http://localhost:5000", "http://52.198.172.96:8080",
+			"http://localhost:5173")); // web 배포 주소 포함해야 함
+		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
 		config.setAllowedHeaders(List.of("Authorization", "Refresh-Token", "Content-Type"));
-		config.setAllowCredentials(false); // origin 바꾸면 true로 설정
+		config.setAllowCredentials(true);
 		config.setExposedHeaders(List.of("Authorization", "Refresh-Token", "Content-Type"));
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", config);
 		return source;
 	}
 }
-
