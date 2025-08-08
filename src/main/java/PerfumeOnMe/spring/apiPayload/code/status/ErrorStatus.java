@@ -64,6 +64,7 @@ public enum ErrorStatus implements BaseErrorCode {
 	FILE_NOT_FOUND(HttpStatus.BAD_REQUEST, "CHATBOT4001", "프롬프트 파일을 찾을 수 없습니다."),
 	PROMPT_LOADING_FAIL(HttpStatus.BAD_REQUEST, "CHATBOT4002", "프롬프트 로딩에 실패하였습니다."),
 	REQUIRED_MESSAGES(HttpStatus.BAD_REQUEST, "CHATBOT4003", "메세지를 입력하세요."),
+	OPENAI_RATE_LIMIT_EXCEEDED(HttpStatus.TOO_MANY_REQUESTS, "CHATBOT429", "OpenAI API 요청 한도를 초과했습니다. 잠시 후 다시 시도해주세요."),
 
 	// 예시,,,
 	ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다.");
