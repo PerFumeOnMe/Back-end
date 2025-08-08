@@ -1,8 +1,8 @@
 package PerfumeOnMe.spring.config.security.oauth.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,7 +25,7 @@ public class OAuthController {
 
 	private final OAuthServiceFactory serviceFactory;
 
-	@GetMapping("/{provider}")
+	@PostMapping("/{provider}")
 	@Operation(
 		summary = "소셜 로그인 API",
 		description = "소셜 액세스 토큰을 발급하고, 해당 토큰으로 사용자 정보를 가져와 회원가입 및 로그인을 진행하는 API입니다.",
@@ -51,5 +51,14 @@ public class OAuthController {
 		AuthResponseDTO.LoginResult result = oAuthService.oAuthLogin(code, response);
 
 		return ResponseEntity.ok().body(ApiResponse.onSuccess(result));
+	}
+
+	// 인가 코드 확인용 임시 컨트롤러
+	// @GetMapping("/{provider}")
+	public ResponseEntity<ApiResponse<String>> getCode(
+		@RequestParam("code") String code,
+		@PathVariable("provider") String Provider,
+		HttpServletResponse response) {
+		return ResponseEntity.ok(ApiResponse.onSuccess(code));
 	}
 }
