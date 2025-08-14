@@ -37,7 +37,7 @@ public interface FragranceControllerDocs {
 
 	@Operation(
 		summary = "향수 키워드 검색",
-		description = "keyword 로 향수 이름을 검색하고, 페이징 처리된 결과를 반환합니다.",
+		description = "keyword 로 '향수이름' 또는 '브랜드'를 검색하고, 페이징 처리된 결과를 반환합니다.",
 		responses = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FragranceResponseDTO.FragranceSearchResult.class))),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "FRAGRANCE4002", description = "검색어를 2글자 이상 입력해주세요.")
