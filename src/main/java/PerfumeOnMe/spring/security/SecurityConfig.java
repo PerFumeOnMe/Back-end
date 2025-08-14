@@ -44,7 +44,6 @@ public class SecurityConfig {
 		http
 			// 요청 경로별 인증 확인 설정
 			.authorizeHttpRequests(auth -> auth
-				// .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 				.requestMatchers(AUTH_WHITELIST).permitAll()
 				.anyRequest().authenticated() // 개발 진행할 때 임시로 풀어두기 -> 나중에 authenticated()로 변경
 			)
@@ -74,7 +73,7 @@ public class SecurityConfig {
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration config = new CorsConfiguration();
 		config.setAllowedOrigins(List.of("http://localhost:8080", "http://localhost:5000", "http://52.198.172.96:8080",
-			"http://localhost:5173", "https://frontend-git-main-jskim6335-5256s-projects.vercel.app:443",
+			"http://localhost:5173",
 			"https://api.perfumeonme.p-e.kr", "https://perfumeonme.vercel.app"));
 		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
 		config.setAllowedHeaders(List.of("Authorization", "Refresh-Token", "Content-Type"));
