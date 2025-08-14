@@ -93,6 +93,61 @@ public class FragranceRepositoryImpl implements FragranceRepositoryCustom {
 		return PageableExecutionUtils.getPage(content, pageable, () -> count != null ? count : 0);
 	}
 
+	/*
+	 * 향수 검색 관련 메서드
+	 */
+
+	/** 이름 containsIgnoreCase OR 브랜드 매칭(in) */
+	private BooleanExpression nameOrBrandMatches(String rawKeyword) {
+		if (isBlank(rawKeyword))
+			return null;
+
+		// 앞뒤 공백 제거
+		String keyword = rawKeyword.trim();
+
+		// 이름 containsIgnoreCase
+		BooleanExpression byName = f.name.containsIgnoreCase(keyword);
+
+		// 브랜드 enum 후보들 선별 (영문 enum 명 / 한글표기 모두 부분일치)
+		List<Brand> matchedBrands = findMatchingBrands(keyword);
+
+		// 브랜드 조건 (후보가 없을 수도 있음)
+		BooleanExpression byBrand = matchedBrands.isEmpty() ? null : f.brand.in(matchedBrands);
+
+		// 이름 또는 브랜드
+		return or(byName, byBrand);
+	}
+
+	private List<Brand> findMatchingBrands(String keyword) {
+		// 비교 일관성을 위해 키워드를 소문자로 통일
+		String kw = keyword.toLowerCase();
+		List<Brand> result = new ArrayList<>();
+
+		// 모든 브랜드 enum 상수를 순회.
+		for (Brand b : Brand.values()) {
+			// enum 상수명(영문) 또는 showBrand(한/영 혼합 표시)에 부분일치
+			String name = b.name().toLowerCase();
+			String show = b.getShowBrand() == null ? "" : b.getShowBrand().toLowerCase();
+			if (name.contains(kw) || show.contains(kw)) {
+				result.add(b);
+			}
+		}
+		return result;
+	}
+
+	/** 유틸: OR 결합 (null 안전) */
+	private BooleanExpression or(BooleanExpression a, BooleanExpression b) {
+		if (a == null)
+			return b;
+		if (b == null)
+			return a;
+		return a.or(b);
+	}
+
+	private boolean isBlank(String s) {
+		return s == null || s.trim().isEmpty();
+	}
+
 	// 향수 필터링
 	@Override
 	public Page<Fragrance> findByFilter(FragranceRequestDTO.FragranceFilterRequest r, Pageable pageable) {
@@ -156,59 +211,4 @@ public class FragranceRepositoryImpl implements FragranceRepositoryCustom {
 		return new PageImpl<>(result, pageable, total != null ? total : 0);
 	}
 
-
-	/*
-	 * 향수 검색 관련 메서드
-	 */
-
-	/** 이름 containsIgnoreCase OR 브랜드 매칭(in) */
-	private BooleanExpression nameOrBrandMatches(String rawKeyword) {
-		if (isBlank(rawKeyword))
-			return null;
-
-		// 앞뒤 공백 제거
-		String keyword = rawKeyword.trim();
-
-		// 이름 containsIgnoreCase
-		BooleanExpression byName = f.name.containsIgnoreCase(keyword);
-
-		// 브랜드 enum 후보들 선별 (영문 enum 명 / 한글표기 모두 부분일치)
-		List<Brand> matchedBrands = findMatchingBrands(keyword);
-
-		// 브랜드 조건 (후보가 없을 수도 있음)
-		BooleanExpression byBrand = matchedBrands.isEmpty() ? null : f.brand.in(matchedBrands);
-
-		// 이름 또는 브랜드
-		return or(byName, byBrand);
-	}
-
-	private List<Brand> findMatchingBrands(String keyword) {
-		// 비교 일관성을 위해 키워드를 소문자로 통일
-		String kw = keyword.toLowerCase();
-		List<Brand> result = new ArrayList<>();
-
-		// 모든 브랜드 enum 상수를 순회.
-		for (Brand b : Brand.values()) {
-			// enum 상수명(영문) 또는 showBrand(한/영 혼합 표시)에 부분일치
-			String name = b.name().toLowerCase();
-			String show = b.getShowBrand() == null ? "" : b.getShowBrand().toLowerCase();
-			if (name.contains(kw) || show.contains(kw)) {
-				result.add(b);
-			}
-		}
-		return result;
-	}
-
-	/** 유틸: OR 결합 (null 안전) */
-	private BooleanExpression or(BooleanExpression a, BooleanExpression b) {
-		if (a == null)
-			return b;
-		if (b == null)
-			return a;
-		return a.or(b);
-	}
-
-	private boolean isBlank(String s) {
-		return s == null || s.trim().isEmpty();
-	}
 }
