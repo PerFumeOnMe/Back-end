@@ -73,7 +73,8 @@ public class SecurityConfig {
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration config = new CorsConfiguration();
 		config.setAllowedOrigins(List.of("http://localhost:8080", "http://localhost:5000", "http://52.198.172.96:8080",
-			"http://localhost:5173")); // web 배포 주소 포함해야 함
+			"http://localhost:5173", "https://frontend-git-main-jskim6335-5256s-projects.vercel.app:443",
+			"https://52.198.172.96:443"));
 		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
 		config.setAllowedHeaders(List.of("Authorization", "Refresh-Token", "Content-Type"));
 		config.setAllowCredentials(true);
