@@ -61,7 +61,7 @@ jobs:
         run: |
           aws ec2 authorize-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
 
-      - name: AWS EC2 Connection
+      - name: AWS EC2 Connection & Deploy Spring (bind to loopback)
         uses: appleboy/ssh-action@v0.1.6
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -70,16 +70,20 @@ jobs:
           port: ${{ secrets.EC2_SSH_PORT }}
           timeout: 500s
           script: |
+            set -e
+            
+            sudo docker network create perfume-network || true
+            
             sudo docker stop perfumeonme || true
             sudo docker rm perfumeonme || true
             sudo docker rmi chanee29/perfumeonme || true
             sudo docker pull chanee29/perfumeonme
             
             echo "🚀 Starting new container with the following environment variables:"
-            sudo docker network create perfume-network || true
             
-            sudo docker run -d -p 8080:8080 --name perfumeonme \
+            sudo docker run -d --name perfumeonme \
               --network perfume-network \
+              -p 127.0.0.1:8080:8080 \
               -e SPRING_PROFILES_ACTIVE=dev \
               -e DB_URL=${{ secrets.ENV_DB_URL }} \
               -e DB_USERNAME=${{ secrets.ENV_DB_USERNAME }} \
@@ -97,6 +101,7 @@ jobs:
               -e EXTERNAL_FASTAPI_PBTI_URL=${{ secrets.FASTAPI_PBTI_URL }} \
               -e IMAGE_KEYWORD_CHARACTER_BASE_PATH=${{ secrets.IMAGE_KEYWORD_CHARACTER_BASE_PATH }} \
               chanee29/perfumeonme
+            
 
       - name: Remove GitHub IP FROM security group
         run: |
