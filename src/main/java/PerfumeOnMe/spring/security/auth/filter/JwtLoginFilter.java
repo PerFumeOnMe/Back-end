@@ -78,6 +78,7 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
 		// Authentication에서 principal String 추출
 		String loginId = authResult.getName();
 		Long userId = ((CustomUserDetails)authResult.getPrincipal()).getUserId();
+		String name = ((CustomUserDetails)authResult.getPrincipal()).getName();
 
 		// 사용자의 로그아웃 액세스 토큰이 존재하는 경우 삭제
 		if (logoutAccessTokenManager.findLogoutAccessToken(loginId)) {
@@ -87,7 +88,8 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
 		// 토큰 생성 및 DTO에 담기
 		String accessToken = jwtTokenProvider.createAccessToken(authResult);
 		String refreshToken = jwtTokenProvider.createRefreshToken(authResult);
-		AuthResponseDTO.LoginResult loginResultDTO = AuthConverter.toLoginResult(refreshToken, userId, Social.LOCAL);
+		AuthResponseDTO.LoginResult loginResultDTO = AuthConverter.toLoginResult(refreshToken, userId, Social.LOCAL,
+			name);
 
 		// 리프레시 토큰을 Redis에 저장
 		refreshTokenManager.saveRefreshToken(loginId, refreshToken);
