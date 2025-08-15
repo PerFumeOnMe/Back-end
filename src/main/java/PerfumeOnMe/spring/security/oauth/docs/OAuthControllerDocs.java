@@ -8,15 +8,20 @@ import PerfumeOnMe.spring.apiPayload.ApiResponse;
 import PerfumeOnMe.spring.security.auth.dto.AuthResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 
+@Tag(name = "OAuth Login", description = "소셜 로그인 API")
 public interface OAuthControllerDocs {
 
 	@Operation(
 		summary = "소셜 로그인 API",
 		description = "소셜 액세스 토큰을 발급하고, 해당 토큰으로 사용자 정보를 가져와 회원가입 및 로그인을 진행하는 API입니다.",
 		responses = {
-			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "성공입니다."),
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "성공입니다.",
+				content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthResponseDTO.LoginResult.class))),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "MEMBER4003", description = "해당 아이디를 가진 사용자가 존재하지 않습니다."),
 		},
 		parameters = {
