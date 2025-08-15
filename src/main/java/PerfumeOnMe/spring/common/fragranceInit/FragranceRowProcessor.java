@@ -216,8 +216,25 @@ public class FragranceRowProcessor {
 			case "YVES SAINT LAURENT" -> Brand.YVES_SAINT_LAURENT;
 			case "LE LABO" -> Brand.LE_LABO;
 			case "VERSACE" -> Brand.VERSACE;
-			case "메종 프란시스 커정" -> Brand.MAISON_FRANCIS_KURKDJIAN;
-
+			case "MAISON FRANCIS KURKDJIAN" -> Brand.MAISON_FRANCIS_KURKDJIAN;
+			case "PRADA" -> Brand.PRADA;
+			case "LOUIS VUITTON" -> Brand.LOUIS_VUITTON;
+			case "CREED" -> Brand.CREED;
+			case "GIVENCHY" -> Brand.GIVENCHY;
+			case "BDK" -> Brand.BDK;
+			case "SERGE LUTENS" -> Brand.SERGE_LUTENS;
+			case "NISHANE" -> Brand.NISHANE;
+			case "GIORGIO ARMANI" -> Brand.GIORGIO_ARMANI;
+			case "KILIAN" -> Brand.KILIAN;
+			case "ETAT LIBRE DORANGE" -> Brand.ETAT_LIBRE_DORANGE;
+			case "XERIOFF" -> Brand.XERIOFF;
+			case "ACQUA DI PARMA" -> Brand.ACQUA_DI_PARMA;
+			case "HERMES" -> Brand.HERMES;
+			case "DIOR" -> Brand.DIOR;
+			case "GUERLAIN" -> Brand.GUERLAIN;
+			case "L ART ET LA MATIÈRE BY GUERLAIN" -> Brand.L_ART_ET_LA_MATIERE_BY_GUERLAIN;
+			case "CHANEL" -> Brand.CHANEL;
+			case "LES EXCLUSIFS DE CHANEL" -> Brand.LES_EXCLUSIFS_DE_CHANEL;
 			default -> throw new GeneralException(ErrorStatus.UNSUPPORTED_BRAND, "지원하지 않는 브랜드: " + brandStr);
 		};
 	}
