@@ -31,7 +31,7 @@ GPT 기반 분석, 키워드 검색, 설문 등 다양한 방법을 통해 사�
 
 ## 🔗 배포 주소
 
-> [🌐 퍼퓨온미 바로가기](https://perfuonme.example.com)
+> [🌐 퍼퓨온미 바로가기](https://perfumeonme.vercel.app)
 
 ---
 
