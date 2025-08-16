@@ -71,6 +71,7 @@ public class LoginServiceImpl implements LoginService {
 
 		// Authentication에서 userId 추출
 		Long userId = ((CustomUserDetails)request.getPrincipal()).getUserId();
+		String name = ((CustomUserDetails)request.getPrincipal()).getName();
 
 		// 토큰 생성 및 DTO에 담기
 		String accessToken = jwtTokenProvider.createAccessToken(request);
@@ -85,6 +86,6 @@ public class LoginServiceImpl implements LoginService {
 		response.setStatus(HttpServletResponse.SC_OK);
 		response.setHeader("Authorization", "Bearer " + accessToken);
 
-		return AuthConverter.toLoginResult(refreshToken, userId, social);
+		return AuthConverter.toLoginResult(refreshToken, userId, social, name);
 	}
 }

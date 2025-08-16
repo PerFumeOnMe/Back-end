@@ -5,11 +5,13 @@ import PerfumeOnMe.spring.security.auth.dto.AuthResponseDTO;
 
 public class AuthConverter {
 
-	public static AuthResponseDTO.LoginResult toLoginResult(String refreshToken, Long userId, Social social) {
+	public static AuthResponseDTO.LoginResult toLoginResult(String refreshToken, Long userId, Social social,
+		String name) {
 		return AuthResponseDTO.LoginResult.builder()
 			.refreshToken(refreshToken)
 			.userId(userId)
 			.social(social)
+			.name(name)
 			.build();
 	}
 
