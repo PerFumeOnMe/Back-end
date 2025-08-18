@@ -1,0 +1,93 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  sql:
+    init:
+      mode: never
+  jpa:
+    hibernate:
+      ddl-auto: update # create X
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+        use_sql_comments: true
+        default_batch_fetch_size: 100
+    show-sql: true
+  data:
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST:host.docker.internal}
+      port: ${SPRING_DATA_REDIS_PORT:6379}
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+  cache:
+    type: redis
+  security:
+    oauth2:
+      kakao:
+        client-id: ${KAKAO_REST_API_KEY}
+        client-secret: ${KAKAO_CLIENT_SECRET}
+        redirect-uri: "http://localhost:5173/oauth/kakao/callback"
+        authorization-uri: https://kauth.kakao.com/oauth/authorize
+        token-uri: https://kauth.kakao.com/oauth/token
+        user-info-uri: https://kapi.kakao.com/v2/user/me
+        user-name-attribute: id
+        scope:
+          - profile_nickname
+          - profile_image
+          - account_email
+          - name
+        authorization-grant-type: authorization_code
+jwt:
+  token:
+    secretKey: ${JWT_SECRET:default_dummy}
+    expiration:
+      access: 1209600000 # 2H(7200000) -> 연동 끝나면 수정
+      refresh: 1209600000 # 2Week(1209600000)
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
+openai:
+  api-key: ${OPENAI_API_KEY}
+  model: gpt-4
+
+cloud:
+  aws:
+    s3:
+      bucket: ${AWS_S3_BUCKET_NAME}
+      path:
+        profile: user_profiles
+    region:
+      static: ap-northeast-1
+    stack:
+      auto: false
+    credentials:
+      accessKey: ${AWS_S3_ACCESS_KEY_ID}
+      secretKey: ${AWS_S3_SECRET_ACCESS_KEY}
+
+external:
+  fastapi:
+    recommend-url: ${EXTERNAL_FASTAPI_RECOMMEND_URL} # Docker 컨테이너 간 통신
+    pbti-recommend-url: ${EXTERNAL_FASTAPI_PBTI_URL} # Docker 컨테이너 간 통신
+app:
+  image-keyword:
+    character-image-base-path: ${IMAGE_KEYWORD_CHARACTER_BASE_PATH}
+    cache-timeout-minutes: 15
+    fast-api:
+      connect-timeout: 5000
+      read-timeout: 10000
+      max-retries: 3
+      retry-delay: 1000

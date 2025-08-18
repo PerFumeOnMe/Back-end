@@ -1,0 +1,108 @@
+name: PerfumeonMe Dev CI/CD
+
+on:
+  push:
+    branches: [ "develop" ]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'adopt'
+
+      - name: gradlew mod modify
+        run: chmod +x gradlew
+
+      # gradle 캐싱 (0) - 주석처리할수도있음
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Spring Boot Build
+        run: ./gradlew clean build --exclude-task test
+
+      - name: Docker Image Build
+        run: docker build -t chanee29/perfumeonme .
+
+      - name: docker login
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: docker Hub Push
+        run: docker push chanee29/perfumeonme
+
+      - name: get GitHub IP
+        id: ip
+        uses: haythem/public-ip@v1.2
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_PASSWORD }}
+          aws-region: ap-northeast-1
+
+      - name: Add GitHub IP to AWS
+        run: |
+          aws ec2 authorize-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+
+      - name: AWS EC2 Connection & Deploy Spring (bind to loopback)
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          port: ${{ secrets.EC2_SSH_PORT }}
+          timeout: 500s
+          script: |
+            set -e
+            
+            sudo docker network create perfume-network || true
+            
+            sudo docker stop perfumeonme || true
+            sudo docker rm perfumeonme || true
+            sudo docker rmi chanee29/perfumeonme || true
+            sudo docker pull chanee29/perfumeonme
+            
+            echo "🚀 Starting new container with the following environment variables:"
+            
+            sudo docker run -d --name perfumeonme \
+              --network perfume-network \
+              -p 127.0.0.1:8080:8080 \
+              -e SPRING_PROFILES_ACTIVE=dev \
+              -e DB_URL=${{ secrets.ENV_DB_URL }} \
+              -e DB_USERNAME=${{ secrets.ENV_DB_USERNAME }} \
+              -e DB_PASSWORD=${{ secrets.ENV_DB_PASSWORD }} \
+              -e SPRING_DATA_REDIS_HOST=${{ secrets.ENV_REDIS_HOST }} \
+              -e SPRING_DATA_REDIS_PORT=${{ secrets.ENV_REDIS_PORT }} \
+              -e JWT_SECRET=${{ secrets.ENV_JWT_SECRET }} \
+              -e OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} \
+              -e KAKAO_REST_API_KEY=${{ secrets.KAKAO_REST_API_KEY }} \
+              -e KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }} \
+              -e AWS_S3_ACCESS_KEY_ID=${{ secrets.AWS_S3_ACCESS_KEY_ID }} \
+              -e AWS_S3_SECRET_ACCESS_KEY=${{ secrets.AWS_S3_SECRET_ACCESS_KEY }} \
+              -e AWS_S3_BUCKET_NAME=${{ secrets.AWS_S3_BUCKET_NAME }} \
+              -e EXTERNAL_FASTAPI_RECOMMEND_URL=${{ secrets.FASTAPI_RECOMMEND_URL }} \
+              -e EXTERNAL_FASTAPI_PBTI_URL=${{ secrets.FASTAPI_PBTI_URL }} \
+              -e IMAGE_KEYWORD_CHARACTER_BASE_PATH=${{ secrets.IMAGE_KEYWORD_CHARACTER_BASE_PATH }} \
+              chanee29/perfumeonme
+            
+
+      - name: Remove GitHub IP FROM security group
+        run: |
+          aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
