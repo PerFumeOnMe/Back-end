@@ -67,6 +67,7 @@ public class ImageKeywordPreviewService {
 				.description(f.getDescription())
 				.relatedKeywords(f.getRelatedKeywords())
 				.imageUrl(f.getImageUrl())
+				.removebgImageUrl(f.getRemovebgImageUrl())
 				.build()
 			).collect(Collectors.toList());
 
