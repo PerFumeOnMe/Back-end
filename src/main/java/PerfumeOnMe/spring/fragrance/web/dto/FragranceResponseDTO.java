@@ -141,7 +141,7 @@ public class FragranceResponseDTO {
 	public static class MyPerfume {
 		private String brand;
 		private String name;
-		private String imageUrl;
+		private String removebgImageUrl;
 	}
 }
 

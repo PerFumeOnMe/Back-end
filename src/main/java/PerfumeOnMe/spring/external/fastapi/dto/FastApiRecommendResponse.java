@@ -22,5 +22,6 @@ public class FastApiRecommendResponse {
 		private String description;
 		private List<String> relatedKeywords;
 		private String imageUrl;
+		private String removebgImageUrl;
 	}
 }

@@ -68,6 +68,7 @@ public class ImageKeywordResponseDTO {
 			private String description;
 			private List<String> relatedKeywords;
 			private String imageUrl;
+			private String removebgImageUrl;
 		}
 	}
 
@@ -96,6 +97,7 @@ public class ImageKeywordResponseDTO {
 			private String description;
 			private List<String> relatedKeywords;
 			private String imageUrl;
+			private String removebgImageUrl;
 		}
 	}
 
