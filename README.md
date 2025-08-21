@@ -121,6 +121,7 @@ GPT 기반 분석, 키워드 검색, 설문 등 다양한 방법을 통해 사�
                         └── 📁service
                         └── 📁web
                             └── 📁controller
+                            └── 📁docs
                             └── 📁dto
                     └── 📁common
                         └── 📁base
@@ -140,6 +141,7 @@ GPT 기반 분석, 키워드 검색, 설문 등 다양한 방법을 통해 사�
                         └── 📁service
                         └── 📁web
                             └── 📁controller
+                            └── 📁docs
                             └── 📁dto
                     └── 📁external
                         └── 📁fastapi
@@ -166,6 +168,7 @@ GPT 기반 분석, 키워드 검색, 설문 등 다양한 방법을 통해 사�
                             └── 📁validator
                         └── 📁web
                             └── 📁controller
+                            └── 📁docs
                             └── 📁dto
                     └── 📁imagekeyword
                         └── 📁converter
@@ -189,12 +192,14 @@ GPT 기반 분석, 키워드 검색, 설문 등 다양한 방법을 통해 사�
                         └── 📁service
                         └── 📁web
                             └── 📁controller
+                            └── 📁docs
                             └── 📁dto
                     └── 📁s3file
                         └── 📁aws
                         └── 📁converter
                         └── 📁web
                             └── 📁controller
+                            └── 📁docs
                             └── 📁dto
                     └── 📁security
                         └── 📁auth
@@ -227,6 +232,7 @@ GPT 기반 분석, 키워드 검색, 설문 등 다양한 방법을 통해 사�
                             └── 📁validator
                         └── 📁web
                             └── 📁controller
+                            └── 📁docs
                             └── 📁dto
                     └── 📁uuid
                         └── 📁domain
