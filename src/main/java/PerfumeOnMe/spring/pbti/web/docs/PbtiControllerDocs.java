@@ -60,8 +60,7 @@ public interface PbtiControllerDocs {
 		}
 	)
 	ResponseEntity<ApiResponse<PbtiResponseDTO.PbtiResultDetailResponse>> searchPbtiResult(
-		@RequestBody PbtiRequestDTO.PbtiResultDetailRequest request,
-		@AuthenticationPrincipal CustomUserDetails userDetails);
+		@RequestBody PbtiRequestDTO.PbtiResultDetailRequest request);
 
 	@Operation(
 		summary = "PBTI 결과 이름 수정",
