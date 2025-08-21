@@ -8,7 +8,7 @@ import jakarta.validation.ConstraintValidatorContext;
 
 public class ValidTopNoteValidator implements ConstraintValidator<ValidTopNote, String> {
 	private static final Set<String> VALID_TOP_NOTES = Set.of(
-		"베르가뭇", "레몬", "오렌지", "자몽", "사과", "페퍼민트"
+		"베르가못", "레몬", "오렌지", "자몽", "사과", "페퍼민트"
 	);
 
 	@Override

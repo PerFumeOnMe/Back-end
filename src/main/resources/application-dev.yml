@@ -19,7 +19,7 @@ spring:
         format_sql: true
         use_sql_comments: true
         default_batch_fetch_size: 100
-    show-sql: true
+    show-sql: false
   data:
     redis:
       host: ${SPRING_DATA_REDIS_HOST:host.docker.internal}
@@ -37,7 +37,7 @@ spring:
       kakao:
         client-id: ${KAKAO_REST_API_KEY}
         client-secret: ${KAKAO_CLIENT_SECRET}
-        redirect-uri: "http://localhost:5173/oauth/kakao/callback"
+        redirect-uri: "https://perfumeonme.vercel.app/oauth/kakao/callback"
         authorization-uri: https://kauth.kakao.com/oauth/authorize
         token-uri: https://kauth.kakao.com/oauth/token
         user-info-uri: https://kapi.kakao.com/v2/user/me

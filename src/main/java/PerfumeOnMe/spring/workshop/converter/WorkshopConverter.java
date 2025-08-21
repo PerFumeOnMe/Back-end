@@ -69,6 +69,7 @@ public class WorkshopConverter {
 					.description(fragrance.getDescription())
 					.price(fragrance.getPrice())
 					.imageUrl(fragrance.getImageUrl())
+					.removebgImageUrl(fragrance.getRemovebgImageUrl())
 					.build())
 				.collect(Collectors.toList());
 

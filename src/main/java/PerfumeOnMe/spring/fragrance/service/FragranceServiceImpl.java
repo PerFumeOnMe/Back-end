@@ -36,6 +36,7 @@ import PerfumeOnMe.spring.user.repository.UserRepository;
 import PerfumeOnMe.spring.user.repository.userFragrance.UserFragranceRepository;
 import PerfumeOnMe.spring.workshop.domain.Workshop;
 import PerfumeOnMe.spring.workshop.repository.WorkshopRepository;
+import PerfumeOnMe.spring.workshop.web.dto.WorkshopResponseDTO;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -257,25 +258,29 @@ public class FragranceServiceImpl implements FragranceService {
 		return FragranceConverter.toMyPerfumeResult(true, myPerfumeList);
 	}
 
-	/**recommendedFragranceJson 필드를 파싱하여 MyPerfume 리스트로 변환*/
+	/**recommendedFragranceJson 필드를 파싱하여 MyPerfume 리스트로 변환 (메인페이지용 - 배경제거 이미지 우선 사용)*/
 	private List<FragranceResponseDTO.MyPerfume> parseRecommendedFragranceJson(String jsonString) {
 		try {
 			if (jsonString == null || jsonString.trim().isEmpty()) {
 				return List.of();
 			}
 
-			// JSON 배열을 파싱하여 MyPerfume DTO로 변환
-			TypeReference<List<FragranceResponseDTO.MyPerfume>> typeRef =
-				new TypeReference<List<FragranceResponseDTO.MyPerfume>>() {
-				};
+			// JSON 배열을 RecommendedFragranceDTO로 파싱
+			TypeReference<List<WorkshopResponseDTO.RecommendedFragranceDTO>> typeRef =
+				new TypeReference<>() {};
 
-			List<FragranceResponseDTO.MyPerfume> perfumeList = objectMapper.readValue(jsonString, typeRef);
+			List<WorkshopResponseDTO.RecommendedFragranceDTO> fragranceList = 
+				objectMapper.readValue(jsonString, typeRef);
 
-			// null 체크 및 필수 필드 검증
-			return perfumeList.stream()
-				.filter(perfume -> perfume != null &&
-					perfume.getBrand() != null &&
-					perfume.getName() != null)
+			// MyPerfume으로 변환하면서 배경제거 이미지를 우선 사용
+			return fragranceList.stream()
+				.filter(f -> f != null && f.getBrand() != null && f.getName() != null)
+				.map(f -> FragranceResponseDTO.MyPerfume.builder()
+					.brand(f.getBrand())
+					.name(f.getName())
+					.removebgImageUrl(f.getRemovebgImageUrl() != null && !f.getRemovebgImageUrl().trim().isEmpty() ? 
+									 f.getRemovebgImageUrl() : f.getImageUrl()) // 배경제거 이미지 우선, 없거나 빈값이면 원본
+					.build())
 				.collect(Collectors.toList());
 
 		} catch (Exception e) {
@@ -284,9 +289,7 @@ public class FragranceServiceImpl implements FragranceService {
 		}
 	}
 
-	/**
-	 * 사용자 ID로 사용자 조회 (공통 메서드)
-	 */
+	/** 사용자 ID로 사용자 조회 (공통 메서드) */
 	private User findUserById(Long userId) {
 		return userRepository.findById(userId)
 			.orElseThrow(() -> new GeneralException(ErrorStatus.LOGIN_ID_NOT_FOUND));
