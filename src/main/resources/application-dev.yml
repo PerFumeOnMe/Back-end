@@ -12,7 +12,7 @@ spring:
       mode: never
   jpa:
     hibernate:
-      ddl-auto: update # create X
+      ddl-auto: create-drop # create X
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
