@@ -57,6 +57,9 @@ public class WorkshopFragrance extends BaseEntity {
 	@Column(length = 500)
 	private String imageUrl; // 향수이미지
 
+	@Column(length = 500)
+	private String removebgImageUrl; // 배경 제거된 향수이미지
+
 	@Column(columnDefinition = "TEXT")
 	private String description; // 향수설명
 

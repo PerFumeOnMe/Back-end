@@ -149,6 +149,9 @@ public class WorkshopResponseDTO {
 
 		@Schema(description = "이미지 URL", example = "www.s3.com")
 		private String imageUrl;
+
+		@Schema(description = "배경 제거된 이미지 URL", example = "www.s3.com/removed-bg.png")
+		private String removebgImageUrl;
 	}
 
 	@Builder
