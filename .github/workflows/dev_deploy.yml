@@ -2,7 +2,7 @@ name: PerfumeonMe Dev CI/CD
 
 on:
   push:
-    branches: [ "develop" ]
+    branches: [ "main" ]
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -101,7 +101,7 @@ jobs:
               -e EXTERNAL_FASTAPI_PBTI_URL=${{ secrets.FASTAPI_PBTI_URL }} \
               -e IMAGE_KEYWORD_CHARACTER_BASE_PATH=${{ secrets.IMAGE_KEYWORD_CHARACTER_BASE_PATH }} \
               chanee29/perfumeonme
-            
+
 
       - name: Remove GitHub IP FROM security group
         run: |
