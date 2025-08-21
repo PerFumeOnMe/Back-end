@@ -28,8 +28,8 @@ public class UserRequestDTO {
 		@NotBlank
 		@Schema(description = "사용자가 입력한 아이디", example = "umc123")
 		@Pattern(
-			regexp = "^[a-z0-9]+$",
-			message = "영어 소문자와 숫자만 입력할 수 있으며, 공백 없이 1자 이상 입력해주세요."
+			regexp = "^[a-z0-9]{1,17}$",
+			message = "영어 소문자와 숫자만 입력할 수 있으며, 공백 없이 1자 이상 17자 이하로 입력해주세요."
 		)
 		private String loginId;
 		@NotBlank
