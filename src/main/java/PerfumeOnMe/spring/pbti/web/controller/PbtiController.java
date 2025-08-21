@@ -58,11 +58,9 @@ public class PbtiController implements PbtiControllerDocs {
 	// 마이페이지 PBTI 결과 상세 조회 API
 	@PostMapping("/detailResult")
 	public ResponseEntity<ApiResponse<PbtiResponseDTO.PbtiResultDetailResponse>> searchPbtiResult(
-		@RequestBody PbtiRequestDTO.PbtiResultDetailRequest request,
-		@AuthenticationPrincipal CustomUserDetails userDetails) {
+		@RequestBody PbtiRequestDTO.PbtiResultDetailRequest request) {
 
-		PbtiResponseDTO.PbtiResultDetailResponse result = pbtiService.searchPbtiResult(userDetails.getUserId(),
-			request);
+		PbtiResponseDTO.PbtiResultDetailResponse result = pbtiService.searchPbtiResult(request);
 		return ResponseEntity.ok(ApiResponse.onSuccess(result));
 	}
 
