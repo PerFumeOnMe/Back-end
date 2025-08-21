@@ -31,7 +31,8 @@ public class SecurityConfig {
 		"/v3/api-docs/**", "/swagger-resources/**", "/swagger-ui.html", "/swagger-ui/**",
 		"/swagger/**", "/users/signup", "/auth/login", "/auth/social/**", "/users/reissue",
 		"/health", "/fragrances/allow/**", "/favicon.ico", "/images/**",
-		"/css/**", "/js/**", "/webjars/**"
+		"/css/**", "/js/**", "/webjars/**",
+		"/pbti/detailResult"
 	};
 	private final JwtAuthenticationFilter JwtAuthenticationFilter;
 	private final JwtExceptionHandlerFilter JwtExceptionHandlerFilter;

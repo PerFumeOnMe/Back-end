@@ -15,8 +15,7 @@ public interface PbtiService {
 	PbtiResponseDTO.SearchPbtiListResponse searchPbtiList(Long userId);
 
 	// 마이페이지 PBTI 결과 상세 조회 API
-	PbtiResponseDTO.PbtiResultDetailResponse searchPbtiResult(Long userId,
-		PbtiRequestDTO.PbtiResultDetailRequest request);
+	PbtiResponseDTO.PbtiResultDetailResponse searchPbtiResult(PbtiRequestDTO.PbtiResultDetailRequest request);
 
 	// PBTI 결과 이름 수정 API
 	PbtiResponseDTO.UpdatePbtiNameResponse updatePbtiName(Long userId, Long pbtiId,
